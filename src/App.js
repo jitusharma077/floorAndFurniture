@@ -1,24 +1,24 @@
-import { checkUserLoggedIn, setLoggedInUserDetails } from './Components/Store/Actions/UserAction';
-import { store } from './Components/Store/Index';
-import { useEffect } from 'react';
-import CommonRoutes from './Components/Routes/CommonRoutes';
-import cookie from 'react-cookies';
+import logo from './logo.svg';
+import './App.css';
 
 function App() {
-
-  useEffect(() => {
-    if (cookie.load('isLoggedIn') === 'true') {
-      store.dispatch(checkUserLoggedIn(true));
-    };
-    if (cookie.load('userDetails')) {
-      store.dispatch(setLoggedInUserDetails(cookie.load(('userDetails'))));
-    }
-  }, []);
-
   return (
-    <>
-      <CommonRoutes />
-    </>
+    <div className="App">
+      <header className="App-header">
+        <img src={logo} className="App-logo" alt="logo" />
+        <p>
+          Edit <code>src/App.js</code> and save to reload.
+        </p>
+        <a
+          className="App-link"
+          href="https://reactjs.org"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Learn React
+        </a>
+      </header>
+    </div>
   );
 }
 
