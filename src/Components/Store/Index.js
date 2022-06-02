@@ -1,17 +1,14 @@
-import { applyMiddleware, combineReducers, createStore } from "redux";
-import { composeWithDevTools } from "redux-devtools-extension";
-import { loadState } from "../Utility/LocalStorage";
-import Reducer from "./Reducers/Reducer";
+import { configureStore } from "@reduxjs/toolkit";
 import thunk from "redux-thunk";
-
+import { loadState } from "../Utility/LocalStorage";
+import reducer from "./Reducers/reducer";
 const persistedState = loadState();
-
-const rootReducer = combineReducers({
-  user: Reducer,
+const rootReducer = {
+  user: reducer,
+};
+const store = configureStore({
+  reducer: rootReducer,
+  preloadedState: persistedState,
+  middleware: [thunk],
 });
-
-export const store = createStore(
-  rootReducer,
-  persistedState,
-  composeWithDevTools(applyMiddleware(thunk))
-);
+export default store;

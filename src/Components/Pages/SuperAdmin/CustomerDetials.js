@@ -1,10 +1,27 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { GetDataWithToken } from "../../ApiHelper/ApiHelper";
 import SuperAdminHeader from "./Common/SuperAdminHeader";
 import SuperAdminSidebar from "./Common/SuperAdminSidebar";
 
 function CustomerDetials() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [CustomerDetials, setCustomerDetials] = useState({});
+
+  useEffect(() => {
+    console.log("location", location.state.data);
+    GetDataWithToken(`superadmin/get-customer/${location.state.data}`).then(
+      (response) => {
+        if (response.status === true) {
+          setCustomerDetials(response.data);
+        }
+      }
+    );
+  }, [""]);
   return (
     <>
+      {console.log("first", CustomerDetials)}
       <SuperAdminHeader />
       <SuperAdminSidebar />
       <div className="content-body">
@@ -18,28 +35,49 @@ function CustomerDetials() {
                     <div className="card-body">
                       <div className="guest-profile">
                         <div className="d-flex">
-                          <img src="images/profile/pic1.jpg" />
+                          <img src="images/profile/pic1.jpg" alt="" />
                           <div>
-                            <h2 className="font-w600">Jitu Sharma</h2>
+                            <h2 className="font-w600 ">
+                              {CustomerDetials?.firstName}{" "}
+                              {CustomerDetials?.lastName}
+                            </h2>
                             <span className="text-secondary">
-                              ID 1234124512551
+                              ID #{CustomerDetials?.id}
                             </span>
                           </div>
                         </div>
                         <div className="row">
                           <div className="col-lg-3">
                             <div className="mt-4 check-status">
-                              <span className="d-block mb-2">Email</span>
+                              <span className="d-block mb-2">
+                                Primary Email
+                              </span>
                               <span className="font-w500 fs-16">
-                                Jitusharma@gmail.com
+                                {CustomerDetials?.primary_email}
+                              </span>
+                            </div>
+                            <div className="mt-4 check-status">
+                              <span className="d-block mb-2">
+                                Secondary Email
+                              </span>
+                              <span className="font-w500 fs-16">
+                                {CustomerDetials?.secondary_email}
                               </span>
                             </div>
                           </div>
-                          <div className="col-lg-2">
+                          <div className="col-lg-3">
                             <div className="mt-4">
                               <span className="d-block mb-2">Phone Number</span>
                               <span className="font-w500 fs-16">
-                                9876543210
+                                {CustomerDetials?.primary_phone}
+                              </span>
+                            </div>
+                            <div className="mt-4">
+                              <span className="d-block mb-2">
+                                Secondary Phone Number
+                              </span>
+                              <span className="font-w500 fs-16">
+                                {CustomerDetials?.secondary_phone}
                               </span>
                             </div>
                           </div>
@@ -49,6 +87,15 @@ function CustomerDetials() {
                               <span className="font-w500 fs-16">
                                 B-48 Hariyana bhawan road in front of malaviya
                                 public school patel nagar bikaner
+                              </span>
+                            </div>
+                            <div className="mt-4">
+                              <span className="d-block mb-2">
+                                Company name and GST
+                              </span>
+                              <span className="font-w500 fs-16">
+                                {CustomerDetials?.companyName} :{" "}
+                                {CustomerDetials?.GST}
                               </span>
                             </div>
                           </div>
@@ -80,46 +127,45 @@ function CustomerDetials() {
                         <th>Enquiry no.</th>
                         <th>Date of Enquiry</th>
                         <th>Category's</th>
-                        <th>Contact</th>
                         <th>Status</th>
                         <th>Action</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr>
-                        <td>#ED34DF5</td>
-                        <td>
-                          <p className="mb-0">12 May 2021</p>
-                        </td>
-                        <td>
-                          <div>
-                            <h5 className="text-nowrap">
-                              Curtains, Wallpapers
-                            </h5>
-                          </div>
-                        </td>
-                        <td>
-                          <div>
-                            <span className="font-w600 text-nowrap">
-                              <i className="fas fa-phone-alt me-2" />
-                              012 334 55512
-                            </span>
-                          </div>
-                        </td>
-                        <td>
-                          <span className="font-w600 text-success">
-                            Completed
-                          </span>
-                        </td>
-                        <td>
-                          <a
-                            href="Enquiry-detials.html"
-                            className="btn btn-primary"
-                          >
-                            View Enquiry
-                          </a>
-                        </td>
-                      </tr>
+                      {CustomerDetials.enquiries &&
+                        CustomerDetials.enquiries.map((item, index) => (
+                          <tr key={index}>
+                            <td>{item.id}</td>
+                            <td>{item.createdAt}</td>
+                            <td>N/A</td>
+
+                            <td>
+                              <span className="badge badge-warning">
+                                {item.enquirystatuses.map(
+                                  (status) => status.status
+                                )}
+                              </span>
+                            </td>
+                            <td>
+                              <button
+                                onClick={() => {
+                                  navigate("/EnquiryDetials", {
+                                    state: { data: item.id },
+                                  });
+                                }}
+                                className="btn btn-primary btn-sm"
+                              >
+                                View
+                              </button>
+                              {/* <a
+                                    href="Schedule.html"
+                                    className="btn btn-primary btn-sm"
+                                  >
+                                    Enquiry Assignment
+                                  </a> */}
+                            </td>
+                          </tr>
+                        ))}
                     </tbody>
                   </table>
                 </div>

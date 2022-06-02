@@ -1,4 +1,5 @@
 import axios from "axios";
+import Cookies from "js-cookie";
 
 // Api Url's
 const serverUrl = "http://168.235.81.206:6696/api/v1/";
@@ -26,3 +27,46 @@ export function PostData(url, data) {
       return errorStatus;
     });
 }
+
+export const PostDataWithToken = (url, data) => {
+  let tokens = "";
+  if (Cookies.get("FandFToken")) {
+    tokens = Cookies.get("FandFToken");
+  }
+  var headers = {
+    Authorization: "Bearer " + tokens,
+    "Accept-Language": "en",
+  };
+  return axios
+    .post(serverUrl + url, data, { headers: headers })
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      let errorStatus = JSON.parse(JSON.stringify(error.response));
+      return errorStatus;
+    });
+};
+
+export const GetDataWithToken = (url) => {
+  let tokens = "";
+  if (Cookies.get("FandFToken")) {
+    tokens = Cookies.get("FandFToken");
+  }
+  let config = {
+    headers: {
+      Authorization: "Bearer " + tokens,
+      "Accept-Language": "en",
+    },
+    params: {},
+  };
+  return axios
+    .get(serverUrl + url, config)
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      let errorStatus = JSON.parse(JSON.stringify(error.response));
+      return errorStatus;
+    });
+};

@@ -2,7 +2,7 @@ import {
   CHECK_USER_LOGGED_IN,
   FETCH_USER_REQUEST,
   USER_LOGGED_IN_DETAILS,
-} from "../Types";
+} from "../types";
 
 const initialState = {
   loading: false,
@@ -10,7 +10,7 @@ const initialState = {
   userDetails: null,
 };
 
-const Reducer = (state = initialState, action) => {
+const reducer = (state = initialState, action) => {
   switch (action.type) {
     case FETCH_USER_REQUEST:
       return {
@@ -32,4 +32,4 @@ const Reducer = (state = initialState, action) => {
   }
 };
 
-export default Reducer;
+export default reducer;

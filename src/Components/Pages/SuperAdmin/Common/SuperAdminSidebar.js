@@ -5,6 +5,7 @@ function SuperAdminSidebar() {
   useEffect(() => {
     const script = document.createElement("script");
     script.src = "js/custom.min.js";
+
     script.async = true;
     setTimeout(() => {
       script.onload = () => scriptLoaded();
@@ -47,10 +48,10 @@ function SuperAdminSidebar() {
               </Link>
             </li>
             <li>
-              <a href="Invoice.html" className aria-expanded="false">
+              <Link to={"/all-invoice"} className aria-expanded="false">
                 <i className="flaticon-022-copy" />
                 <span className="nav-text">Invoice</span>
-              </a>
+              </Link>
             </li>
             <li>
               <a
@@ -63,10 +64,10 @@ function SuperAdminSidebar() {
               </a>
               <ul aria-expanded="false">
                 <li>
-                  <a href="All-Schedule.html">All Schedules</a>
+                  <Link to={"/all-schedule"}>All Schedules</Link>
                 </li>
                 <li>
-                  <a href="Schedule.html">Schedule Enquiry</a>
+                  <Link to={"/add-schedule"}>Schedule Enquiry</Link>
                 </li>
                 {/* <li><a href="Schedule.html">Schedule a Installer</a></li>
                       <li><a href="Schedule.html">Schedule a Tailer</a></li> */}
@@ -83,28 +84,28 @@ function SuperAdminSidebar() {
               </a>
               <ul aria-expanded="false">
                 <li>
-                  <a href="All-Outlet-manager.html">All Outlet Manager</a>
+                  <Link to={"/all-outlet-manager"}>All Outlet Manager</Link>
                 </li>
                 <li>
-                  <a href="all-sales-person.html">All Sales Person </a>
+                  <Link to={"/all-sales-person"}>All Sales Person </Link>
                 </li>
                 <li>
-                  <a href="all-dispatch.html"> All Dispatch Person</a>
+                  <Link to={"/all-dispatch"}> All Dispatch Person</Link>
                 </li>
                 <li>
-                  <a href="All-stiching.html"> All Stitching Manager</a>
+                  <Link to={"/All-stitching"}> All Stitching Manager</Link>
                 </li>
                 <li>
-                  <a href="All-measurer.html"> All Measurer</a>
+                  <Link to={"/All-measurer"}> All Measurer</Link>
                 </li>
                 <li>
-                  <a href="all-Tailor.html"> All Tailor</a>
+                  <Link to={"/all-Tailor"}> All Tailor</Link>
                 </li>
                 <li>
-                  <a href="All-Qc.html"> All QC</a>
+                  <Link to={"/All-Qc"}> All QC</Link>
                 </li>
                 <li>
-                  <a href="All-Installer.html"> All Installer</a>
+                  <Link to={"/All-Installer"}> All Installer</Link>
                 </li>
               </ul>
             </li>
@@ -132,115 +133,6 @@ function SuperAdminSidebar() {
         </div>
       </div>
       {/*----- Side bar End ----*/}
-      <div className="modal fade" id="modal1">
-        <div className="modal-dialog modal-dialog-centered" role="document">
-          <div className="modal-content">
-            <div className="modal-header">
-              <h5 className="modal-title">Add Outlet</h5>
-              <button
-                type="button"
-                className="btn-close"
-                data-bs-dismiss="modal"
-              ></button>
-            </div>
-            <div className="modal-body">
-              <form>
-                <div className="mb-3 row align-items-center">
-                  <label className="col-sm-3 col-form-label" htmlFor="fnf">
-                    Name
-                  </label>
-                  <div className="col-sm-9">
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="fnf"
-                      placeholder="outlet name"
-                    />
-                  </div>
-                </div>
-                <div className="mb-3 row align-items-center">
-                  <label className="col-sm-3 col-form-label" htmlFor="comment">
-                    Address
-                  </label>
-                  <div className="col-sm-9">
-                    <textarea
-                      className="form-control"
-                      rows={4}
-                      id="comment"
-                      placeholder="outlet address"
-                      defaultValue={""}
-                    />
-                  </div>
-                </div>
-                <div className="mb-3 row align-items-center">
-                  <label className="col-sm-3 col-form-label" htmlFor="fnf1">
-                    Mobile No.
-                  </label>
-                  <div className="col-sm-9">
-                    <input
-                      type="number"
-                      className="form-control"
-                      id="fnf1"
-                      placeholder="outlet mobile number"
-                    />
-                  </div>
-                </div>
-                <div className="mb-3 row align-items-center">
-                  <label className="col-sm-3 col-form-label" htmlFor="fnf2">
-                    Email
-                  </label>
-                  <div className="col-sm-9">
-                    <input
-                      type="email"
-                      className="form-control"
-                      id="fnf2"
-                      placeholder="outlet email"
-                    />
-                  </div>
-                </div>
-                <div className="mb-3 row align-items-center">
-                  <label className="col-sm-3 col-form-label" htmlFor="fnf2">
-                    Outlet id
-                  </label>
-                  <div className="col-sm-9">
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="fnf2"
-                      placeholder="outlet id"
-                    />
-                  </div>
-                </div>
-                <div className="mb-3 row align-items-center">
-                  <label className="col-sm-3 col-form-label" htmlFor="fnf2">
-                    Outlet Password
-                  </label>
-                  <div className="col-sm-9">
-                    <input
-                      type="password"
-                      className="form-control"
-                      id="fnf2"
-                      placeholder="outlet Password"
-                    />
-                  </div>
-                </div>
-              </form>
-            </div>
-            <div className="modal-footer">
-              <button
-                type="button"
-                className="btn btn-danger light"
-                data-bs-dismiss="modal"
-              >
-                Close
-              </button>
-              <button type="button" className="btn btn-primary">
-                Add outlet
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
     </>
   );
 }

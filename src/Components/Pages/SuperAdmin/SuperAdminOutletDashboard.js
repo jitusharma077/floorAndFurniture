@@ -1,8 +1,24 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
+import { GetDataWithToken } from "../../ApiHelper/ApiHelper";
 import SuperAdminHeader from "./Common/SuperAdminHeader";
 import SuperAdminSidebar from "./Common/SuperAdminSidebar";
 
 function SuperAdminOutletDashboard() {
+  const location = useLocation();
+  const [OutletDetials, setOutletDetials] = useState();
+  const [IcList, setIcList] = useState([]);
+
+  useEffect(() => {
+    GetDataWithToken(`superadmin/get-outlet/${location.state.data}`).then(
+      (response) => {
+        if (response.status === true) {
+          setOutletDetials(response.data);
+          setIcList(response.data.ic);
+        }
+      }
+    );
+  }, [""]);
   return (
     <>
       <SuperAdminHeader />
@@ -501,7 +517,7 @@ function SuperAdminOutletDashboard() {
                       <div className="table-responsive">
                         <table
                           id="example4"
-                          className="display"
+                          className="table card-table display mb-4 shadow-hover table-responsive-lg"
                           style={{ minWidth: "845px" }}
                         >
                           <thead>
@@ -514,76 +530,27 @@ function SuperAdminOutletDashboard() {
                             </tr>
                           </thead>
                           <tbody>
-                            <tr>
-                              <td>IC 1</td>
-                              <td>#54605</td>
-                              <td>9057100757</td>
-                              <td>ic@gmail.com</td>
-                              <td>
-                                <a
-                                  href="IcDetails.html"
-                                  className="btn btn-primary"
-                                >
-                                  View details
-                                </a>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>IC 2</td>
-                              <td>#54605</td>
-                              <td>9057100757</td>
-                              <td>ic@gmail.com</td>
-                              <td>
-                                <a
-                                  href="IcDetails.html"
-                                  className="btn btn-primary"
-                                >
-                                  View details
-                                </a>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>IC 3</td>
-                              <td>#54605</td>
-                              <td>9057100757</td>
-                              <td>ic@gmail.com</td>
-                              <td>
-                                <a
-                                  href="IcDetails.html"
-                                  className="btn btn-primary"
-                                >
-                                  View details
-                                </a>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>IC 4</td>
-                              <td>#54605</td>
-                              <td>9057100757</td>
-                              <td>ic@gmail.com</td>
-                              <td>
-                                <a
-                                  href="IcDetails.html"
-                                  className="btn btn-primary"
-                                >
-                                  View details
-                                </a>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>IC 5</td>
-                              <td>#54605</td>
-                              <td>9057100757</td>
-                              <td>ic@gmail.com</td>
-                              <td>
-                                <a
-                                  href="IcDetails.html"
-                                  className="btn btn-primary"
-                                >
-                                  View details
-                                </a>
-                              </td>
-                            </tr>
+                            {console.log("icList", IcList)}
+                            {IcList.map((item, index) => {
+                              return (
+                                <tr key={index}>
+                                  <td>
+                                    {item?.firstName} {item?.lastName}
+                                  </td>
+                                  <td>{item?.id}</td>
+                                  <td>{item?.phone}</td>
+                                  <td>{item?.email}</td>
+                                  <td>
+                                    <a
+                                      href="IcDetails.html"
+                                      className="btn btn-primary"
+                                    >
+                                      View details
+                                    </a>
+                                  </td>
+                                </tr>
+                              );
+                            })}
                           </tbody>
                         </table>
                       </div>

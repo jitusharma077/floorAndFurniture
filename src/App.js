@@ -1,8 +1,8 @@
 import {
   checkUserLoggedIn,
   setLoggedInUserDetails,
-} from "./Components/Store/Actions/UserAction";
-import { store } from "./Components/Store/Index";
+} from "./Components/Store/Actions/userAction";
+import store from "./Components/Store";
 import { useEffect } from "react";
 import CommonRoutes from "./Components/Routes/CommonRoutes";
 import Cookies from "js-cookie";

@@ -1,6 +1,16 @@
 import React from "react";
+import { useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
+import { setLoggedInUserDetails } from "../../../Store/Actions/userAction";
+import Cookies from "js-cookie";
 
 function SuperAdminHeader() {
+  // const dispatch = useDispatch();
+  // const logout = () => {
+  //   Cookies.remove("FandFToken");
+  //   Cookies.remove("userType");
+  //   dispatch(setLoggedInUserDetails({}));
+  // };
   return (
     <div>
       {/*--- Main wrapper start -----*/}
@@ -181,10 +191,10 @@ function SuperAdminHeader() {
                       <img src="images/profile/pic1.jpg" width={20} />
                     </a>
                     <div className="dropdown-menu dropdown-menu-end">
-                      <a href="login.html" className="dropdown-item ai-icon">
+                      <Link to={"/"} className="dropdown-item ai-icon">
                         <i className="icon-logout icons" />
                         <span className="ms-2">Logout </span>
-                      </a>
+                      </Link>
                     </div>
                   </li>
                 </ul>

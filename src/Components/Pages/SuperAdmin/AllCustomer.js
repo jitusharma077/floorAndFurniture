@@ -1,11 +1,25 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import DataTable from "react-data-table-component";
+import { Link, useNavigate } from "react-router-dom";
+import { GetDataWithToken } from "../../ApiHelper/ApiHelper";
+import DataTableBase from "./Common/DataTablebasic";
 import SuperAdminHeader from "./Common/SuperAdminHeader";
 import SuperAdminSidebar from "./Common/SuperAdminSidebar";
 
 function AllCustomer() {
+  const navigate = useNavigate();
+  const [allCustomer, setAllCustomer] = useState([]);
+  useEffect(() => {
+    GetDataWithToken("superadmin/get-customers").then((response) => {
+      if (response.status === true) {
+        setAllCustomer(response.data);
+      }
+    });
+  }, [""]);
+
   return (
     <>
+      {console.log("all customers", allCustomer)}
       <SuperAdminHeader />
       <SuperAdminSidebar />
       <div className="content-body">
@@ -21,134 +35,44 @@ function AllCustomer() {
                   <div className="table-responsive">
                     <table
                       id="example4"
-                      className="display"
-                      style={{ minWidth: "845px" }}
+                      className=" table card-table display mb-4 shadow-hover table-responsive-lg"
                     >
                       <thead>
                         <tr>
                           <th>Customer Name</th>
                           <th>Enquiry number</th>
                           <th>Category Type</th>
-                          <th>Payment Status</th>
-                          <th>Status</th>
+                          <th>Mobile Number</th>
+
                           <th>Action</th>
                         </tr>
                       </thead>
                       <tbody>
-                        <tr>
-                          <td>shubham pandey</td>
-                          <td>#54605</td>
-                          <td>Library</td>
-                          <td>Cash</td>
-                          <td>
-                            <span className="badge light badge-success">
-                              Paid
-                            </span>
-                          </td>
-                          <td>
-                            <Link
-                              to={"/customer-detials"}
-                              className="btn btn-primary"
-                            >
-                              View More
-                            </Link>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>Garrett Winters</td>
-                          <td>#54687</td>
-                          <td>Library</td>
-                          <td>Credit Card</td>
-                          <td>
-                            <span className="badge light badge-warning">
-                              Panding
-                            </span>
-                          </td>
-                          <td>
-                            <Link
-                              to={"/customer-detials"}
-                              className="btn btn-primary"
-                            >
-                              View More
-                            </Link>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>Ashton Cox</td>
-                          <td>#35672</td>
-                          <td>Tuition</td>
-                          <td>Cash</td>
-                          <td>
-                            <span className="badge light badge-success">
-                              Paid
-                            </span>
-                          </td>
-                          <td>
-                            <Link
-                              to={"/customer-detials"}
-                              className="btn btn-primary"
-                            >
-                              View More
-                            </Link>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>Cedric Kelly</td>
-                          <td>#57984</td>
-                          <td>Annual</td>
-                          <td>Credit Card</td>
-                          <td>
-                            <span className="badge light badge-warning">
-                              Panding
-                            </span>
-                          </td>
-                          <td>
-                            <Link
-                              to={"/customer-detials"}
-                              className="btn btn-primary"
-                            >
-                              View More
-                            </Link>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>Airi Satou</td>
-                          <td>#12453</td>
-                          <td>Library</td>
-                          <td>Cheque</td>
-                          <td>
-                            <span className="badge light badge-warning">
-                              Panding
-                            </span>
-                          </td>
-                          <td>
-                            <Link
-                              to={"/customer-detials"}
-                              className="btn btn-primary"
-                            >
-                              View More
-                            </Link>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>Brielle Williamson</td>
-                          <td>#59723</td>
-                          <td>Tuition</td>
-                          <td>Cash</td>
-                          <td>
-                            <span className="badge light badge-success">
-                              Paid
-                            </span>
-                          </td>
-                          <td>
-                            <a
-                              href="Custome-detials.html"
-                              className="btn btn-primary"
-                            >
-                              View More
-                            </a>
-                          </td>
-                        </tr>
+                        {allCustomer.map((customer, index) => {
+                          return (
+                            <tr key={index}>
+                              <td>
+                                {customer.firstName} {customer.lastName}
+                              </td>
+                              <td>{customer.id}</td>
+                              <td>no category</td>
+                              <td>{customer.primary_phone}</td>
+
+                              <td>
+                                <button
+                                  onClick={() => {
+                                    navigate("/customer-detials", {
+                                      state: { data: customer.id },
+                                    });
+                                  }}
+                                  className="btn btn-primary"
+                                >
+                                  View
+                                </button>
+                              </td>
+                            </tr>
+                          );
+                        })}
                       </tbody>
                     </table>
                   </div>

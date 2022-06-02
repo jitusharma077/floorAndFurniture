@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import Cookies from "js-cookie";
 import { PostData } from "../ApiHelper/ApiHelper";
 import { useNavigate } from "react-router-dom";
-import { setLoggedInUserDetails } from "../Store/Actions/UserAction";
+import { setLoggedInUserDetails } from "../Store/Actions/userAction";
 import { useDispatch } from "react-redux";
 import { toast } from "material-react-toastify";
 
@@ -26,7 +26,7 @@ const Login = () => {
     PostData("auth/login", loginData).then((response) => {
       if (response.status === true) {
         console.log(response);
-        Cookies.set("token", response.data.accessToken);
+        Cookies.set("FandFToken", response.data.accessToken);
         Cookies.set("userType", response.data.type);
         dispatch(setLoggedInUserDetails(response.data));
 
