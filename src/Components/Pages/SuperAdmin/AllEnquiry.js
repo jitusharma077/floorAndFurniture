@@ -49,27 +49,29 @@ function AllEnquiry() {
                         </tr>
                       </thead>
                       <tbody>
-                        {AllEnquiry &&
-                          AllEnquiry.length > 0 &&
+                        {/* {console.log("length", AllEnquiry.length)} */}
+                        {AllEnquiry && AllEnquiry.length < 0 ? (
+                          <p>No Enquiry Found</p>
+                        ) : (
                           AllEnquiry.map((data, index) => (
                             <tr>
                               <>
                                 {" "}
                                 <th>{data.id}</th>
                                 <th>
-                                  {data.customer.firstName}{" "}
-                                  {data.customer.lastName}
+                                  {data?.customer?.firstName}{" "}
+                                  {data?.customer?.lastName}
                                 </th>
-                                <th>{data.customer.primary_phone}</th>
+                                <th>{data?.customer?.primary_phone}</th>
                                 <th>Curtains</th>
                                 <td>
                                   <span className="badge light badge-success">
-                                    {data.enquirystatuses.map(
+                                    {data?.enquirystatuses.map(
                                       (status) => status.status
                                     )}
                                   </span>
                                 </td>
-                                <td>{data.createdAt}</td>
+                                <td>{data?.createdAt}</td>
                                 <td>
                                   <button
                                     onClick={() => {
@@ -90,7 +92,8 @@ function AllEnquiry() {
                                 </td>
                               </>
                             </tr>
-                          ))}
+                          ))
+                        )}
                       </tbody>
                     </table>
                   </div>

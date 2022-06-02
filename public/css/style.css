@@ -45221,6 +45221,7 @@ code {
 .list-group-item.active {
   background-color: #5b6058;
   border-color: #5b6058;
+  color: #fff !important;
 }
 
 [data-theme-version="dark"] .list-group-item {

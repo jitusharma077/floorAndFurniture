@@ -43,7 +43,7 @@ const CommonRoutes = () => {
     setType(userDetails);
   }, [userDetails]);
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={process.env.PUBLIC_URL}>
       <Routes>
         {console.log("type", type)}
 

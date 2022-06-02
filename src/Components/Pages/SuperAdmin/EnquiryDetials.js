@@ -273,7 +273,7 @@ function EnquiryDetials() {
                                       EnquiryDetials?.data?.rooms.map(
                                         (rooms, index) => (
                                           <a
-                                            className="list-group-item list-group-item-action text-white"
+                                            className={`list-group-item list-group-item-action text-white`}
                                             data-bs-toggle="list"
                                             href={`#list-home-${index}`}
                                             role="tab"
@@ -297,334 +297,543 @@ function EnquiryDetials() {
                                             id={`list-home-${index}`}
                                           >
                                             <div className="room-heading">
-                                              {/* <h4 className>
+                                              <h4 className>
                                                 {room.roomDescription}
-                                              </h4> */}
+                                              </h4>
                                               <span>
-                                                {" "}
-                                                {room.roomDescription}
+                                                No. of Doors :{" "}
+                                                {room.numberOfDoor}, No. of
+                                                windows : {room.numberOfWindow}
                                               </span>
                                             </div>
+                                            <h5 className="text-white py-3">
+                                              Selected Curtains
+                                            </h5>
                                             <div>
                                               <ul className="list-group list-group-flush">
                                                 <li className="list-group-item d-flex justify-content-between text-white">
                                                   <span className="mb-0">
                                                     CURTAIN FABRIC SELECTED :
                                                   </span>
-                                                  <strong>Xieriya</strong>
+                                                  <strong>
+                                                    {
+                                                      room?.selectedcurtain
+                                                        ?.curtainfabric?.fabric
+                                                    }
+                                                  </strong>
                                                 </li>
                                                 <li className="list-group-item d-flex justify-content-between text-white">
                                                   <span className="mb-0">
                                                     BRAND. :
                                                   </span>
-                                                  <strong>Brands</strong>
+                                                  <strong>
+                                                    {
+                                                      room?.selectedcurtain
+                                                        ?.curtainfabric?.book
+                                                        ?.brand?.brand
+                                                    }
+                                                  </strong>
                                                 </li>
                                                 <li className="list-group-item d-flex justify-content-between text-white">
                                                   <span className="mb-0">
                                                     Book. :
                                                   </span>
-                                                  <strong>#tredf</strong>
-                                                </li>
-                                                <li className="list-group-item d-flex justify-content-between text-white">
-                                                  <span className="mb-0">
-                                                    CURTAIN STYLE :
-                                                  </span>
-                                                  <strong>EYELET</strong>
-                                                </li>
-                                                <li className="list-group-item d-flex justify-content-between text-white">
-                                                  <span className="mb-0">
-                                                    LINIING REQUIRED :
-                                                  </span>
                                                   <strong>
-                                                    Yes (BLACKOUT,DIMOUT,LIGHT
-                                                    FILTERING)
+                                                    {
+                                                      room?.selectedcurtain
+                                                        ?.curtainfabric?.book
+                                                        ?.book
+                                                    }
                                                   </strong>
                                                 </li>
                                                 <li className="list-group-item d-flex justify-content-between text-white">
                                                   <span className="mb-0">
-                                                    SHEER REQUIRED :
-                                                  </span>
-                                                  <strong>YES</strong>
-                                                </li>
-                                                <li className="list-group-item d-flex justify-content-between text-white">
-                                                  <span className="mb-0">
-                                                    SHEER FABRIC SELECTED :
-                                                  </span>
-                                                  <strong>EYELET</strong>
-                                                </li>
-                                                <li className="list-group-item d-flex justify-content-between text-white">
-                                                  <span className="mb-0">
-                                                    BRAND. :
-                                                  </span>
-                                                  <strong>Brands</strong>
-                                                </li>
-                                                <li className="list-group-item d-flex justify-content-between text-white">
-                                                  <span className="mb-0">
-                                                    Book. :
-                                                  </span>
-                                                  <strong>#tredf</strong>
-                                                </li>
-                                                <li className="list-group-item d-flex justify-content-between text-white">
-                                                  <span className="mb-0">
-                                                    Ceiling Type: :
-                                                  </span>
-                                                  <strong>POP</strong>
-                                                </li>
-                                                <li className="list-group-item d-flex justify-content-between text-white">
-                                                  <span className="mb-0">
-                                                    Wall Type: :
+                                                    CURTAIN STYLE :
                                                   </span>
                                                   <strong>
-                                                    Concrete,Marble,Wood
+                                                    {
+                                                      room?.selectedcurtain
+                                                        ?.curtainstyle
+                                                        ?.curtainStyle
+                                                    }
                                                   </strong>
                                                 </li>
-                                                <li className="list-group-item d-flex justify-content-between text-white">
-                                                  <span className="mb-0">
-                                                    TRACK REQ :
-                                                  </span>
-                                                  <strong>Manual</strong>
-                                                </li>
-                                                <li className="list-group-item d-flex justify-content-between text-white">
-                                                  <span className="mb-0">
-                                                    CURTAIN STYLE :
-                                                  </span>
-                                                  <strong>EYELET</strong>
-                                                </li>
-                                                <li className="list-group-item d-flex justify-content-between text-white">
-                                                  <span className="mb-0">
-                                                    CURTAIN STYLE :
-                                                  </span>
-                                                  <strong>EYELET</strong>
-                                                </li>
-                                                <li className="list-group-item d-flex justify-content-between text-white">
-                                                  <span className="mb-0">
-                                                    CURTAIN STYLE :
-                                                  </span>
-                                                  <strong>EYELET</strong>
-                                                </li>
+                                                {room?.selectedlining ==
+                                                null ? null : (
+                                                  <li className="list-group-item d-flex justify-content-between text-white">
+                                                    <span className="mb-0">
+                                                      LINIING REQUIRED :
+                                                    </span>
+                                                    <strong>
+                                                      {
+                                                        room?.selectedlining
+                                                          ?.lining?.type
+                                                      }{" "}
+                                                    </strong>
+                                                  </li>
+                                                )}
                                               </ul>
                                             </div>
-                                            <div className="room-heading">
-                                              <h4 className>Room 2</h4>
-                                              <span>Guest Room</span>
-                                            </div>
-                                            <div>
-                                              <ul className="list-group list-group-flush">
-                                                <li className="list-group-item d-flex justify-content-between text-white">
-                                                  <span className="mb-0">
-                                                    CURTAIN FABRIC SELECTED :
-                                                  </span>
-                                                  <strong>Xieriya</strong>
-                                                </li>
-                                                <li className="list-group-item d-flex justify-content-between text-white">
-                                                  <span className="mb-0">
-                                                    BRAND. :
-                                                  </span>
-                                                  <strong>Brands</strong>
-                                                </li>
-                                                <li className="list-group-item d-flex justify-content-between text-white">
-                                                  <span className="mb-0">
-                                                    Book. :
-                                                  </span>
-                                                  <strong>#tredf</strong>
-                                                </li>
-                                                <li className="list-group-item d-flex justify-content-between text-white">
-                                                  <span className="mb-0">
-                                                    CURTAIN STYLE :
-                                                  </span>
-                                                  <strong>EYELET</strong>
-                                                </li>
-                                                <li className="list-group-item d-flex justify-content-between text-white">
-                                                  <span className="mb-0">
-                                                    LINIING REQUIRED :
-                                                  </span>
-                                                  <strong>
-                                                    Yes (BLACKOUT,DIMOUT,LIGHT
-                                                    FILTERING)
-                                                  </strong>
-                                                </li>
-                                                <li className="list-group-item d-flex justify-content-between text-white">
-                                                  <span className="mb-0">
-                                                    SHEER REQUIRED :
-                                                  </span>
-                                                  <strong>YES</strong>
-                                                </li>
-                                                <li className="list-group-item d-flex justify-content-between text-white">
-                                                  <span className="mb-0">
-                                                    SHEER FABRIC SELECTED :
-                                                  </span>
-                                                  <strong>EYELET</strong>
-                                                </li>
-                                                <li className="list-group-item d-flex justify-content-between text-white">
-                                                  <span className="mb-0">
-                                                    BRAND. :
-                                                  </span>
-                                                  <strong>Brands</strong>
-                                                </li>
-                                                <li className="list-group-item d-flex justify-content-between text-white">
-                                                  <span className="mb-0">
-                                                    Book. :
-                                                  </span>
-                                                  <strong>#tredf</strong>
-                                                </li>
-                                                <li className="list-group-item d-flex justify-content-between text-white">
-                                                  <span className="mb-0">
-                                                    Ceiling Type: :
-                                                  </span>
-                                                  <strong>POP</strong>
-                                                </li>
-                                                <li className="list-group-item d-flex justify-content-between text-white">
-                                                  <span className="mb-0">
-                                                    Wall Type: :
-                                                  </span>
-                                                  <strong>
-                                                    Concrete,Marble,Wood
-                                                  </strong>
-                                                </li>
-                                                <li className="list-group-item d-flex justify-content-between text-white">
-                                                  <span className="mb-0">
-                                                    TRACK REQ :
-                                                  </span>
-                                                  <strong>Manual</strong>
-                                                </li>
-                                                <li className="list-group-item d-flex justify-content-between text-white">
-                                                  <span className="mb-0">
-                                                    CURTAIN STYLE :
-                                                  </span>
-                                                  <strong>EYELET</strong>
-                                                </li>
-                                                <li className="list-group-item d-flex justify-content-between text-white">
-                                                  <span className="mb-0">
-                                                    CURTAIN STYLE :
-                                                  </span>
-                                                  <strong>EYELET</strong>
-                                                </li>
-                                                <li className="list-group-item d-flex justify-content-between text-white">
-                                                  <span className="mb-0">
-                                                    CURTAIN STYLE :
-                                                  </span>
-                                                  <strong>EYELET</strong>
-                                                </li>
-                                              </ul>
-                                            </div>
+                                            {room?.selectedborder ==
+                                            null ? null : (
+                                              <div>
+                                                <h5 className="text-white py-3">
+                                                  Selected Sheers
+                                                </h5>
+                                                <ul className="list-group list-group-flush">
+                                                  <li className="list-group-item d-flex justify-content-between text-white">
+                                                    <span className="mb-0">
+                                                      SHEER REQUIRED :
+                                                    </span>
+                                                    <strong>Yes</strong>
+                                                  </li>
+                                                  <li className="list-group-item d-flex justify-content-between text-white">
+                                                    <span className="mb-0">
+                                                      SHEER FABRIC SELECTED :
+                                                    </span>
+                                                    <strong>
+                                                      {
+                                                        room?.selectedsheer
+                                                          ?.sheerfabric?.fabric
+                                                      }
+                                                    </strong>
+                                                  </li>
+                                                  <li className="list-group-item d-flex justify-content-between text-white">
+                                                    <span className="mb-0">
+                                                      BRAND. :
+                                                    </span>
+                                                    <strong>
+                                                      {" "}
+                                                      {
+                                                        room?.selectedsheer
+                                                          ?.sheerfabric?.book
+                                                          ?.brand?.brand
+                                                      }
+                                                    </strong>
+                                                  </li>
+                                                  <li className="list-group-item d-flex justify-content-between text-white">
+                                                    <span className="mb-0">
+                                                      Book. :
+                                                    </span>
+                                                    <strong>
+                                                      {" "}
+                                                      {
+                                                        room?.selectedsheer
+                                                          ?.sheerfabric?.book
+                                                          ?.book
+                                                      }
+                                                    </strong>
+                                                  </li>
+                                                  <li className="list-group-item d-flex justify-content-between text-white">
+                                                    <span className="mb-0">
+                                                      width :{" "}
+                                                    </span>
+                                                    <strong>
+                                                      {" "}
+                                                      {
+                                                        room?.selectedsheer
+                                                          ?.sheerfabric?.width
+                                                      }
+                                                    </strong>
+                                                  </li>
+                                                  <li className="list-group-item d-flex justify-content-between text-white">
+                                                    <span className="mb-0">
+                                                      repeat_horizontal:
+                                                    </span>
+                                                    <strong>
+                                                      {
+                                                        room?.selectedsheer
+                                                          ?.sheerfabric
+                                                          ?.repeat_horizontal
+                                                      }
+                                                    </strong>
+                                                  </li>
+                                                  <li className="list-group-item d-flex justify-content-between text-white">
+                                                    <span className="mb-0">
+                                                      repeat_vertical :
+                                                    </span>
+                                                    <strong>
+                                                      {" "}
+                                                      {
+                                                        room?.selectedsheer
+                                                          ?.sheerfabric
+                                                          ?.repeat_vertical
+                                                      }
+                                                    </strong>
+                                                  </li>
+                                                  <li className="list-group-item d-flex justify-content-between text-white">
+                                                    <span className="mb-0">
+                                                      leadChain :
+                                                    </span>
+                                                    {room?.selectedsheer
+                                                      ?.leadChain === true ? (
+                                                      <strong>Yes</strong>
+                                                    ) : (
+                                                      <strong>No</strong>
+                                                    )}
+                                                  </li>
+                                                  <li className="list-group-item d-flex justify-content-between text-white">
+                                                    <span className="mb-0">
+                                                      hand Hammering :
+                                                    </span>
+                                                    {room?.selectedsheer
+                                                      ?.handHammering ===
+                                                    true ? (
+                                                      <strong>Yes</strong>
+                                                    ) : (
+                                                      <strong>No</strong>
+                                                    )}
+                                                  </li>
+                                                  <li className="list-group-item d-flex justify-content-between text-white">
+                                                    <span className="mb-0">
+                                                      CURTAIN STYLE :
+                                                    </span>
+                                                    <strong>
+                                                      {
+                                                        room?.selectedsheer
+                                                          ?.curtainstyle
+                                                          ?.curtainStyle
+                                                      }
+                                                    </strong>
+                                                  </li>
+                                                </ul>
+                                              </div>
+                                            )}
+
+                                            {room?.selectedbelt ==
+                                            null ? null : (
+                                              <div>
+                                                <h5 className="text-white py-3">
+                                                  Selected Belt
+                                                </h5>
+                                                <ul className="list-group list-group-flush">
+                                                  <li className="list-group-item d-flex justify-content-between text-white">
+                                                    <span className="mb-0">
+                                                      BELT REQUIRED :
+                                                    </span>
+                                                    <strong>Yes</strong>
+                                                  </li>
+                                                  <li className="list-group-item d-flex justify-content-between text-white">
+                                                    <span className="mb-0">
+                                                      BELT FABRIC SELECTED :
+                                                    </span>
+                                                    <strong>
+                                                      {
+                                                        room?.selectedbelt?.belt
+                                                          ?.fabric
+                                                      }
+                                                    </strong>
+                                                  </li>
+                                                  <li className="list-group-item d-flex justify-content-between text-white">
+                                                    <span className="mb-0">
+                                                      REPEAT :
+                                                    </span>
+                                                    <strong>
+                                                      {" "}
+                                                      {
+                                                        room?.selectedbelt?.belt
+                                                          ?.repeat
+                                                      }
+                                                    </strong>
+                                                  </li>
+                                                  <li className="list-group-item d-flex justify-content-between text-white">
+                                                    <span className="mb-0">
+                                                      Book. :
+                                                    </span>
+                                                    <strong>
+                                                      {
+                                                        room?.selectedbelt?.belt
+                                                          ?.book?.book
+                                                      }
+                                                    </strong>
+                                                  </li>
+                                                  <li className="list-group-item d-flex justify-content-between text-white">
+                                                    <span className="mb-0">
+                                                      width :{" "}
+                                                    </span>
+                                                    <strong>
+                                                      {" "}
+                                                      {
+                                                        room?.selectedbelt?.belt
+                                                          ?.width
+                                                      }
+                                                    </strong>
+                                                  </li>
+                                                </ul>
+                                              </div>
+                                            )}
+                                            {room?.selectedborder ==
+                                            null ? null : (
+                                              <div>
+                                                <h5 className="text-white py-3">
+                                                  Selected Border
+                                                </h5>
+                                                <ul className="list-group list-group-flush">
+                                                  <li className="list-group-item d-flex justify-content-between text-white">
+                                                    <span className="mb-0">
+                                                      BORDER REQUIRED :
+                                                    </span>
+                                                    <strong>Yes</strong>
+                                                  </li>
+                                                  <li className="list-group-item d-flex justify-content-between text-white">
+                                                    <span className="mb-0">
+                                                      BORDER TYPE :
+                                                    </span>
+                                                    <strong>
+                                                      {
+                                                        room?.selectedborder
+                                                          ?.border_type?.type
+                                                      }
+                                                    </strong>
+                                                  </li>
+                                                  <li className="list-group-item d-flex justify-content-between text-white">
+                                                    <span className="mb-0">
+                                                      Border FABRIC SELECTED :
+                                                    </span>
+                                                    <strong>
+                                                      {
+                                                        room?.selectedborder
+                                                          ?.border?.brand?.brand
+                                                      }
+                                                    </strong>
+                                                  </li>
+                                                  <li className="list-group-item d-flex justify-content-between text-white">
+                                                    <span className="mb-0">
+                                                      REPEAT :
+                                                    </span>
+                                                    <strong>
+                                                      {" "}
+                                                      {
+                                                        room?.selectedborder
+                                                          ?.border?.repeat
+                                                      }
+                                                    </strong>
+                                                  </li>
+                                                  <li className="list-group-item d-flex justify-content-between text-white">
+                                                    <span className="mb-0">
+                                                      Book. :
+                                                    </span>
+                                                    <strong>
+                                                      {
+                                                        room?.selectedborder
+                                                          ?.border?.book?.book
+                                                      }
+                                                    </strong>
+                                                  </li>
+                                                  <li className="list-group-item d-flex justify-content-between text-white">
+                                                    <span className="mb-0">
+                                                      Brand. :
+                                                    </span>
+                                                    <strong>
+                                                      {
+                                                        room?.selectedborder
+                                                          ?.border?.book?.book
+                                                      }
+                                                    </strong>
+                                                  </li>
+                                                  <li className="list-group-item d-flex justify-content-between text-white">
+                                                    <span className="mb-0">
+                                                      width :{" "}
+                                                    </span>
+                                                    <strong>
+                                                      {" "}
+                                                      {
+                                                        room?.selectedborder
+                                                          ?.border?.width
+                                                      }
+                                                    </strong>
+                                                  </li>
+                                                </ul>
+                                              </div>
+                                            )}
+
+                                            {room?.selectedpattern ==
+                                            null ? null : (
+                                              <div>
+                                                <h5 className="text-white py-3">
+                                                  Selected Pattern
+                                                </h5>
+                                                <ul className="list-group list-group-flush">
+                                                  <li className="list-group-item d-flex justify-content-between text-white">
+                                                    <span className="mb-0">
+                                                      Curtain pattern :
+                                                    </span>
+                                                    <strong>
+                                                      {
+                                                        room?.selectedpattern
+                                                          ?.curtainpattern
+                                                          ?.pattern
+                                                      }
+                                                    </strong>
+                                                  </li>
+                                                  <li className="list-group-item d-flex justify-content-between text-white">
+                                                    <span className="mb-0">
+                                                      curtain style :
+                                                    </span>
+                                                    <strong>
+                                                      {
+                                                        room?.selectedpattern
+                                                          ?.curtainstyle
+                                                          ?.curtainStyle
+                                                      }
+                                                    </strong>
+                                                  </li>
+                                                  <li className="list-group-item d-flex justify-content-between text-white">
+                                                    <span className="mb-0">
+                                                      fabric 1 SELECTED :
+                                                    </span>
+                                                    <strong>
+                                                      {
+                                                        room?.selectedpattern
+                                                          ?.fabric1?.fabric
+                                                      }
+                                                    </strong>
+                                                  </li>
+                                                  <li className="list-group-item d-flex justify-content-between text-white">
+                                                    <span className="mb-0">
+                                                      Width :
+                                                    </span>
+                                                    <strong>
+                                                      {" "}
+                                                      {
+                                                        room?.selectedpattern
+                                                          ?.fabric1?.width
+                                                      }
+                                                    </strong>
+                                                  </li>
+                                                  <li className="list-group-item d-flex justify-content-between text-white">
+                                                    <span className="mb-0">
+                                                      Fabric 1 Book :
+                                                    </span>
+                                                    <strong>
+                                                      {" "}
+                                                      {
+                                                        room?.selectedpattern
+                                                          ?.fabric1?.book?.book
+                                                      }
+                                                    </strong>
+                                                  </li>
+                                                  <li className="list-group-item d-flex justify-content-between text-white">
+                                                    <span className="mb-0">
+                                                      Fabric 1 Brand. :
+                                                    </span>
+                                                    <strong>
+                                                      {" "}
+                                                      {
+                                                        room?.selectedpattern
+                                                          ?.fabric1?.book?.brand
+                                                          ?.brand
+                                                      }
+                                                    </strong>
+                                                  </li>
+                                                  <li className="list-group-item d-flex justify-content-between text-white">
+                                                    <span className="mb-0">
+                                                      Fabric 1 repeat horizontal
+                                                      :{" "}
+                                                    </span>
+                                                    <strong>
+                                                      {" "}
+                                                      {
+                                                        room?.selectedpattern
+                                                          ?.fabric1
+                                                          ?.repeat_horizontal
+                                                      }
+                                                    </strong>
+                                                  </li>
+                                                  <li className="list-group-item d-flex justify-content-between text-white">
+                                                    <span className="mb-0">
+                                                      Fabric 1 repeat vertical :{" "}
+                                                    </span>
+                                                    <strong>
+                                                      {" "}
+                                                      {
+                                                        room?.selectedpattern
+                                                          ?.fabric1
+                                                          ?.repeat_vertical
+                                                      }
+                                                    </strong>
+                                                  </li>
+                                                  <li className="list-group-item d-flex justify-content-between text-white">
+                                                    <span className="mb-0">
+                                                      fabric 2 SELECTED :
+                                                    </span>
+                                                    <strong>
+                                                      {
+                                                        room?.selectedpattern
+                                                          ?.fabric2?.fabric
+                                                      }
+                                                    </strong>
+                                                  </li>
+                                                  <li className="list-group-item d-flex justify-content-between text-white">
+                                                    <span className="mb-0">
+                                                      Width :
+                                                    </span>
+                                                    <strong>
+                                                      {" "}
+                                                      {
+                                                        room?.selectedpattern
+                                                          ?.fabric2?.width
+                                                      }
+                                                    </strong>
+                                                  </li>
+                                                  <li className="list-group-item d-flex justify-content-between text-white">
+                                                    <span className="mb-0">
+                                                      Fabric 2 Book :
+                                                    </span>
+                                                    <strong>
+                                                      {" "}
+                                                      {
+                                                        room?.selectedpattern
+                                                          ?.fabric2?.book?.book
+                                                      }
+                                                    </strong>
+                                                  </li>
+                                                  <li className="list-group-item d-flex justify-content-between text-white">
+                                                    <span className="mb-0">
+                                                      Fabric 2 Brand. :
+                                                    </span>
+                                                    <strong>
+                                                      {" "}
+                                                      {
+                                                        room?.selectedpattern
+                                                          ?.fabric2?.book?.brand
+                                                          ?.brand
+                                                      }
+                                                    </strong>
+                                                  </li>
+                                                  <li className="list-group-item d-flex justify-content-between text-white">
+                                                    <span className="mb-0">
+                                                      Fabric 2 repeat horizontal
+                                                      :{" "}
+                                                    </span>
+                                                    <strong>
+                                                      {" "}
+                                                      {
+                                                        room?.selectedpattern
+                                                          ?.fabric2
+                                                          ?.repeat_horizontal
+                                                      }
+                                                    </strong>
+                                                  </li>
+                                                  <li className="list-group-item d-flex justify-content-between text-white">
+                                                    <span className="mb-0">
+                                                      Fabric 2 repeat vertical :{" "}
+                                                    </span>
+                                                    <strong>
+                                                      {" "}
+                                                      {
+                                                        room?.selectedpattern
+                                                          ?.fabric2
+                                                          ?.repeat_vertical
+                                                      }
+                                                    </strong>
+                                                  </li>
+                                                </ul>
+                                              </div>
+                                            )}
                                           </div>
                                         )
                                       )}
-
-                                    {/* <div
-                                      className="tab-pane fade"
-                                      id="list-profile"
-                                      role="tabpanel"
-                                    >
-                                      <div className="room-heading">
-                                        <h4 className>Room 3</h4>
-                                        <span>Father's Room</span>
-                                      </div>
-                                      <ul className="list-group list-group-flush">
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">
-                                            CURTAIN FABRIC SELECTED :
-                                          </span>
-                                          <strong>Xieriya</strong>
-                                        </li>
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">BRAND. :</span>
-                                          <strong>Brands</strong>
-                                        </li>
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">Book. :</span>
-                                          <strong>#tredf</strong>
-                                        </li>
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">
-                                            CURTAIN STYLE :
-                                          </span>
-                                          <strong>EYELET</strong>
-                                        </li>
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">
-                                            LINIING REQUIRED :
-                                          </span>
-                                          <strong>
-                                            Yes (BLACKOUT,DIMOUT,LIGHT
-                                            FILTERING)
-                                          </strong>
-                                        </li>
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">
-                                            SHEER REQUIRED :
-                                          </span>
-                                          <strong>YES</strong>
-                                        </li>
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">
-                                            SHEER FABRIC SELECTED :
-                                          </span>
-                                          <strong>EYELET</strong>
-                                        </li>
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">BRAND. :</span>
-                                          <strong>Brands</strong>
-                                        </li>
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">Book. :</span>
-                                          <strong>#tredf</strong>
-                                        </li>
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">
-                                            Ceiling Type: :
-                                          </span>
-                                          <strong>POP</strong>
-                                        </li>
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">
-                                            Wall Type: :
-                                          </span>
-                                          <strong>Concrete,Marble,Wood</strong>
-                                        </li>
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">
-                                            TRACK REQ :
-                                          </span>
-                                          <strong>Manual</strong>
-                                        </li>
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">
-                                            CURTAIN STYLE :
-                                          </span>
-                                          <strong>EYELET</strong>
-                                        </li>
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">
-                                            CURTAIN STYLE :
-                                          </span>
-                                          <strong>EYELET</strong>
-                                        </li>
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">
-                                            CURTAIN STYLE :
-                                          </span>
-                                          <strong>EYELET</strong>
-                                        </li>
-                                      </ul>
-                                    </div>
-                                    <div
-                                      className="tab-pane fade"
-                                      id="list-messages"
-                                    >
-                                      <h4 className="mb-4 text-white">
-                                        Floor Detials
-                                      </h4>
-                                    </div>
-                                    <div
-                                      className="tab-pane fade"
-                                      id="list-settings"
-                                    >
-                                      <h4 className="mb-4 text-white">
-                                        Mattress Detials
-                                      </h4>
-                                      <p />
-                                    </div> */}
                                   </div>
                                 </div>
                               </div>
@@ -1621,68 +1830,150 @@ function EnquiryDetials() {
                 <div className="card-body">
                   <div
                     id="DZ_W_TimeLine"
-                    className="widget-timeline dlab-scroll height370"
+                    className="widget-timeline dlab-scroll"
                   >
                     <ul className="timeline">
                       <li>
                         <div className="timeline-badge primary" />
                         <a className="timeline-panel text-muted" href="#">
-                          <span>10 minutes ago</span>
-                          <h6 className="mb-0">
-                            Youtube, a video-sharing website, goes live
-                            <strong className="text-primary">$500</strong>.
+                          <span className="text-white">10 minutes ago</span>
+                          <h6 className="mb-0 text-white">
+                            New Customer Added
+                            {/* <strong className="text-primary"></strong>. */}
                           </h6>
                         </a>
                       </li>
                       <li>
                         <div className="timeline-badge info" />
                         <a className="timeline-panel text-muted" href="#">
-                          <span>20 minutes ago</span>
+                          <span>8 minutes ago</span>
                           <h6 className="mb-0">
-                            New order placed
-                            <strong className="text-info">#XF-2356.</strong>
+                            New Enquiry Generated
+                            <strong className="text-info d-block">
+                              {" "}
+                              #XF-2356.
+                            </strong>
                           </h6>
-                          <p className="mb-0">
+                          {/* <p className="mb-0">
                             Quisque a consequat ante Sit amet magna at
                             volutapt...
-                          </p>
+                          </p> */}
                         </a>
                       </li>
                       <li>
-                        <div className="timeline-badge danger" />
+                        <div className="timeline-badge primary" />
                         <a className="timeline-panel text-muted" href="#">
-                          <span>30 minutes ago</span>
-                          <h6 className="mb-0">
-                            john just buy your product
-                            <strong className="text-warning">Sell $250</strong>
+                          <span className="text-white">8 minutes ago</span>
+                          <h6 className="mb-0 text-white">
+                            Measurements Assigned to{" "}
+                            <strong>Visnu Pandey</strong>
                           </h6>
+                          {/* <p className="mb-0">
+                            Quisque a consequat ante Sit amet magna at
+                            volutapt...
+                          </p> */}
                         </a>
                       </li>
                       <li>
-                        <div className="timeline-badge success" />
+                        <div className="timeline-badge info" />
                         <a className="timeline-panel text-muted" href="#">
-                          <span>15 minutes ago</span>
+                          <span>8 minutes ago</span>
                           <h6 className="mb-0">
-                            StumbleUpon is acquired by eBay.
+                            Assignment share With Client
+                            {/* <strong className="text-info d-block">
+                              {" "}
+                              #XF-2356.
+                            </strong> */}
                           </h6>
+                          {/* <p className="mb-0">
+                            Quisque a consequat ante Sit amet magna at
+                            volutapt...
+                          </p> */}
                         </a>
                       </li>
                       <li>
-                        <div className="timeline-badge warning" />
-                        <a className="timeline-panel text-muted" href="#">
-                          <span>20 minutes ago</span>
-                          <h6 className="mb-0">
-                            Mashable, a news website and blog, goes live.
+                        <div className="timeline-badge primary" />
+                        <a className="timeline-panel text-white" href="#">
+                          <span>8 minutes ago</span>
+                          <h6 className="mb-0 text-white">
+                            Order Confirm By Client
+                            {/* <strong className="text-info d-block">
+                              {" "}
+                              #XF-2356.
+                            </strong> */}
                           </h6>
+                          {/* <p className="mb-0">
+                            Quisque a consequat ante Sit amet magna at
+                            volutapt...
+                          </p> */}
                         </a>
                       </li>
                       <li>
-                        <div className="timeline-badge dark" />
+                        <div className="timeline-badge info" />
                         <a className="timeline-panel text-muted" href="#">
-                          <span>20 minutes ago</span>
+                          <span>8 minutes ago</span>
                           <h6 className="mb-0">
-                            Mashable, a news website and blog, goes live.
+                            Purchase Order Generated
+                            <strong className="text-info d-block">
+                              {" "}
+                              #PO-234FR.
+                            </strong>
                           </h6>
+                          {/* <p className="mb-0">
+                            Quisque a consequat ante Sit amet magna at
+                            volutapt...
+                          </p> */}
+                        </a>
+                      </li>
+                      <li>
+                        <div className="timeline-badge primary" />
+                        <a className="timeline-panel text-muted" href="#">
+                          <span className="text-white">8 minutes ago</span>
+                          <h6 className="mb-0 text-white">
+                            Follow Up Assign To <strong>Vishnu Pandey</strong>
+                            {/* <strong className="text-info d-block">
+                              {" "}
+                              #XF-2356.
+                            </strong> */}
+                          </h6>
+                          {/* <p className="mb-0">
+                            Quisque a consequat ante Sit amet magna at
+                            volutapt...
+                          </p> */}
+                        </a>
+                      </li>
+                      <li>
+                        <div className="timeline-badge info" />
+                        <a className="timeline-panel text-muted" href="#">
+                          <span>8 minutes ago</span>
+                          <h6 className="mb-0">
+                            GRN Assigned
+                            <strong className="text-info d-block">
+                              {" "}
+                              #XF-2356.
+                            </strong>
+                          </h6>
+                          {/* <p className="mb-0">
+                            Quisque a consequat ante Sit amet magna at
+                            volutapt...
+                          </p> */}
+                        </a>
+                      </li>
+                      <li>
+                        <div className="timeline-badge primary" />
+                        <a className="timeline-panel text-muted" href="#">
+                          <span className="text-white">8 minutes ago</span>
+                          <h6 className="mb-0 text-white">
+                            Ready To Ship
+                            <strong className="text-info d-block">
+                              {" "}
+                              #SI-2356RT.
+                            </strong>
+                          </h6>
+                          {/* <p className="mb-0">
+                            Quisque a consequat ante Sit amet magna at
+                            volutapt...
+                          </p> */}
                         </a>
                       </li>
                     </ul>
