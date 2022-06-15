@@ -2,10 +2,10 @@ import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { GetDataWithToken } from "../../ApiHelper/ApiHelper";
-import SuperAdminHeader from "./Common/SuperAdminHeader";
-import SuperAdminSidebar from "./Common/SuperAdminSidebar";
+import OutletManagerHeader from "./OutletManagerHeader";
+import OutletManagerSidebar from "./OutletManagerSidebar";
 
-function EnquiryDetials() {
+function OutletEnquiryDetials() {
   const location = useLocation();
 
   const [enquiryId, setEnquiryId] = useState(null);
@@ -23,14 +23,12 @@ function EnquiryDetials() {
       }
     );
   }, [""]);
-
   return (
     <>
-      {console.log("enquiryId", EnquiryDetials)}
       <div
         data-typography="poppins"
         data-theme-version="light"
-        data-layout="vertical"
+        data-layout="horizontal"
         data-nav-headerbg="color_1"
         data-headerbg="color_1"
         data-sidebar-style="full"
@@ -40,11 +38,10 @@ function EnquiryDetials() {
         data-container="wide"
         direction="ltr"
         data-primary="color_1"
-        id="main-wrapper"
-        className="show"
+        className="outlet_style"
       >
-        <SuperAdminHeader />
-        <SuperAdminSidebar />
+        <OutletManagerHeader />
+        <OutletManagerSidebar />
         <div className="content-body">
           {/* row */}
           <div className="container-fluid">
@@ -1933,4 +1930,4 @@ function EnquiryDetials() {
   );
 }
 
-export default EnquiryDetials;
+export default OutletEnquiryDetials;

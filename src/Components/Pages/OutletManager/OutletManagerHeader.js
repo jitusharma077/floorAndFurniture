@@ -1,18 +1,18 @@
-import React, { useState } from "react";
+import React from "react";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { setLoggedInUserDetails } from "../../../Store/Actions/userAction";
+import { GetDataWithToken } from "../../ApiHelper/ApiHelper";
 import Cookies from "js-cookie";
-import { GetDataWithToken } from "../../../ApiHelper/ApiHelper";
+import { setLoggedInUserDetails } from "../../Store/Actions/userAction";
 import { toast } from "material-react-toastify";
 
-function SuperAdminHeader() {
+function OutletManagerHeader() {
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
 
   const logout = () => {
-    GetDataWithToken("auth/logout/user").then((response) => {
+    GetDataWithToken("auth/logout/outletLogout").then((response) => {
       if (response.status === true) {
         Cookies.remove("FandFToken");
         Cookies.remove("userType");
@@ -23,14 +23,6 @@ function SuperAdminHeader() {
       }
     });
   };
-  // const logout = () => {
-  //   GetDataWithToken("auth/logout").then((response) => {
-  //     if
-  //     (response.status === true) {
-  //
-  //     }
-  //   )}
-
   return (
     <>
       {/*--- Main wrapper start -----*/}
@@ -73,10 +65,7 @@ function SuperAdminHeader() {
       <div className="header">
         <div className="header-content">
           <nav className="navbar navbar-expand">
-            <div className="collapse navbar-collapse justify-content-between">
-              <div className="nav-item d-flex align-items-center">
-                <div className="input-group search-area"></div>
-              </div>
+            <div className="collapse navbar-collapse justify-content-end">
               <ul className="navbar-nav header-right">
                 <li className="nav-item">
                   <Link to={"/Search"} className="btn btn-primary">
@@ -86,7 +75,7 @@ function SuperAdminHeader() {
                 <li className="nav-item dropdown notification_dropdown">
                   <a
                     className="nav-link"
-                    href="#"
+                    href="javascript:void(0);"
                     role="button"
                     data-bs-toggle="dropdown"
                   >
@@ -108,7 +97,7 @@ function SuperAdminHeader() {
                           transform="translate(0 0)"
                           fill="#ffffff"
                           fillRule="evenodd"
-                        />
+                        ></path>
                       </g>
                     </svg>
                     <span className="badge light text-white bg-primary rounded-circle">
@@ -119,21 +108,21 @@ function SuperAdminHeader() {
                     <div
                       id="DZ_W_Notification1"
                       className="widget-media dlab-scroll p-3 ps"
-                      style={{ height: "380px" }}
+                      style={{ height: 380 }}
                     >
                       <ul className="timeline">
                         <li>
                           <div className="timeline-panel">
                             <div className="media me-2">
                               <img
-                                alt="test"
+                                alt="image"
                                 width={50}
-                                src="images/avatar/1.jpg"
+                                src="./images/avatar/1.jpg"
                               />
                             </div>
                             <div className="media-body">
                               <h6 className="mb-1">
-                                Dr sultads Submits an Enquiry
+                                Syntahis coaching submits an Enqiry
                               </h6>
                               <small className="d-block">
                                 29 July 2020 - 02:26 PM
@@ -143,28 +132,39 @@ function SuperAdminHeader() {
                         </li>
                         <li>
                           <div className="timeline-panel">
-                            <div className="media me-2 media-info">KG</div>
+                            <div className="media me-2 media-success">MM</div>
                             <div className="media-body">
                               <h6 className="mb-1">
-                                Resport created successfully
+                                Dr. Manoj Meena Submits an Enquiry
                               </h6>
                               <small className="d-block">
-                                29 July 2020 - 02:26 PM
+                                28 July 2020 - 10:26 AM
                               </small>
                             </div>
                           </div>
                         </li>
                         <li>
                           <div className="timeline-panel">
-                            <div className="media me-2 media-success">
-                              <i className="fa fa-home" />
-                            </div>
+                            <div className="media me-2 media-danger">SS</div>
                             <div className="media-body">
                               <h6 className="mb-1">
-                                Reminder : Followup Time!
+                                Sardul Singh G submits an Enquiry
                               </h6>
                               <small className="d-block">
-                                29 July 2020 - 02:26 PM
+                                26 July 2020 - 12:00 PM
+                              </small>
+                            </div>
+                          </div>
+                        </li>
+                        <li>
+                          <div className="timeline-panel">
+                            <div className="media me-2 media-info">OI</div>
+                            <div className="media-body">
+                              <h6 className="mb-1">
+                                Order item is dispached successfully
+                              </h6>
+                              <small className="d-block">
+                                30 July 2020 - 1L00 AM
                               </small>
                             </div>
                           </div>
@@ -172,30 +172,28 @@ function SuperAdminHeader() {
                       </ul>
                       <div
                         className="ps__rail-x"
-                        style={{ left: "0px", bottom: "0px" }}
+                        style={{ left: 0, bottom: 0 }}
                       >
                         <div
                           className="ps__thumb-x"
                           tabIndex={0}
-                          style={{ left: "0px", width: "0px" }}
-                        />
+                          style={{ left: 0, width: 0 }}
+                        ></div>
                       </div>
-                      <div
-                        className="ps__rail-y"
-                        style={{ top: "0px", right: "0px" }}
-                      >
+                      <div className="ps__rail-y" style={{ top: 0, right: 0 }}>
                         <div
                           className="ps__thumb-y"
                           tabIndex={0}
-                          style={{ top: "0px", height: "0px" }}
-                        />
+                          style={{ top: 0, height: 0 }}
+                        ></div>
                       </div>
                     </div>
                     <a
                       className="all-notification"
                       href="all-notification.html"
                     >
-                      See all notifications <i className="ti-arrow-end" />
+                      See all notifications
+                      <i className="ti-arrow-end" />
                     </a>
                   </div>
                 </li>
@@ -206,7 +204,7 @@ function SuperAdminHeader() {
                     role="button"
                     data-bs-toggle="dropdown"
                   >
-                    <img src="images/profile/pic1.jpg" width={20} />
+                    <img src="./images/logo.png" width={20} />
                   </a>
                   <div className="dropdown-menu dropdown-menu-end">
                     <button
@@ -225,9 +223,10 @@ function SuperAdminHeader() {
           </nav>
         </div>
       </div>
+
       {/*----- Header End ----*/}
     </>
   );
 }
 
-export default SuperAdminHeader;
+export default OutletManagerHeader;

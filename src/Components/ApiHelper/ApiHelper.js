@@ -70,3 +70,31 @@ export const GetDataWithToken = (url) => {
       return errorStatus;
     });
 };
+
+export function PutDataWithToken(url, data) {
+  // body..
+  //
+  let tokens = "";
+  if (Cookies.get("FandFToken")) {
+    tokens = Cookies.get("FandFToken");
+  }
+  var headers = {
+    "Content-Type": "application/json",
+    Authorization: "Bearer " + tokens,
+    Accept: "application/json",
+  };
+  return axios
+    .put(serverUrl + url, data, { headers: headers })
+    .then((response) => {
+      //console.log(res);
+      //console.log(res.data);
+      return response.data;
+    })
+    .catch((error) => {
+      //return error.data;
+      //console.log(error.response);
+      let errorStatus = JSON.parse(JSON.stringify(error.response));
+      //console.log(errorStatus.data);
+      return errorStatus;
+    });
+}

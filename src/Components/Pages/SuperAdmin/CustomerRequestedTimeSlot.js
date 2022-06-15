@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import SuperAdminHeader from "./Common/SuperAdminHeader";
 import SuperAdminSidebar from "./Common/SuperAdminSidebar";
 
-function AllSchedule() {
+function CustomerRequestedTimeSlot() {
   return (
     <>
       <div
@@ -24,7 +24,6 @@ function AllSchedule() {
       >
         <SuperAdminHeader />
         <SuperAdminSidebar />
-
         <div className="content-body">
           {/* row */}
           <div className="container-fluid">
@@ -32,10 +31,7 @@ function AllSchedule() {
               <div className="col-xl-12">
                 <div className="card">
                   <div className="card-header">
-                    <h4 className="card-title">All Schedules</h4>
-                    <Link className="btn btn-primary" to={"/add-schedule"}>
-                      Add New Schedule
-                    </Link>
+                    <h4 className="card-title">All Requested Time Slot</h4>
                   </div>
                   <div className="card-body">
                     <div className="table-responsive">
@@ -123,4 +119,4 @@ function AllSchedule() {
   );
 }
 
-export default AllSchedule;
+export default CustomerRequestedTimeSlot;

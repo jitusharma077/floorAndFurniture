@@ -64,11 +64,20 @@ function SuperAdminSidebar() {
               </a>
               <ul aria-expanded="false">
                 <li>
+                  <Link to={"/create-time-slot"}>Add Time Slot</Link>
+                </li>
+                <li>
+                  <Link to={"/Customer-requested-time-slot"}>
+                    Customer requested time slot
+                  </Link>
+                </li>
+                <li>
                   <Link to={"/all-schedule"}>All Schedules</Link>
                 </li>
                 <li>
                   <Link to={"/add-schedule"}>Schedule Enquiry</Link>
                 </li>
+
                 {/* <li><a href="Schedule.html">Schedule a Installer</a></li>
                       <li><a href="Schedule.html">Schedule a Tailer</a></li> */}
               </ul>

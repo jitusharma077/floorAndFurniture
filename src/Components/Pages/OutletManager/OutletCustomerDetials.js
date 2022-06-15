@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { GetDataWithToken } from "../../ApiHelper/ApiHelper";
-import SuperAdminHeader from "./Common/SuperAdminHeader";
-import SuperAdminSidebar from "./Common/SuperAdminSidebar";
+import OutletManagerHeader from "./OutletManagerHeader";
+import OutletManagerSidebar from "./OutletManagerSidebar";
 
-function CustomerDetials() {
+function OutletCustomerDetials() {
   const location = useLocation();
   const navigate = useNavigate();
   const [CustomerDetials, setCustomerDetials] = useState({});
@@ -21,11 +21,10 @@ function CustomerDetials() {
   }, [""]);
   return (
     <>
-      {console.log("first", CustomerDetials)}
       <div
         data-typography="poppins"
         data-theme-version="light"
-        data-layout="vertical"
+        data-layout="horizontal"
         data-nav-headerbg="color_1"
         data-headerbg="color_1"
         data-sidebar-style="full"
@@ -35,13 +34,11 @@ function CustomerDetials() {
         data-container="wide"
         direction="ltr"
         data-primary="color_1"
-        id="main-wrapper"
-        className="show"
+        className="outlet_style"
       >
-        <SuperAdminHeader />
-        <SuperAdminSidebar />
+        <OutletManagerHeader />
+        <OutletManagerSidebar />
         <div className="content-body">
-          {/* row */}
           <div className="container-fluid">
             <div className="row">
               <div className="col-xl-12">
@@ -159,15 +156,13 @@ function CustomerDetials() {
 
                               <td>
                                 <span className="badge badge-warning">
-                                  {item.enquirystatuses.map(
-                                    (status) => status.status
-                                  )}
+                                  {item.status}
                                 </span>
                               </td>
                               <td>
                                 <button
                                   onClick={() => {
-                                    navigate("/EnquiryDetials", {
+                                    navigate("/OutletEnquiryDetials", {
                                       state: { data: item.id },
                                     });
                                   }}
@@ -197,4 +192,4 @@ function CustomerDetials() {
   );
 }
 
-export default CustomerDetials;
+export default OutletCustomerDetials;

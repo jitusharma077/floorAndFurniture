@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import Cookies from "js-cookie";
 import { PostData } from "../ApiHelper/ApiHelper";
@@ -6,10 +6,32 @@ import { useNavigate } from "react-router-dom";
 import { setLoggedInUserDetails } from "../Store/Actions/userAction";
 import { useDispatch } from "react-redux";
 import { toast } from "material-react-toastify";
+import { getToken } from "../../firebaseInit";
+import { Spinner } from "reactstrap";
 
 const Login = () => {
   const navigation = useNavigate();
   const dispatch = useDispatch();
+  const [isToken, setToken] = useState(false);
+  const [isTokenFound, setTokenFound] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    let token;
+    async function tokenFunc() {
+      token = await getToken(setTokenFound);
+      if (token) {
+        console.log("Token is by jitu", token);
+        setToken(token);
+      } else {
+        //   console.log("test")
+      }
+      return token;
+    }
+
+    tokenFunc();
+  }, [setTokenFound]);
+
   const {
     register,
     handleSubmit,
@@ -17,10 +39,12 @@ const Login = () => {
   } = useForm();
 
   const onSubmit = (data) => {
+    setIsLoading(true);
     console.log("errorrs", errors);
     let loginData = {
       email: data.email,
       password: data.password,
+      // fcm_token: isToken,
     };
     console.log(loginData);
     PostData("auth/login", loginData).then((response) => {
@@ -28,7 +52,9 @@ const Login = () => {
         console.log(response);
         Cookies.set("FandFToken", response.data.accessToken);
         Cookies.set("userType", response.data.type);
+        Cookies.set("userID", response.data.id);
         dispatch(setLoggedInUserDetails(response.data));
+        setIsLoading(false);
 
         let getType = response.data.type;
         switch (getType) {
@@ -43,11 +69,13 @@ const Login = () => {
               position: "top-right",
             });
             break;
-          case "outlet-manager":
+          case "outlet":
             toast.success(response.message, {
               position: "top-right",
             });
-            navigation("/OutletManagerDashboard");
+            navigation("/OutletManagerDashboard", {
+              state: { data: response.data.id },
+            });
             break;
 
           case "StitchingStoreManager":
@@ -83,7 +111,7 @@ const Login = () => {
                           className="d-inline-block mb-5"
                         >
                           <img
-                            src="/images/loginLogo.png"
+                            src="./images/loginLogo.png"
                             style={{ width: "200px" }}
                             alt="test"
                           />
@@ -156,10 +184,15 @@ const Login = () => {
                         </div>
                         <div className="text-center">
                           <button
+                            disabled={isLoading === true ? true : false}
                             type="submit"
                             className="btn btn-primary btn-block"
                           >
-                            Sign In
+                            {isLoading === true ? (
+                              <Spinner size="small" />
+                            ) : (
+                              "Login"
+                            )}
                           </button>
                         </div>
                       </form>

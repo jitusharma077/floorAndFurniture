@@ -4,15 +4,17 @@ import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import { GetDataWithToken, PostDataWithToken } from "../../ApiHelper/ApiHelper";
+import CreateOutletModal from "../../Common/CreateOutletModal";
 import SuperAdminHeader from "./Common/SuperAdminHeader";
 import SuperAdminSidebar from "./Common/SuperAdminSidebar";
 
-function AllOutlet() {
+function AllOutlet(props) {
   const navigate = useNavigate();
   const [modal, setModal] = useState(false);
+  const toggle = () => setModal(!modal);
 
   const [allOutlets, setAllOutlets] = useState([]);
-  const toggle = () => setModal(!modal);
+
   const [CallApi, setCallApi] = useState(true);
 
   useEffect(() => {
@@ -72,183 +74,105 @@ function AllOutlet() {
 
   return (
     <>
-      <SuperAdminHeader />
-      <SuperAdminSidebar />
-      <div className="content-body">
-        {/* row */}
-        <div className="container-fluid">
-          <div className="row">
-            <div className="col-12">
-              <div className="card">
-                <div className="card-header">
-                  <h4 className="card-title">All Outlets</h4>
-                  <button className="btn btn-primary" onClick={() => toggle()}>
-                    Add more outlet
-                  </button>
-                </div>
-                <div className="card-body">
-                  <div className="table-responsive">
-                    <table
-                      id="example4"
-                      className="table card-table display mb-4 shadow-hover table-responsive-lg"
-                      style={{ minWidth: "845px" }}
+      <div
+        data-typography="poppins"
+        data-theme-version="light"
+        data-layout="vertical"
+        data-nav-headerbg="color_1"
+        data-headerbg="color_1"
+        data-sidebar-style="full"
+        data-sibebarbg="color_1"
+        data-sidebar-position="fixed"
+        data-header-position="fixed"
+        data-container="wide"
+        direction="ltr"
+        data-primary="color_1"
+        id="main-wrapper"
+        className="show"
+      >
+        <SuperAdminHeader />
+        <SuperAdminSidebar />
+        <div className="content-body">
+          {/* row */}
+          <div className="container-fluid">
+            <div className="row">
+              <div className="col-12">
+                <div className="card">
+                  <div className="card-header">
+                    <h4 className="card-title">All Outlets</h4>
+                    {console.log("modal", modal)}
+                    <button
+                      className="btn btn-primary"
+                      onClick={() => setModal(!modal)}
                     >
-                      <thead>
-                        <tr>
-                          <th>Outlet id</th>
-                          <th>Outlet Name</th>
-                          <th>Outlet Address</th>
-                          <th>Outlet Mobile No.</th>
-                          <th>Email</th>
-                          <th>Action</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {allOutlets && allOutlets.length < 0 ? (
-                          <p>No data found</p>
-                        ) : (
-                          allOutlets.map((outlet, index) => {
-                            return (
-                              <tr key={index}>
-                                <td>{outlet.id}</td>
-                                <td>{outlet.outlet_name}</td>
-                                <td>{outlet.address}</td>
-                                <td>{outlet.outlet_phone}</td>
-                                <td>{outlet.outlet_email}</td>
+                      Add more outlet
+                    </button>
+                  </div>
+                  <div className="card-body">
+                    <div className="table-responsive">
+                      <table
+                        id="example4"
+                        className="table card-table display mb-4 shadow-hover table-responsive-lg"
+                        style={{ minWidth: "845px" }}
+                      >
+                        <thead>
+                          <tr>
+                            <th>Outlet id</th>
+                            <th>Outlet Name</th>
+                            <th>Outlet Address</th>
+                            <th>Outlet Mobile No.</th>
+                            <th>Email</th>
+                            <th>Action</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {allOutlets && allOutlets.length === 0 ? (
+                            <h3
+                              style={{
+                                position: "absolute",
+                                left: "40%",
+                                padding: "10px",
+                              }}
+                            >
+                              No data found
+                            </h3>
+                          ) : (
+                            allOutlets.map((outlet, index) => {
+                              return (
+                                <tr key={index}>
+                                  <td>{outlet.id}</td>
+                                  <td>{outlet.outlet_name}</td>
+                                  <td>{outlet.address}</td>
+                                  <td>{outlet.outlet_phone}</td>
+                                  <td>{outlet.outlet_email}</td>
 
-                                <td>
-                                  <button
-                                    onClick={() => {
-                                      navigate("/OutletDashboard", {
-                                        state: { data: outlet.id },
-                                      });
-                                    }}
-                                    className="btn btn-primary"
-                                  >
-                                    View
-                                  </button>
-                                </td>
-                              </tr>
-                            );
-                          })
-                        )}
-                      </tbody>
-                    </table>
+                                  <td>
+                                    <button
+                                      onClick={() => {
+                                        navigate("/OutletDashboard", {
+                                          state: { data: outlet.id },
+                                        });
+                                      }}
+                                      className="btn btn-primary"
+                                    >
+                                      View
+                                    </button>
+                                  </td>
+                                </tr>
+                              );
+                            })
+                          )}
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
+        <CreateOutletModal modal={modal} toggle={(val) => toggle(val)} />
       </div>
-      <Modal isOpen={modal} toggle={toggle}>
-        <ModalHeader toggle={toggle}>Add New Outlet</ModalHeader>
-        <ModalBody>
-          <form onSubmit={handleSubmit(CreateNewOutlet)}>
-            <div className="mb-3 row align-items-center">
-              <label className="col-sm-3 col-form-label" htmlFor="fnf">
-                Name
-              </label>
-              <div className="col-sm-9">
-                <input
-                  {...register("outlet_name", {
-                    required: "please enter outlet name",
-                  })}
-                  type="text"
-                  className="form-control"
-                  id="fnf"
-                  placeholder="outlet name"
-                />
-                <span className="text-danger">
-                  {errors.outlet_name && errors.outlet_name.message}
-                </span>
-              </div>
-            </div>
-            <div className="mb-3 row align-items-center">
-              <label className="col-sm-3 col-form-label" htmlFor="comment">
-                Address
-              </label>
-              <div className="col-sm-9">
-                <textarea
-                  {...register("outlet_address", {
-                    required: "please enter outlet address",
-                  })}
-                  className="form-control"
-                  rows={4}
-                  id="comment"
-                  placeholder="outlet address"
-                  defaultValue={""}
-                />
-                <span className="text-danger">
-                  {errors.outlet_address && errors.outlet_address.message}
-                </span>
-              </div>
-            </div>
-            <div className="mb-3 row align-items-center">
-              <label className="col-sm-3 col-form-label" htmlFor="fnf1">
-                Mobile No.
-              </label>
-              <div className="col-sm-9">
-                <input
-                  {...register("outlet_mobile_no", {
-                    required: "please enter outlet mobile no.",
-                  })}
-                  type="number"
-                  className="form-control"
-                  id="fnf1"
-                  placeholder="outlet mobile number"
-                />
-                <span className="text-danger">
-                  {errors.outlet_mobile_no && errors.outlet_mobile_no.message}
-                </span>
-              </div>
-            </div>
-            <div className="mb-3 row align-items-center">
-              <label className="col-sm-3 col-form-label" htmlFor="fnf2">
-                Email
-              </label>
-              <div className="col-sm-9">
-                <input
-                  {...register("outlet_email", {
-                    required: "please enter outlet email",
-                  })}
-                  type="email"
-                  className="form-control"
-                  id="fnf2"
-                  placeholder="outlet email"
-                />
-                <span className="text-danger">
-                  {errors.outlet_email && errors.outlet_email.message}
-                </span>
-              </div>
-            </div>
-            <div className="mb-3 row align-items-center">
-              <label className="col-sm-3 col-form-label" htmlFor="fnf2">
-                Outlet Password
-              </label>
-              <div className="col-sm-9">
-                <input
-                  {...register("outlet_password", {
-                    required: "please enter outlet password",
-                  })}
-                  type="password"
-                  className="form-control"
-                  id="fnf2"
-                  placeholder="outlet Password"
-                />
-                <span className="text-danger">
-                  {errors.outlet_password && errors.outlet_password.message}
-                </span>
-              </div>
-            </div>
-            <div className="form-buttons text-end">
-              <button className="btn btn-secondary me-3">Cancel</button>
-
-              <button className="btn btn-primary">Submit</button>
-            </div>
-          </form>
-        </ModalBody>
-      </Modal>
     </>
   );
 }

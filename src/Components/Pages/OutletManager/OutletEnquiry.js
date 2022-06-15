@@ -1,28 +1,29 @@
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 import { GetDataWithToken } from "../../ApiHelper/ApiHelper";
-import SuperAdminHeader from "./Common/SuperAdminHeader";
-import SuperAdminSidebar from "./Common/SuperAdminSidebar";
+import OutletManagerHeader from "./OutletManagerHeader";
+import OutletManagerSidebar from "./OutletManagerSidebar";
 
-function AllEnquiry() {
+function OutletEnquiry() {
   const navigate = useNavigate();
-  const [AllEnquiry, setAllEnquiry] = useState([]);
+  const [AllOutletEnquiry, setAllOutletEnquiry] = useState([]);
   useEffect(() => {
-    GetDataWithToken("superadmin/get-enquiries").then((response) => {
+    GetDataWithToken(
+      `superadmin/get-outlet-enquiry/${Cookies.get("userID")}`
+    ).then((response) => {
       if (response.status === true) {
-        setAllEnquiry(response.data);
+        setAllOutletEnquiry(response.data);
       }
     });
-  }, [""]);
-
+  }, []);
   return (
     <>
-      {console.log("allenquiry", AllEnquiry)}
       <div
         data-typography="poppins"
         data-theme-version="light"
-        data-layout="vertical"
+        data-layout="horizontal"
         data-nav-headerbg="color_1"
         data-headerbg="color_1"
         data-sidebar-style="full"
@@ -32,12 +33,10 @@ function AllEnquiry() {
         data-container="wide"
         direction="ltr"
         data-primary="color_1"
-        id="main-wrapper"
-        className="show"
+        className="outlet_style"
       >
-        <SuperAdminHeader />
-        <SuperAdminSidebar />
-
+        <OutletManagerHeader />
+        <OutletManagerSidebar />
         <div className="content-body">
           {/* row */}
           <div className="container-fluid">
@@ -45,10 +44,10 @@ function AllEnquiry() {
               <div className="col-12">
                 <div className="card">
                   <div className="card-header">
-                    <h4 className="card-title">All Enquiry</h4>
+                    <h4 className="card-title">All Customers</h4>
                   </div>
                   <div className="card-body">
-                    <div className="table-responsive">
+                    <div className="table card-table display mb-4 shadow-hover table-responsive-lg">
                       <table
                         id="example4"
                         className="table card-table display mb-4 shadow-hover table-responsive-lg"
@@ -59,38 +58,30 @@ function AllEnquiry() {
                             <th>Enquiry number</th>
                             <th>Customer Name</th>
                             <th>Mobile No.</th>
-
                             <th>Status</th>
                             <th>Date</th>
                             <th>Action</th>
                           </tr>
                         </thead>
                         <tbody>
-                          {/* {console.log("length", AllEnquiry.length)} */}
-                          {AllEnquiry && AllEnquiry.length === 0 ? (
-                            <h3
-                              style={{
-                                position: "absolute",
-                                left: "40%",
-                                padding: "10px",
-                              }}
-                            >
-                              No data found
-                            </h3>
+                          {console.log("length", AllOutletEnquiry)}
+
+                          {AllOutletEnquiry && AllOutletEnquiry.length < 0 ? (
+                            <p>No Enquiry Found</p>
                           ) : (
-                            AllEnquiry.map((data, index) => (
+                            AllOutletEnquiry.map((data, index) => (
                               <tr>
                                 <>
                                   {" "}
-                                  <th>{data.id}</th>
-                                  <th>
+                                  <td>{data.id}</td>
+                                  <td>
                                     {data?.customer?.firstName}{" "}
                                     {data?.customer?.lastName}
-                                  </th>
-                                  <th>{data?.customer?.primary_phone}</th>
+                                  </td>
+                                  <td>{data?.customer?.primary_phone}</td>
                                   <td>
                                     <span className="badge light badge-success">
-                                      {data.status}
+                                      {data?.status}
                                     </span>
                                   </td>
                                   <td>
@@ -100,7 +91,7 @@ function AllEnquiry() {
                                   <td>
                                     <button
                                       onClick={() => {
-                                        navigate("/EnquiryDetials", {
+                                        navigate("/OutletEnquiryDetials", {
                                           state: { data: data.id },
                                         });
                                       }}
@@ -133,4 +124,4 @@ function AllEnquiry() {
   );
 }
 
-export default AllEnquiry;
+export default OutletEnquiry;

@@ -34,6 +34,19 @@ import AddNewUser from "../Pages/SuperAdmin/AddNewUser";
 import DataTablebasic from "../Pages/SuperAdmin/Common/DataTablebasic";
 import Error from "../Common/Error";
 import { useSelector } from "react-redux";
+import Search from "../Pages/SuperAdmin/Search";
+import StaffDetials from "../Pages/SuperAdmin/StaffDetials";
+import CreateTimeSlot from "../Pages/SuperAdmin/CreateTimeSlot";
+import CustomerRequestedTimeSlot from "../Pages/SuperAdmin/CustomerRequestedTimeSlot";
+import CustomerSchedule from "../Pages/Customer/CustomerSchedule";
+import EditEnquiry from "../Pages/SuperAdmin/EditEnquiry";
+import OutletCustomers from "../Pages/OutletManager/OutletCustomers";
+import OutletEnquiry from "../Pages/OutletManager/OutletEnquiry";
+import OutletIcs from "../Pages/OutletManager/OutletIcs";
+import AddNewIc from "../Pages/OutletManager/AddNewIc";
+import OutletEnquiryDetials from "../Pages/OutletManager/OutletEnquiryDetials";
+import OutletCustomerDetials from "../Pages/OutletManager/OutletCustomerDetials";
+import OutletStaffDetials from "../Pages/OutletManager/OutletStaffDetials";
 
 const CommonRoutes = () => {
   const [type, setType] = useState({});
@@ -77,6 +90,14 @@ const CommonRoutes = () => {
             <Route path="Add-new-user" element={<AddNewUser />} />
             <Route path="datatable" element={<DataTablebasic />} />
             <Route path="all-schedule" element={<AllSchedule />} />
+            <Route path="Search" element={<Search />} />
+            <Route path="Staff-detials" element={<StaffDetials />} />
+            <Route path="create-time-slot" element={<CreateTimeSlot />} />
+            <Route
+              path="Customer-requested-time-slot"
+              element={<CustomerRequestedTimeSlot />}
+            />
+            <Route path="edit-enquiry" element={<EditEnquiry />} />
           </>
         )}
 
@@ -90,10 +111,25 @@ const CommonRoutes = () => {
         )}
 
         {type === OutletManager && (
-          <Route
-            path="/OutletManagerDashboard"
-            element={<OutletMangerDashboard />}
-          />
+          <>
+            <Route
+              path="/OutletManagerDashboard"
+              element={<OutletMangerDashboard />}
+            />
+            <Route path="outletCustomers" element={<OutletCustomers />} />
+            <Route path="outletEnquiry" element={<OutletEnquiry />} />
+            <Route path="outletIcs" element={<OutletIcs />} />
+            <Route path="addNewIcs" element={<AddNewIc />} />
+            <Route
+              path="OutletEnquiryDetials"
+              element={<OutletEnquiryDetials />}
+            />
+            <Route
+              path="OutletCustomerDetials"
+              element={<OutletCustomerDetials />}
+            />
+            <Route path="OutletStaffDetials" element={<OutletStaffDetials />} />
+          </>
         )}
 
         {type === StitchingStoreManager && (
@@ -104,6 +140,7 @@ const CommonRoutes = () => {
         )}
 
         <Route path="*" element={<Error />} />
+        <Route path="customer-schedule/:url" element={<CustomerSchedule />} />
       </Routes>
     </BrowserRouter>
   );

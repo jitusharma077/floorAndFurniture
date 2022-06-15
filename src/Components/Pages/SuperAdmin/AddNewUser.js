@@ -67,151 +67,174 @@ function AddNewUser() {
   return (
     <>
       {console.debug("roles", allRoals)}
-      <SuperAdminHeader />
-      <SuperAdminSidebar />
-      <div className="content-body">
-        {/* row */}
-        <div className="container-fluid">
-          <div className="row">
-            <div className="col-xl-12">
-              <div className="card">
-                <div className="card-header">
-                  <h4 className="card-title">Add New User</h4>
-                </div>
-                <div className="card-body">
-                  <div className="basic-form">
-                    <form onSubmit={handleSubmit(CreateNewUser)}>
-                      <select
-                        {...register("role", {
-                          required: "please select role",
-                        })}
-                        className="form-control wide mb-3"
-                        onChange={(e) => {
-                          checkSalesPerson(e.target.value);
-                        }}
-                      >
-                        <option value="">Select a Category</option>
-                        {allRoals &&
-                          allRoals.map((item, index) => {
-                            return <option value={item}>{item}</option>;
+      <div
+        data-typography="poppins"
+        data-theme-version="light"
+        data-layout="vertical"
+        data-nav-headerbg="color_1"
+        data-headerbg="color_1"
+        data-sidebar-style="full"
+        data-sibebarbg="color_1"
+        data-sidebar-position="fixed"
+        data-header-position="fixed"
+        data-container="wide"
+        direction="ltr"
+        data-primary="color_1"
+        id="main-wrapper"
+        className="show"
+      >
+        <SuperAdminHeader />
+        <SuperAdminSidebar />
+        <div className="content-body">
+          {/* row */}
+          <div className="container-fluid">
+            <div className="row">
+              <div className="col-xl-12">
+                <div className="card">
+                  <div className="card-header">
+                    <h4 className="card-title">Add New User</h4>
+                  </div>
+                  <div className="card-body">
+                    <div className="basic-form">
+                      <form onSubmit={handleSubmit(CreateNewUser)}>
+                        <select
+                          {...register("role", {
+                            required: "please select role",
                           })}
-                      </select>
-                      <span className="text-danger">
-                        {errors.role && errors.role.message}
-                      </span>
-                      <div className="row">
-                        <div className="col-lg-12">
-                          {salesPerson === true && (
-                            <div className="col-lg-6">
-                              <label className="form-label">
-                                Enter Outlet id
-                              </label>
-                              <input
-                                {...register("outlet_id", {
-                                  required: "please Enter Outlet_id",
-                                  maxLength: 80,
-                                })}
-                                autocomplete="off"
-                                type="text"
-                                className="form-control input-default"
-                              />
-                              <span className="font-danger">
-                                {errors.outlet_id && errors.outlet_id.message}
-                              </span>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-
-                      <div className="mb-3 row">
-                        <div className="col-lg-6">
-                          <label className="form-label">Enter First Name</label>
-                          <input
-                            {...register("firstName", {
-                              required: "please Enter First Name",
-                              maxLength: 80,
+                          className="form-control wide mb-3"
+                          onChange={(e) => {
+                            checkSalesPerson(e.target.value);
+                          }}
+                        >
+                          <option value="">Select a Category</option>
+                          {allRoals &&
+                            allRoals.map((item, index) => {
+                              return <option value={item}>{item}</option>;
                             })}
-                            autocomplete="off"
-                            type="text"
-                            className="form-control input-default"
-                          />
-                          <span className="font-danger">
-                            {errors.firstName && errors.firstName.message}
-                          </span>
-                        </div>
-                        <div className="col-lg-6">
-                          <label className="form-label">Enter Last Name</label>
-                          <input
-                            {...register("lastName", {
-                              required: "please Enter Last Name",
-                              maxLength: 80,
-                            })}
-                            autocomplete="off"
-                            type="text"
-                            className="form-control input-default"
-                          />
-                          <span className="font-danger">
-                            {errors.lastName && errors.lastName.message}
-                          </span>
-                        </div>
-                      </div>
-                      <div className="mb-3 row">
-                        <div className="col-lg-6">
-                          <label className="form-label">Enter Email</label>
-                          <input
-                            {...register("email", {
-                              required: "please Enter Email",
-                              maxLength: 80,
-                            })}
-                            autocomplete="off"
-                            type="email"
-                            className="form-control input-default"
-                          />
-                          <span className="font-danger">
-                            {errors.email && errors.email.message}
-                          </span>
+                        </select>
+                        <span className="text-danger">
+                          {errors.role && errors.role.message}
+                        </span>
+                        <div className="row">
+                          <div className="col-lg-12">
+                            {salesPerson === true && (
+                              <div className="col-lg-6">
+                                <label className="form-label">
+                                  Enter Outlet id
+                                </label>
+                                <input
+                                  {...register("outlet_id", {
+                                    required: "please Enter Outlet_id",
+                                    maxLength: 80,
+                                  })}
+                                  autocomplete="off"
+                                  type="text"
+                                  className="form-control input-default"
+                                />
+                                <span className="font-danger">
+                                  {errors.outlet_id && errors.outlet_id.message}
+                                </span>
+                              </div>
+                            )}
+                          </div>
                         </div>
 
-                        <div className="col-lg-6">
-                          <label className="form-label">
-                            Enter Phone Number
-                          </label>
-                          <input
-                            {...register("phoneNumber", {
-                              required: "please Enter Phone Number",
-                              maxLength: 80,
-                              // pattern: /^[A-Za-z]+$/i,
-                            })}
-                            autocomplete="off"
-                            type="number"
-                            className="form-control input-default"
-                          />
-                          <span className="font-danger">
-                            {errors.phoneNumber && errors.phoneNumber.message}
-                          </span>
+                        <div className="mb-3 row">
+                          <div className="col-lg-6">
+                            <label className="form-label">
+                              Enter First Name
+                            </label>
+                            <input
+                              {...register("firstName", {
+                                required: "please Enter First Name",
+                                maxLength: 80,
+                              })}
+                              autocomplete="off"
+                              type="text"
+                              className="form-control input-default"
+                            />
+                            <span className="font-danger">
+                              {errors.firstName && errors.firstName.message}
+                            </span>
+                          </div>
+                          <div className="col-lg-6">
+                            <label className="form-label">
+                              Enter Last Name
+                            </label>
+                            <input
+                              {...register("lastName", {
+                                required: "please Enter Last Name",
+                                maxLength: 80,
+                              })}
+                              autocomplete="off"
+                              type="text"
+                              className="form-control input-default"
+                            />
+                            <span className="font-danger">
+                              {errors.lastName && errors.lastName.message}
+                            </span>
+                          </div>
                         </div>
-                      </div>
-                      <div className="mb-3 row">
-                        <div className="col-lg-12">
-                          <label className="form-label">Enter Password</label>
-                          <input
-                            {...register("password", {
-                              required: "please Enter Password",
-                              maxLength: 80,
-                            })}
-                            type="password"
-                            className="form-control input-default"
-                          />
-                          <span className="font-danger">
-                            {errors.password && errors.password.message}
-                          </span>
+                        <div className="mb-3 row">
+                          <div className="col-lg-6">
+                            <label className="form-label">Enter Email</label>
+                            <input
+                              {...register("email", {
+                                required: "please Enter Email",
+                                maxLength: 80,
+                              })}
+                              autocomplete="off"
+                              type="email"
+                              className="form-control input-default"
+                            />
+                            <span className="font-danger">
+                              {errors.email && errors.email.message}
+                            </span>
+                          </div>
+
+                          <div className="col-lg-6">
+                            <label className="form-label">
+                              Enter Phone Number
+                            </label>
+                            <input
+                              {...register("phoneNumber", {
+                                required: "please Enter Phone Number",
+                                maxLength: 80,
+                                // pattern: /^[A-Za-z]+$/i,
+                              })}
+                              autocomplete="off"
+                              type="number"
+                              className="form-control input-default"
+                            />
+                            <span className="font-danger">
+                              {errors.phoneNumber && errors.phoneNumber.message}
+                            </span>
+                          </div>
                         </div>
-                      </div>
-                      <div className="buttons text-end">
-                        <button className="btn btn-warning  me-2">Back</button>
-                        <button className="btn btn-primary ">Submit</button>
-                      </div>
-                    </form>
+                        <div className="mb-3 row">
+                          <div className="col-lg-12">
+                            <label className="form-label">Enter Password</label>
+                            <input
+                              {...register("password", {
+                                required: "please Enter Password",
+                                maxLength: 80,
+                              })}
+                              type="password"
+                              className="form-control input-default"
+                            />
+                            <span className="font-danger">
+                              {errors.password && errors.password.message}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="buttons text-end">
+                          <button className="btn btn-warning  me-2">
+                            Back
+                          </button>
+                          <button className="btn btn-primary ">Submit</button>
+                        </div>
+                      </form>
+                    </div>
                   </div>
                 </div>
               </div>

@@ -20,7 +20,7 @@ store.subscribe(
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <ToastContainer autoClose={3000} hideProgressBar closeOnClick rtl={false} />
+    <ToastContainer autoClose={2000} hideProgressBar closeOnClick rtl={false} />
     <Provider store={store}>
       <App />
     </Provider>
