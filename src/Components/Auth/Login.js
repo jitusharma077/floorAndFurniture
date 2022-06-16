@@ -44,7 +44,7 @@ const Login = () => {
     let loginData = {
       email: data.email,
       password: data.password,
-      // fcm_token: isToken,
+      fcm_token: isToken,
     };
     console.log(loginData);
     PostData("auth/login", loginData).then((response) => {
@@ -59,6 +59,7 @@ const Login = () => {
         let getType = response.data.type;
         switch (getType) {
           case "super-admin":
+            console.log("first toastt");
             toast.success(response.message, {
               position: "top-right",
             });

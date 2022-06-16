@@ -80,7 +80,13 @@ function OutletEnquiry() {
                                   </td>
                                   <td>{data?.customer?.primary_phone}</td>
                                   <td>
-                                    <span className="badge light badge-success">
+                                    <span
+                                      className={
+                                        data?.status === "inprogress"
+                                          ? "badge  badge-primary"
+                                          : "badge badge-dark"
+                                      }
+                                    >
                                       {data?.status}
                                     </span>
                                   </td>

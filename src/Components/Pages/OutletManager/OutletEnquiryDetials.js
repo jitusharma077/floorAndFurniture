@@ -960,7 +960,7 @@ function OutletEnquiryDetials() {
                               <li className="list-group-item d-flex justify-content-between text-white">
                                 <span className="mb-0">Measurer Name :</span>
                                 <Link to={"/"}>
-                                  <h5 className="text-blue">
+                                  <h5 className="text-white">
                                     {
                                       EnquiryDetials?.EnquirySchedule
                                         ?.scheduleperson?.firstName

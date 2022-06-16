@@ -21,10 +21,11 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <ToastContainer autoClose={2000} hideProgressBar closeOnClick rtl={false} />
+    {console.log("store")}
     <Provider store={store}>
       <App />
     </Provider>
-    <ToastContainer />
+    {/* <ToastContainer /> */}
   </React.StrictMode>
 );
 reportWebVitals();

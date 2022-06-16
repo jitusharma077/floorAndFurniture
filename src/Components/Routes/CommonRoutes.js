@@ -47,21 +47,21 @@ import AddNewIc from "../Pages/OutletManager/AddNewIc";
 import OutletEnquiryDetials from "../Pages/OutletManager/OutletEnquiryDetials";
 import OutletCustomerDetials from "../Pages/OutletManager/OutletCustomerDetials";
 import OutletStaffDetials from "../Pages/OutletManager/OutletStaffDetials";
+import AllNotification from "../Pages/SuperAdmin/Common/AllNotification";
+import OutletSearch from "../Pages/OutletManager/OutletSearch";
 
 const CommonRoutes = () => {
-  const [type, setType] = useState({});
+  // const [type, setType] = useState({});
   const userDetails = useSelector((store) => store?.user?.userDetails?.type);
 
-  useEffect(() => {
-    setType(userDetails);
-  }, [userDetails]);
+  // useEffect(() => {
+  //   setType(userDetails);
+  // }, [userDetails]);
   return (
     <BrowserRouter basename={process.env.PUBLIC_URL}>
       <Routes>
-        {console.log("type", type)}
-
         <Route path="/" element={<Login />} />
-        {type === superAdmin && (
+        {userDetails === superAdmin && (
           <>
             <Route path="/SuperAdminDashboard" element={<Dashboard />} />
             <Route
@@ -98,10 +98,11 @@ const CommonRoutes = () => {
               element={<CustomerRequestedTimeSlot />}
             />
             <Route path="edit-enquiry" element={<EditEnquiry />} />
+            <Route path="Notification" element={<AllNotification />} />
           </>
         )}
 
-        {type === DispatchTeam && (
+        {userDetails === DispatchTeam && (
           <>
             <Route
               path="/DispatchTeamDashboard"
@@ -110,7 +111,7 @@ const CommonRoutes = () => {
           </>
         )}
 
-        {type === OutletManager && (
+        {userDetails === OutletManager && (
           <>
             <Route
               path="/OutletManagerDashboard"
@@ -129,10 +130,11 @@ const CommonRoutes = () => {
               element={<OutletCustomerDetials />}
             />
             <Route path="OutletStaffDetials" element={<OutletStaffDetials />} />
+            <Route path="OutletSearch" element={<OutletSearch />} />
           </>
         )}
 
-        {type === StitchingStoreManager && (
+        {userDetails === StitchingStoreManager && (
           <Route
             path="/StitchingStoreManagerDashboard"
             element={<StitchingStoreManagerDashboard />}

@@ -19,7 +19,9 @@ function OutletManagerHeader() {
         Cookies.remove("userID");
         dispatch(setLoggedInUserDetails({}));
         navigate("/");
-        toast.success(response.message);
+        toast.success(response.message, {
+          position: toast.POSITION.TOP_CENTER,
+        });
       }
     });
   };
@@ -29,7 +31,7 @@ function OutletManagerHeader() {
 
       {/*---- Nav Header Start -----*/}
       <div className="nav-header">
-        <Link to={"/SuperAdminDashboard"} className="brand-logo">
+        <Link to={"/OutletManagerDashboard"} className="brand-logo">
           <img
             alt="tesr"
             src="./images/f&f-logo.png"
@@ -68,7 +70,7 @@ function OutletManagerHeader() {
             <div className="collapse navbar-collapse justify-content-end">
               <ul className="navbar-nav header-right">
                 <li className="nav-item">
-                  <Link to={"/Search"} className="btn btn-primary">
+                  <Link to={"/OutletSearch"} className="btn btn-primary">
                     Search
                   </Link>
                 </li>

@@ -2,7 +2,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 
 // Api Url's
-const serverUrl = "http://168.235.81.206:6696/api/v1/";
+const serverUrl = "https://fapi.zidni.academy/api/v1/";
 
 // Api's Function
 export function PostData(url, data) {

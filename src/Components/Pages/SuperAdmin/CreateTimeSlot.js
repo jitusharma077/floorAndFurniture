@@ -31,7 +31,9 @@ function CreateTimeSlot() {
     PostDataWithToken(`superadmin/create-schedule/`, formValues).then(
       (response) => {
         if (response.status === true) {
-          toast.success(response.message);
+          toast.success(response.message, {
+            position: toast.POSITION.TOP_CENTER,
+          });
           setformValues([{ Stime: "", Etime: "" }]);
         } else {
           toast.error(response.data.message);

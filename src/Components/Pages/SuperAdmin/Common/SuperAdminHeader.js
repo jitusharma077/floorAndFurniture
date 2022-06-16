@@ -1,15 +1,18 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { setLoggedInUserDetails } from "../../../Store/Actions/userAction";
 import Cookies from "js-cookie";
 import { GetDataWithToken } from "../../../ApiHelper/ApiHelper";
 import { toast } from "material-react-toastify";
+import moment from "moment";
 
 function SuperAdminHeader() {
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
+
+  const [AllNotification, setAllNotification] = useState([]);
 
   const logout = () => {
     GetDataWithToken("auth/logout/user").then((response) => {
@@ -19,7 +22,9 @@ function SuperAdminHeader() {
         Cookies.remove("userID");
         dispatch(setLoggedInUserDetails({}));
         navigate("/");
-        toast.success(response.message);
+        toast.success(response.message, {
+          position: toast.POSITION.TOP_CENTER,
+        });
       }
     });
   };
@@ -30,6 +35,16 @@ function SuperAdminHeader() {
   //
   //     }
   //   )}
+
+  useEffect(() => {
+    GetDataWithToken("superadmin/get-notification/", "").then((response) => {
+      if (response.status === true) {
+        setAllNotification(response.data);
+        console.log("first", response.data);
+      }
+    });
+    // console.log("first useEffect");
+  }, []);
 
   return (
     <>
@@ -112,63 +127,39 @@ function SuperAdminHeader() {
                       </g>
                     </svg>
                     <span className="badge light text-white bg-primary rounded-circle">
-                      4
+                      {AllNotification.length}
                     </span>
                   </a>
                   <div className="dropdown-menu dropdown-menu-end">
                     <div
                       id="DZ_W_Notification1"
                       className="widget-media dlab-scroll p-3 ps"
-                      style={{ height: "380px" }}
+                      style={{ height: "380px", overflow: "scroll !important" }}
                     >
                       <ul className="timeline">
-                        <li>
-                          <div className="timeline-panel">
-                            <div className="media me-2">
-                              <img
-                                alt="test"
-                                width={50}
-                                src="images/avatar/1.jpg"
-                              />
-                            </div>
-                            <div className="media-body">
-                              <h6 className="mb-1">
-                                Dr sultads Submits an Enquiry
-                              </h6>
-                              <small className="d-block">
-                                29 July 2020 - 02:26 PM
-                              </small>
-                            </div>
-                          </div>
-                        </li>
-                        <li>
-                          <div className="timeline-panel">
-                            <div className="media me-2 media-info">KG</div>
-                            <div className="media-body">
-                              <h6 className="mb-1">
-                                Resport created successfully
-                              </h6>
-                              <small className="d-block">
-                                29 July 2020 - 02:26 PM
-                              </small>
-                            </div>
-                          </div>
-                        </li>
-                        <li>
-                          <div className="timeline-panel">
-                            <div className="media me-2 media-success">
-                              <i className="fa fa-home" />
-                            </div>
-                            <div className="media-body">
-                              <h6 className="mb-1">
-                                Reminder : Followup Time!
-                              </h6>
-                              <small className="d-block">
-                                29 July 2020 - 02:26 PM
-                              </small>
-                            </div>
-                          </div>
-                        </li>
+                        {AllNotification && AllNotification.length === 0
+                          ? "No Notification Found"
+                          : AllNotification.slice(0, 4).map((item, index) => {
+                              return (
+                                <li>
+                                  <div className="timeline-panel">
+                                    <div className="media me-2">
+                                      <img
+                                        alt="test"
+                                        width={50}
+                                        src="./images/logo.png"
+                                      />
+                                    </div>
+                                    <div className="media-body">
+                                      <h6 className="mb-1"> {item.message}</h6>
+                                      <small className="d-block">
+                                        {moment(item.created_at).format("LLL")}
+                                      </small>
+                                    </div>
+                                  </div>
+                                </li>
+                              );
+                            })}
                       </ul>
                       <div
                         className="ps__rail-x"
@@ -191,12 +182,9 @@ function SuperAdminHeader() {
                         />
                       </div>
                     </div>
-                    <a
-                      className="all-notification"
-                      href="all-notification.html"
-                    >
+                    <Link className="all-notification" to={"/Notification"}>
                       See all notifications <i className="ti-arrow-end" />
-                    </a>
+                    </Link>
                   </div>
                 </li>
                 <li className="nav-item dropdown header-profile">
@@ -206,7 +194,7 @@ function SuperAdminHeader() {
                     role="button"
                     data-bs-toggle="dropdown"
                   >
-                    <img src="images/profile/pic1.jpg" width={20} />
+                    <img src="./images/logo.png" width={20} />
                   </a>
                   <div className="dropdown-menu dropdown-menu-end">
                     <button

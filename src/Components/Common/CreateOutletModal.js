@@ -27,7 +27,7 @@ function CreateOutletModal({ modal, toggle }) {
       if (response.status === true) {
         console.log("first", response.message);
         toast.success(response.message, {
-          position: "top-right",
+          position: toast.POSITION.TOP_CENTER,
         });
         reset({
           outlet_name: "",

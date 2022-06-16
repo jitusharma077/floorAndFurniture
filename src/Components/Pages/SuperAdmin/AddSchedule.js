@@ -1,8 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { GetDataWithToken } from "../../ApiHelper/ApiHelper";
 import SuperAdminHeader from "./Common/SuperAdminHeader";
 import SuperAdminSidebar from "./Common/SuperAdminSidebar";
 
 function AddSchedule() {
+  useEffect(() => {
+    GetDataWithToken("");
+  }, [""]);
   return (
     <>
       <div

@@ -1,3 +1,4 @@
+import { toast } from "material-react-toastify";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
@@ -12,7 +13,7 @@ function EnquiryDetials() {
   const [EnquiryDetials, setEnquiryDetials] = useState({});
 
   useEffect(() => {
-    console.log("location", location.state.data);
+    console.log("location", location);
     setEnquiryId(location.state.data);
     GetDataWithToken(`superadmin/get-enquiry/${location.state.data}`).then(
       (response) => {
@@ -23,6 +24,18 @@ function EnquiryDetials() {
       }
     );
   }, [""]);
+  const sendEmail = () => {
+    GetDataWithToken(`superadmin/send-mail-customer/${enquiryId}`).then(
+      (response) => {
+        if (response.status === true) {
+          console.log("response", response);
+          toast.success("Mail Sent Successfully", {
+            position: toast.POSITION.TOP_CENTER,
+          });
+        }
+      }
+    );
+  };
 
   return (
     <>
@@ -55,6 +68,15 @@ function EnquiryDetials() {
                     <h4 className="card-title">
                       Enquiry No. {EnquiryDetials?.id}
                     </h4>
+                    <button
+                      onClick={() => {
+                        sendEmail();
+                      }}
+                      className="btn btn-primary"
+                    >
+                      {" "}
+                      Send Email
+                    </button>
                     <Link
                       to={"/edit-enquiry"}
                       className="btn btn-primary btn-xs sharp me-1"
@@ -963,7 +985,7 @@ function EnquiryDetials() {
                               <li className="list-group-item d-flex justify-content-between text-white">
                                 <span className="mb-0">Measurer Name :</span>
                                 <Link to={"/"}>
-                                  <h5 className="text-blue">
+                                  <h5 className="text-white">
                                     {
                                       EnquiryDetials?.EnquirySchedule
                                         ?.scheduleperson?.firstName

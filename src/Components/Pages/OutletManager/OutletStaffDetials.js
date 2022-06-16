@@ -54,7 +54,7 @@ function OutletStaffDetials() {
         if (response.status === true) {
           console.log("first", response.message);
           toast.success(response.message, {
-            position: "top-right",
+            position: toast.POSITION.TOP_CENTER,
           });
         } else {
           toast.error(response.data.message, {
@@ -614,9 +614,7 @@ function OutletStaffDetials() {
                                     <th>{data?.customer?.primary_phone}</th>
                                     <td>
                                       <span className="badge light badge-success">
-                                        {data?.enquirystatuses.map(
-                                          (status) => status.status
-                                        )}
+                                        {data?.status}
                                       </span>
                                     </td>
 

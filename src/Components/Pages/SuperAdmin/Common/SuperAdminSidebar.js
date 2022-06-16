@@ -47,12 +47,12 @@ function SuperAdminSidebar() {
                 <span className="nav-text">Enquiry</span>
               </Link>
             </li>
-            <li>
+            {/* <li>
               <Link to={"/all-invoice"} className aria-expanded="false">
                 <i className="flaticon-022-copy" />
                 <span className="nav-text">Invoice</span>
               </Link>
-            </li>
+            </li> */}
             <li>
               <a
                 className="has-arrow"
@@ -71,9 +71,9 @@ function SuperAdminSidebar() {
                     Customer requested time slot
                   </Link>
                 </li>
-                <li>
+                {/* <li>
                   <Link to={"/all-schedule"}>All Schedules</Link>
-                </li>
+                </li> */}
                 <li>
                   <Link to={"/add-schedule"}>Schedule Enquiry</Link>
                 </li>
@@ -92,9 +92,9 @@ function SuperAdminSidebar() {
                 <span className="nav-text">Users</span>
               </a>
               <ul aria-expanded="false">
-                <li>
+                {/* <li>
                   <Link to={"/all-outlet-manager"}>All Outlet Manager</Link>
-                </li>
+                </li> */}
                 <li>
                   <Link to={"/all-sales-person"}>All Sales Person </Link>
                 </li>
@@ -118,7 +118,7 @@ function SuperAdminSidebar() {
                 </li>
               </ul>
             </li>
-            <li>
+            {/* <li>
               <a
                 href="Stitching_Manager_dashboard.html"
                 className
@@ -127,8 +127,8 @@ function SuperAdminSidebar() {
                 <i className="icon-shuffle icons fw-bold" />
                 <span className="nav-text">Stiching Manager</span>
               </a>
-            </li>
-            <li>
+            </li> */}
+            {/* <li>
               <a
                 href="Dispatch_Department_dashboard.html"
                 className
@@ -137,7 +137,7 @@ function SuperAdminSidebar() {
                 <i className="icon-social-dropbox icons fw-bold" />
                 <span className="nav-text">Dispatch Manager</span>
               </a>
-            </li>
+            </li> */}
           </ul>
         </div>
       </div>

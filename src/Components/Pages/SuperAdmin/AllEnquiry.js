@@ -89,8 +89,14 @@ function AllEnquiry() {
                                   </th>
                                   <th>{data?.customer?.primary_phone}</th>
                                   <td>
-                                    <span className="badge light badge-success">
-                                      {data.status}
+                                    <span
+                                      className={
+                                        data?.status === "inprogress"
+                                          ? "badge  badge-primary"
+                                          : "badge badge-dark"
+                                      }
+                                    >
+                                      {data?.status}
                                     </span>
                                   </td>
                                   <td>

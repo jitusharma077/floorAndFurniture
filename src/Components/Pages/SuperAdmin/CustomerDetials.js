@@ -159,9 +159,7 @@ function CustomerDetials() {
 
                               <td>
                                 <span className="badge badge-warning">
-                                  {item.enquirystatuses.map(
-                                    (status) => status.status
-                                  )}
+                                  {item.status}
                                 </span>
                               </td>
                               <td>
