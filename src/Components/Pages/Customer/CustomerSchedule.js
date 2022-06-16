@@ -61,6 +61,14 @@ function CustomerSchedule() {
         toast.success("Schedule Confirmed Successfully", {
           position: toast.POSITION.TOP_CENTER,
         });
+        setTimeout(() => {
+          window.close();
+        }, 5000);
+      } else {
+        console.log("res", response);
+        toast.error(response?.data?.message, {
+          position: toast.POSITION.TOP_CENTER,
+        });
       }
     });
   };
