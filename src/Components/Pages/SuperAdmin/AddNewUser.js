@@ -8,6 +8,7 @@ import SuperAdminSidebar from "./Common/SuperAdminSidebar";
 function AddNewUser() {
   const [allRoals, setAllRoals] = useState();
   const [salesPerson, setSalesPerson] = useState(false);
+  const [AllOutlets, setAllOutlets] = useState([]);
 
   useEffect(() => {
     GetDataWithToken("superadmin/get-roles").then((response) => {
@@ -15,7 +16,12 @@ function AddNewUser() {
         setAllRoals(response.data);
       }
     });
-  }, [""]);
+    GetDataWithToken("superadmin/get-outlet").then((response) => {
+      if (response.status === true) {
+        setAllOutlets(response.data);
+      }
+    });
+  }, []);
 
   const {
     register,
@@ -34,6 +40,7 @@ function AddNewUser() {
     formData.append("type", data.role);
     formData.append("phone", data.phoneNumber);
     formData.append("outletId", data.outlet_id);
+    formData.append("IcId", data.ic_id);
     PostDataWithToken("superadmin/create-user", formData).then((response) => {
       if (response.status === true) {
         console.log("first", response.message);
@@ -47,6 +54,7 @@ function AddNewUser() {
           password: "",
           role: "",
           phoneNumber: "",
+          ic_id: "",
         });
       } else {
         toast.error(response.data.message, {
@@ -118,23 +126,55 @@ function AddNewUser() {
                         <div className="row">
                           <div className="col-lg-12">
                             {salesPerson === true && (
-                              <div className="col-lg-6">
-                                <label className="form-label">
-                                  Enter Outlet id
-                                </label>
-                                <input
-                                  {...register("outlet_id", {
-                                    required: "please Enter Outlet_id",
-                                    maxLength: 80,
-                                  })}
-                                  autocomplete="off"
-                                  type="text"
-                                  className="form-control input-default"
-                                />
-                                <span className="font-danger">
-                                  {errors.outlet_id && errors.outlet_id.message}
-                                </span>
-                              </div>
+                              <>
+                                <div className="row">
+                                  <div className="col-lg-6">
+                                    <label className="form-label">
+                                      Select Outlet
+                                    </label>
+                                    <select
+                                      {...register("outlet_id", {
+                                        required: "please Enter Outlet_id",
+                                        maxLength: 80,
+                                      })}
+                                      autocomplete="off"
+                                      type="text"
+                                      className="form-control input-default"
+                                    >
+                                      <option value="">Select Outlet</option>
+                                      {AllOutlets &&
+                                        AllOutlets.map((outlet, index) => (
+                                          <option value={outlet.id}>
+                                            {outlet.firstName}
+                                          </option>
+                                        ))}
+                                    </select>
+
+                                    <span className="font-danger">
+                                      {errors.outlet_id &&
+                                        errors.outlet_id.message}
+                                    </span>
+                                  </div>
+                                  <div className="col-lg-6">
+                                    <label className="form-label">
+                                      Enter IC id
+                                    </label>
+                                    <input
+                                      {...register("ic_id", {
+                                        required: "please Enter Outlet_id",
+                                        maxLength: 80,
+                                      })}
+                                      autocomplete="off"
+                                      type="text"
+                                      className="form-control input-default"
+                                    />
+                                    <span className="font-danger">
+                                      {errors.outlet_id &&
+                                        errors.outlet_id.message}
+                                    </span>
+                                  </div>
+                                </div>
+                              </>
                             )}
                           </div>
                         </div>

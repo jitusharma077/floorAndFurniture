@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { GetDataWithToken } from "../../ApiHelper/ApiHelper";
 import SuperAdminHeader from "./Common/SuperAdminHeader";
 import SuperAdminSidebar from "./Common/SuperAdminSidebar";
@@ -8,6 +8,7 @@ function SuperAdminOutletDashboard() {
   const location = useLocation();
   const [OutletDetials, setOutletDetials] = useState();
   const [IcList, setIcList] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     GetDataWithToken(`superadmin/get-outlet/${location.state.data}`).then(
@@ -561,13 +562,16 @@ function SuperAdminOutletDashboard() {
                                     <td>{item?.phone}</td>
                                     <td>{item?.email}</td>
                                     <td>
-                                      <Link
-                                        to={"/OutletDashboard"}
-                                        href="IcDetails.html"
+                                      <button
+                                        onClick={() => {
+                                          navigate("/staff-detials", {
+                                            state: { data: item.id },
+                                          });
+                                        }}
                                         className="btn btn-primary"
                                       >
-                                        View details
-                                      </Link>
+                                        View
+                                      </button>
                                     </td>
                                   </tr>
                                 );

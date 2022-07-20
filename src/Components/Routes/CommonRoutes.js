@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Login from "../Auth/Login";
 import DispatchTeamDashboard from "../Pages/DispatchTeam/DispatchTeamDashboard";
 import OutletMangerDashboard from "../Pages/OutletManager/OutletMangerDashboard";
 import StitchingStoreManagerDashboard from "../Pages/StitchingStoreManager/StitchingStoreManagerDashboard";
 import Dashboard from "../Pages/SuperAdmin/Dashboard";
-import Cookies from "js-cookie";
+
 import {
   DispatchTeam,
   OutletManager,
@@ -49,6 +49,12 @@ import OutletCustomerDetials from "../Pages/OutletManager/OutletCustomerDetials"
 import OutletStaffDetials from "../Pages/OutletManager/OutletStaffDetials";
 import AllNotification from "../Pages/SuperAdmin/Common/AllNotification";
 import OutletSearch from "../Pages/OutletManager/OutletSearch";
+import DispatchTeamProductDesc from "../Pages/DispatchTeam/DispatchTeamProductDesc";
+import DispatchTeamProductConfirmation from "../Pages/DispatchTeam/DispatchTeamProductConfirmation";
+import DispatchTeamAllOrders from "../Pages/DispatchTeam/DispatchTeamAllOrders";
+
+import CreateNewQcCheck from "../Pages/SuperAdmin/CreateNewQcCheck";
+import AllQcChecks from "../Pages/SuperAdmin/AllQcChecks";
 
 const CommonRoutes = () => {
   // const [type, setType] = useState({});
@@ -99,6 +105,8 @@ const CommonRoutes = () => {
             />
             <Route path="edit-enquiry" element={<EditEnquiry />} />
             <Route path="Notification" element={<AllNotification />} />
+            <Route path="CreateQcCheck" element={<CreateNewQcCheck />} />
+            <Route path="AllQcChecks" element={<AllQcChecks />} />
           </>
         )}
 
@@ -107,6 +115,18 @@ const CommonRoutes = () => {
             <Route
               path="/DispatchTeamDashboard"
               element={<DispatchTeamDashboard />}
+            />
+            <Route
+              path="/DispatchTeamProductDescription"
+              element={<DispatchTeamProductDesc />}
+            />
+            <Route
+              path="DispatchTeam-product-confirmation"
+              element={<DispatchTeamProductConfirmation />}
+            />
+            <Route
+              path="dispatch-team-all-order"
+              element={<DispatchTeamAllOrders />}
             />
           </>
         )}
@@ -135,10 +155,12 @@ const CommonRoutes = () => {
         )}
 
         {userDetails === StitchingStoreManager && (
-          <Route
-            path="/StitchingStoreManagerDashboard"
-            element={<StitchingStoreManagerDashboard />}
-          />
+          <>
+            <Route
+              path="/StitchingStoreManagerDashboard"
+              element={<StitchingStoreManagerDashboard />}
+            />
+          </>
         )}
 
         <Route path="*" element={<Error />} />

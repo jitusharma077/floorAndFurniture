@@ -17,13 +17,17 @@ function CreateOutletModal({ modal, toggle }) {
 
   const CreateNewOutlet = (data) => {
     let formData = new FormData();
-
-    formData.append("name", data.outlet_name);
+    formData.append("type", "outlet");
+    formData.append("firstName", data.outlet_name);
     formData.append("email", data.outlet_email);
     formData.append("password", data.outlet_password);
     formData.append("phone", data.outlet_mobile_no);
-    formData.append("address", data.outlet_address);
-    PostDataWithToken("superadmin/add-outlet", formData).then((response) => {
+    formData.append("street", data.street);
+    formData.append("state", data.State);
+    formData.append("pincode", data.Pincode);
+    formData.append("city", data.city);
+
+    PostDataWithToken("superadmin/create-user", formData).then((response) => {
       if (response.status === true) {
         console.log("first", response.message);
         toast.success(response.message, {
@@ -73,24 +77,81 @@ function CreateOutletModal({ modal, toggle }) {
           </div>
           <div className="mb-3 row align-items-center">
             <label className="col-sm-3 col-form-label" htmlFor="comment">
-              Address
+              street
             </label>
-            <div className="col-sm-9">
-              <textarea
-                {...register("outlet_address", {
-                  required: "please enter outlet address",
+            <div className="col-lg-9">
+              <input
+                {...register("street", {
+                  required: "please enter outlet Street",
                 })}
                 className="form-control"
-                rows={4}
                 id="comment"
-                placeholder="outlet address"
+                placeholder="outlet Street"
                 defaultValue={""}
               />
               <span className="text-danger">
-                {errors.outlet_address && errors.outlet_address.message}
+                {errors.street && errors.street.message}
               </span>
             </div>
           </div>
+          <div className="mb-3 row align-items-center">
+            <label className="col-sm-3 col-form-label" htmlFor="city">
+              City
+            </label>
+            <div className="col-lg-9">
+              <input
+                {...register("city", {
+                  required: "please enter outlet city",
+                })}
+                className="form-control"
+                id="city"
+                placeholder="outlet city"
+                defaultValue={""}
+              />
+              <span className="text-danger">
+                {errors.city && errors.city.message}
+              </span>
+            </div>
+          </div>
+          <div className="mb-3 row align-items-center">
+            <label className="col-sm-3 col-form-label" htmlFor="State">
+              State
+            </label>
+            <div className="col-lg-9">
+              <input
+                {...register("State", {
+                  required: "please enter outlet State",
+                })}
+                className="form-control"
+                id="State"
+                placeholder="outlet State"
+                defaultValue={""}
+              />
+              <span className="text-danger">
+                {errors.State && errors.State.message}
+              </span>
+            </div>
+          </div>
+          <div className="mb-3 row align-items-center">
+            <label className="col-sm-3 col-form-label" htmlFor="Pincode">
+              Pincode
+            </label>
+            <div className="col-lg-9">
+              <input
+                {...register("Pincode", {
+                  required: "please enter outlet Pincode",
+                })}
+                className="form-control"
+                id="Pincode"
+                placeholder="outlet Pincode"
+                defaultValue={""}
+              />
+              <span className="text-danger">
+                {errors.Pincode && errors.Pincode.message}
+              </span>
+            </div>
+          </div>
+
           <div className="mb-3 row align-items-center">
             <label className="col-sm-3 col-form-label" htmlFor="fnf1">
               Mobile No.

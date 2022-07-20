@@ -82,6 +82,28 @@ function SuperAdminSidebar() {
                       <li><a href="Schedule.html">Schedule a Tailer</a></li> */}
               </ul>
             </li>
+
+            <li>
+              <a
+                className="has-arrow"
+                href="javascript:void()"
+                aria-expanded="false"
+              >
+                <i className="fa fa-address-card" aria-hidden="true" />
+                <span className="nav-text">Qc Checks</span>
+              </a>
+              <ul aria-expanded="false">
+                {/* <li>
+                  <Link to={"/all-outlet-manager"}>All Outlet Manager</Link>
+                </li> */}
+                <li>
+                  <Link to={"/AllQcChecks"}>All Qc Checks </Link>
+                </li>
+                <li>
+                  <Link to={"/CreateQcCheck"}> New Qc Check</Link>
+                </li>
+              </ul>
+            </li>
             <li>
               <a
                 className="has-arrow"

@@ -987,12 +987,12 @@ function EnquiryDetials() {
                                 <Link to={"/"}>
                                   <h5 className="text-white">
                                     {
-                                      EnquiryDetials?.EnquirySchedule
-                                        ?.scheduleperson?.firstName
+                                      EnquiryDetials?.EnquirySchedule?.user
+                                        ?.firstName
                                     }{" "}
                                     {
-                                      EnquiryDetials?.EnquirySchedule
-                                        ?.scheduleperson?.lastName
+                                      EnquiryDetials?.EnquirySchedule?.user
+                                        ?.lastName
                                     }
                                   </h5>
                                 </Link>

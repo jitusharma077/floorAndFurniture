@@ -8,6 +8,12 @@ import { useDispatch } from "react-redux";
 import { toast } from "material-react-toastify";
 import { getToken } from "../../firebaseInit";
 import { Spinner } from "reactstrap";
+import {
+  DispatchTeam,
+  OutletManager,
+  StitchingStoreManager,
+  superAdmin,
+} from "../Common/RoleType";
 
 const Login = () => {
   const navigation = useNavigate();
@@ -58,19 +64,22 @@ const Login = () => {
 
         let getType = response.data.type;
         switch (getType) {
-          case "super-admin":
+          case superAdmin:
             console.log("first toastt");
             toast.success(response.message, {
               position: "top-right",
             });
             navigation("/SuperAdminDashboard");
             break;
-          case "DispatchTeam":
+          case DispatchTeam:
             toast.success(response.message, {
               position: "top-right",
             });
+            navigation("/DispatchTeamDashboard", {
+              state: { data: response.data.id },
+            });
             break;
-          case "outlet":
+          case OutletManager:
             toast.success(response.message, {
               position: "top-right",
             });
@@ -79,7 +88,7 @@ const Login = () => {
             });
             break;
 
-          case "StitchingStoreManager":
+          case StitchingStoreManager:
             toast.success(response.message, {
               position: "top-right",
             });

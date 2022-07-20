@@ -33,45 +33,6 @@ function AllOutlet(props) {
     }
   }, [CallApi]);
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset,
-  } = useForm();
-
-  const CreateNewOutlet = (data) => {
-    let formData = new FormData();
-
-    formData.append("name", data.outlet_name);
-    formData.append("email", data.outlet_email);
-    formData.append("password", data.outlet_password);
-    formData.append("phone", data.outlet_mobile_no);
-    formData.append("address", data.outlet_address);
-    PostDataWithToken("superadmin/add-outlet", formData).then((response) => {
-      if (response.status === true) {
-        console.log("first", response.message);
-        toast.success(response.message, {
-          position: toast.POSITION.TOP_CENTER,
-        });
-        reset({
-          outlet_name: "",
-          outlet_email: "",
-          outlet_password: "",
-          password: "",
-          outlet_mobile_no: "",
-          outlet_address: "",
-        });
-        toggle();
-        setCallApi(true);
-      } else {
-        toast.error(response.data.message, {
-          position: "top-right",
-        });
-      }
-    });
-  };
-
   return (
     <>
       <div
@@ -141,10 +102,14 @@ function AllOutlet(props) {
                               return (
                                 <tr key={index}>
                                   <td>{outlet.id}</td>
-                                  <td>{outlet.outlet_name}</td>
-                                  <td>{outlet.address}</td>
-                                  <td>{outlet.outlet_phone}</td>
-                                  <td>{outlet.outlet_email}</td>
+                                  <td>{outlet.firstName}</td>
+                                  <td>
+                                    {outlet.outletAddress?.street}{" "}
+                                    {outlet.outletAddress?.city}{" "}
+                                    {outlet.outletAddress?.state}
+                                  </td>
+                                  <td>{outlet.phone}</td>
+                                  <td>{outlet.email}</td>
 
                                   <td>
                                     <button
