@@ -11,7 +11,7 @@ import { onMessageListener } from "./firebaseInit";
 function App() {
   const [show, setShow] = useState(false);
   const [notification, setNotification] = useState({ title: "", body: "" });
-  console.log(show, notification);
+  // console.log(show, notification);
 
   onMessageListener()
     .then((payload) => {
@@ -20,12 +20,12 @@ function App() {
         title: payload.notification.title,
         body: payload.notification.body,
       });
-      console.log("notification payload", payload);
+      // console.log("notification payload", payload);
 
       console.log(payload);
     })
     .catch((err) => console.log("failed: ", err));
-  console.log("notification", show, notification);
+  // console.log("notification", show, notification);
 
   useEffect(() => {
     if (Cookies.get("isLoggedIn") === "true") {

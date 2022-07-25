@@ -1,13 +1,14 @@
 import { toast } from "material-react-toastify";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { GetDataWithToken } from "../../ApiHelper/ApiHelper";
 import SuperAdminHeader from "./Common/SuperAdminHeader";
 import SuperAdminSidebar from "./Common/SuperAdminSidebar";
 
 function EnquiryDetials() {
   const location = useLocation();
+  const navigate = useNavigate();
 
   const [enquiryId, setEnquiryId] = useState(null);
   const [EnquiryDetials, setEnquiryDetials] = useState({});
@@ -76,6 +77,16 @@ function EnquiryDetials() {
                     >
                       {" "}
                       Send Email
+                    </button>
+                    <button
+                      onClick={() => {
+                        navigate("/add-schedule", {
+                          state: { data: enquiryId },
+                        });
+                      }}
+                      className="btn btn-primary"
+                    >
+                      Schedule Enquiry
                     </button>
                     <Link
                       to={"/edit-enquiry"}

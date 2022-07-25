@@ -46,6 +46,7 @@ function AllCustomer() {
                 <div className="card">
                   <div className="card-header">
                     <h4 className="card-title">All Customers</h4>
+                    {/* <button className=""></button> */}
                   </div>
                   <div className="card-body">
                     <div className="table-responsive">

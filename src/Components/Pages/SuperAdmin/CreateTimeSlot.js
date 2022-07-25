@@ -20,9 +20,10 @@ function CreateTimeSlot() {
     setformValues([...formValues, { Stime: "", Etime: "" }]);
   };
 
-  const removeFormFields = (i) => {
+  const removeFormFields = (index) => {
+    // console.log("index", index);
     let formval = [...formValues];
-    formval.splice(i, 1);
+    formval.splice(index, 1);
     setformValues(formValues);
   };
 
@@ -117,7 +118,10 @@ function CreateTimeSlot() {
                                     <button
                                       type="button"
                                       className="btn btn-primary remove me-2"
-                                      onClick={() => removeFormFields(index)}
+                                      onClick={(e) =>
+                                        // console.log("index", { index })
+                                        removeFormFields(index)
+                                      }
                                     >
                                       Remove
                                     </button>

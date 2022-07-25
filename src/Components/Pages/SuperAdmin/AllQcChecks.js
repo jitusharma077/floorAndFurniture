@@ -26,25 +26,28 @@ function AllQcChecks() {
   const [thirdQcCheck, setthirdQcCheck] = useState([]);
   const [AllQcCheckData, setAllQcCheckData] = useState([]);
   useEffect(() => {
-    GetDataWithToken("quality/get-qc/1").then((response) => {
+    GetDataWithToken("quality/get-qc/").then((response) => {
       console.log("response", response.data);
+      const Data = response.data;
+      for (const key in Data) {
+        // let ObjData = Data[key];
+        // setfirstQcCheck(Data[key]);
+        console.log("ForIn loop", key);
+      }
+      // console.log("ObjData", ObjData);
+
+      // for (const key in Data) {
+      //   console.log("ForIn loop", `${key}: ${Data[key]}`);
+      // }
+
       setfirstQcCheck(response.data);
-      //   const ApiData = response.data;
-      //   const AllQcCheck = [
-      //     {
-      //       name: "Qc1",
-      //       id: "1",
-      //       ...ApiData,
-      //     },
-      //   ];
-      //   console.log("newData", AllQcCheck);
     });
-    GetDataWithToken("quality/get-qc/2").then((response) => {
-      setSecQcCheck(response.data);
-    });
-    GetDataWithToken("quality/get-qc/3").then((response) => {
-      setthirdQcCheck(response.data);
-    });
+    // GetDataWithToken("quality/get-qc/").then((response) => {
+    //   setSecQcCheck(response.data);
+    // });
+    // GetDataWithToken("quality/get-qc/").then((response) => {
+    //   setthirdQcCheck(response.data);
+    // });
     // setAllQcCheckData([...firstQcCheck, ...SecQcCheck, ...thirdQcCheck]);
   }, []);
   const BlockQc = (e) => {
@@ -72,7 +75,8 @@ function AllQcChecks() {
       id="main-wrapper"
       className="show"
     >
-      {console.log("AllQcCheckData", AllQcCheckData)}
+      {console.log("firstQcCheck", firstQcCheck)}
+      {console.log("SecQcCheck", SecQcCheck)}
       <SuperAdminHeader />
       <SuperAdminSidebar />
       <div className="content-body">
@@ -111,76 +115,66 @@ function AllQcChecks() {
                         data-bs-parent="#accordion-five"
                       >
                         <div class="accordion-body-text">
-                          {firstQcCheck &&
-                            firstQcCheck.map((item, index) => {
-                              return (
-                                <div class="card">
-                                  <div class="card-header">
-                                    <h4 class="card-title">{item.name}</h4>
-                                  </div>
-                                  <div class="card-body">
-                                    <div class="table-responsive">
-                                      <table class="table table-bordered table-responsive-sm">
-                                        <thead>
-                                          <tr>
-                                            <th>#</th>
-                                            <th>Checks</th>
-                                            <th>Descriptions</th>
-                                            <th>Status</th>
-                                            <th>Date</th>
-                                            <th>Action</th>
-                                          </tr>
-                                        </thead>
-                                        {item.quality_check_details &&
-                                          item.quality_check_details.map(
-                                            (response, index) => {
-                                              return (
-                                                <tr>
-                                                  <td>{index + 1}</td>
-                                                  <td>{response.checks}</td>
-                                                  <td>
-                                                    {response.description}
-                                                  </td>
-                                                  <td>
-                                                    {response.status ===
-                                                    true ? (
-                                                      <span className="badge bg-success ">
-                                                        Active
-                                                      </span>
-                                                    ) : (
-                                                      <span className="badge bg-danger ">
-                                                        Blocked
-                                                      </span>
-                                                    )}{" "}
-                                                  </td>
-                                                  <td>
-                                                    {moment(
-                                                      response.createdAt
-                                                    ).format("DD-MM-YYYY")}
-                                                  </td>
-                                                  <td>
-                                                    <button class="btn btn-danger bg-primary">
-                                                      Edit
-                                                    </button>
-                                                    <button
-                                                      class="btn btn-danger bg-danger ms-2"
-                                                      onClick={(e) =>
-                                                        BlockQc(response.id)
-                                                      }
-                                                    >
-                                                      Block
-                                                    </button>
-                                                  </td>
-                                                </tr>
-                                              );
-                                            }
-                                          )}
-                                      </table>
-                                    </div>
-                                  </div>
-                                </div>
-                              );
-                            })}
+                          <div class="card">
+                            <div class="card-body">
+                              <div class="table-responsive">
+                                <table class="table table-bordered table-responsive-sm">
+                                  <thead>
+                                    <tr>
+                                      <th>#</th>
+                                      <th>Product Type</th>
+                                      <th>Checks</th>
+                                      <th>Descriptions</th>
+                                      <th>Status</th>
+                                      <th>Date</th>
+                                      <th>Action</th>
+                                    </tr>
+                                  </thead>
+
+                                  {firstQcCheck.QC1 &&
+                                    firstQcCheck.QC1.map((response, index) => {
+                                      return (
+                                        <tr>
+                                          <td>{index + 1}</td>
+                                          <td>{response?.material?.name}</td>
+                                          <td>{response?.checks}</td>
+                                          <td>{response?.description}</td>
+                                          <td>
+                                            {response?.status === true ? (
+                                              <span className="badge bg-success ">
+                                                Active
+                                              </span>
+                                            ) : (
+                                              <span className="badge bg-danger ">
+                                                Blocked
+                                              </span>
+                                            )}{" "}
+                                          </td>
+                                          <td>
+                                            {moment(response.createdAt).format(
+                                              "DD-MM-YYYY"
+                                            )}
+                                          </td>
+                                          <td>
+                                            <button class="btn btn-danger bg-primary">
+                                              Edit
+                                            </button>
+                                            <button
+                                              class="btn btn-danger bg-danger ms-2"
+                                              onClick={(e) =>
+                                                BlockQc(response.id)
+                                              }
+                                            >
+                                              Block
+                                            </button>
+                                          </td>
+                                        </tr>
+                                      );
+                                    })}
+                                </table>
+                              </div>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -205,56 +199,65 @@ function AllQcChecks() {
                         data-bs-parent="#accordion-five"
                       >
                         <div class="accordion-body-text">
-                          <div class="accordion-body-text">
-                            {SecQcCheck &&
-                              SecQcCheck.map((item, index) => {
-                                return (
-                                  <div class="card">
-                                    <div class="card-header">
-                                      <h4 class="card-title">{item.name}</h4>
-                                    </div>
-                                    <div class="card-body">
-                                      <div class="table-responsive">
-                                        <table class="table table-bordered table-responsive-sm">
-                                          <thead>
-                                            <tr>
-                                              <th>#</th>
-                                              <th>Checks</th>
-                                              <th>Descriptions</th>
-                                              <th>Status</th>
-                                              <th>Date</th>
-                                              <th>Action</th>
-                                            </tr>
-                                          </thead>
-                                          {item.quality_check_details &&
-                                            item.quality_check_details.map(
-                                              (response, index) => {
-                                                return (
-                                                  <tr>
-                                                    <td>{index + 1}</td>
-                                                    <td>{response.checks}</td>
-                                                    <td>
-                                                      {response.description}
-                                                    </td>
-                                                    <td>{response.status}</td>
-                                                    <td>
-                                                      {response.createdAt}
-                                                    </td>
-                                                    <td>
-                                                      <button class="btn btn-primary">
-                                                        Edit
-                                                      </button>
-                                                    </td>
-                                                  </tr>
-                                                );
-                                              }
+                          <div class="card">
+                            <div class="card-body">
+                              <div class="table-responsive">
+                                <table class="table table-bordered table-responsive-sm">
+                                  <thead>
+                                    <tr>
+                                      <th>#</th>
+                                      <th>Product Type</th>
+                                      <th>Checks</th>
+                                      <th>Descriptions</th>
+                                      <th>Status</th>
+                                      <th>Date</th>
+                                      <th>Action</th>
+                                    </tr>
+                                  </thead>
+
+                                  {firstQcCheck.QC2 &&
+                                    firstQcCheck.QC2.map((response, index) => {
+                                      return (
+                                        <tr>
+                                          <td>{index + 1}</td>
+                                          <td>{response?.material?.name}</td>
+                                          <td>{response?.checks}</td>
+                                          <td>{response?.description}</td>
+                                          <td>
+                                            {response?.status === true ? (
+                                              <span className="badge bg-success ">
+                                                Active
+                                              </span>
+                                            ) : (
+                                              <span className="badge bg-danger ">
+                                                Blocked
+                                              </span>
+                                            )}{" "}
+                                          </td>
+                                          <td>
+                                            {moment(response.createdAt).format(
+                                              "DD-MM-YYYY"
                                             )}
-                                        </table>
-                                      </div>
-                                    </div>
-                                  </div>
-                                );
-                              })}
+                                          </td>
+                                          <td>
+                                            <button class="btn btn-danger bg-primary">
+                                              Edit
+                                            </button>
+                                            <button
+                                              class="btn btn-danger bg-danger ms-2"
+                                              onClick={(e) =>
+                                                BlockQc(response.id)
+                                              }
+                                            >
+                                              Block
+                                            </button>
+                                          </td>
+                                        </tr>
+                                      );
+                                    })}
+                                </table>
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -281,57 +284,74 @@ function AllQcChecks() {
                       >
                         <div class="accordion-body-text">
                           <div class="accordion-body-text">
-                            {thirdQcCheck &&
-                              thirdQcCheck.map((item, index) => {
-                                return (
-                                  <div class="card">
-                                    <div class="card-header">
-                                      <h4 class="card-title">{item.name}</h4>
-                                    </div>
-                                    <div class="card-body">
-                                      <div class="table-responsive">
-                                        <table class="table table-bordered table-responsive-sm">
-                                          <thead>
+                            <div class="card">
+                              <div class="card-body">
+                                <div class="table-responsive">
+                                  <table class="table table-bordered table-responsive-sm">
+                                    <thead>
+                                      <tr>
+                                        <th>#</th>
+                                        <th>Product Type</th>
+                                        <th>Checks</th>
+                                        <th>Descriptions</th>
+                                        <th>Status</th>
+                                        <th>Date</th>
+                                        <th>Action</th>
+                                      </tr>
+                                    </thead>
+
+                                    {firstQcCheck.QC3 &&
+                                    firstQcCheck.QC3.hasownProperty("QC3") ? (
+                                      firstQcCheck?.QC3.map(
+                                        (response, index) => {
+                                          return (
                                             <tr>
-                                              <th>#</th>
-                                              <th>Checks</th>
-                                              <th>Descriptions</th>
-                                              <th>Status</th>
-                                              <th>Date</th>
-                                              <th>Action</th>
+                                              <td>{index + 1}</td>
+                                              <td>
+                                                {response?.material?.name}
+                                              </td>
+                                              <td>{response?.checks}</td>
+                                              <td>{response?.description}</td>
+                                              <td>
+                                                {response?.status === true ? (
+                                                  <span className="badge bg-success ">
+                                                    Active
+                                                  </span>
+                                                ) : (
+                                                  <span className="badge bg-danger ">
+                                                    Blocked
+                                                  </span>
+                                                )}{" "}
+                                              </td>
+                                              <td>
+                                                {moment(
+                                                  response.createdAt
+                                                ).format("DD-MM-YYYY")}
+                                              </td>
+                                              <td>
+                                                <button class="btn btn-danger bg-primary">
+                                                  Edit
+                                                </button>
+                                                <button
+                                                  class="btn btn-danger bg-danger ms-2"
+                                                  onClick={(e) =>
+                                                    BlockQc(response.id)
+                                                  }
+                                                >
+                                                  Block
+                                                </button>
+                                              </td>
                                             </tr>
-                                          </thead>
-                                          {item.quality_check_details &&
-                                            item.quality_check_details.map(
-                                              (response, index) => {
-                                                return (
-                                                  <tr>
-                                                    <td>{index + 1}</td>
-                                                    <td>{response.checks}</td>
-                                                    <td>
-                                                      {response.description}
-                                                    </td>
-                                                    <td>{response.status}</td>
-                                                    <td>
-                                                      {moment(
-                                                        response.createdAt
-                                                      ).format("yyyy-MM-dd")}
-                                                    </td>
-                                                    <td>
-                                                      <button class="btn btn-primary">
-                                                        Edit
-                                                      </button>
-                                                    </td>
-                                                  </tr>
-                                                );
-                                              }
-                                            )}
-                                        </table>
-                                      </div>
-                                    </div>
-                                  </div>
-                                );
-                              })}
+                                          );
+                                        }
+                                      )
+                                    ) : (
+                                      <p>No Data</p>
+                                    )}
+                                  </table>
+                                </div>
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </div>

@@ -1,12 +1,78 @@
-import React, { useEffect } from "react";
-import { GetDataWithToken } from "../../ApiHelper/ApiHelper";
+import { toast } from "material-react-toastify";
+import moment from "moment";
+import React, { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
+import { GetDataWithToken, PostDataWithToken } from "../../ApiHelper/ApiHelper";
 import SuperAdminHeader from "./Common/SuperAdminHeader";
 import SuperAdminSidebar from "./Common/SuperAdminSidebar";
 
 function AddSchedule() {
+  const location = useLocation();
+  const [AllTimeSlot, setAllTimeSlot] = useState([]);
+  const [EnquiryId, setEnquiryId] = useState(null);
+  const [AllUnAssignedUser, setAllUnAssignedUser] = useState([]);
+  const [AssignedPerson, setAssignedPerson] = useState("");
+  const [InquiryData, setInquiryData] = useState([]);
+  const [getDate, setGetDate] = useState("");
+  const [customerTimeSlot, setcustomerTimeSlot] = useState("");
+
   useEffect(() => {
-    GetDataWithToken("");
-  }, [""]);
+    console.log("first", location.state);
+    setEnquiryId(location.state.data);
+    GetDataWithToken("superadmin/get-schedule/").then((response) => {
+      if (response.status === true) {
+        setAllTimeSlot(response.data);
+      }
+    });
+  }, [location.state]);
+
+  const getAssignedPerson = (e) => {
+    setAssignedPerson(e.target.value);
+  };
+  const getSelectedDate = (e) => {
+    console.log("date", e.target.value);
+    setGetDate(e.target.value);
+  };
+
+  const getTimeSlot = (timeSlot) => {
+    console.log("timeSlot", timeSlot.target.value);
+    setcustomerTimeSlot(timeSlot.target.value);
+
+    GetDataWithToken(
+      `superadmin/get-unassigned-user/${timeSlot.target.value}`
+    ).then((response) => {
+      if (response.status === true) {
+        setAllUnAssignedUser(response.data);
+      }
+    });
+  };
+
+  const ConfirmSchduled = (event) => {
+    event.preventDefault();
+    let data = {
+      schedulePersonId: AssignedPerson,
+      enquiryId: EnquiryId,
+      ScheduleId: customerTimeSlot,
+      date: moment(getDate).format("YYYY-MM-DD"),
+    };
+
+    PostDataWithToken(`auth/assign-schedule-enquiry`, data).then((response) => {
+      if (response.status === true) {
+        console.log("response", response);
+        test.success("Schedule Confirmed Successfully", {
+          position: toast.POSITION.TOP_CENTER,
+        });
+        setTimeout(() => {
+          window.close();
+        }, 5000);
+      } else {
+        console.log("res", response);
+        toast.error(response?.data?.message, {
+          position: toast.POSITION.TOP_CENTER,
+        });
+      }
+    });
+  };
   return (
     <>
       <div
@@ -38,45 +104,63 @@ function AddSchedule() {
                   </div>
                   <div className="card-body">
                     <div className="basic-form">
-                      <form>
-                        <select className="default-select form-control wide mb-3">
-                          <option>Select a Category</option>
-                          <option>Measurer</option>
-                          <option>Installer</option>
-                          <option>Tailer</option>
-                        </select>
-                        <select className="default-select form-control wide mb-3">
-                          <option>Select a Person</option>
-                          <option>Person 1</option>
-                          <option>Person 2</option>
-                          <option>Person 3</option>
-                        </select>
-                        <div className="mb-3 row">
-                          <div className="col-lg-6">
-                            <label className="form-label">Select Date</label>
+                      <form onSubmit={ConfirmSchduled}>
+                        <div className="row align-items-center">
+                          <div className="col-lg-12 my-1">
+                            <label className="me-sm-2">
+                              Select Date For Measurements
+                            </label>
                             <input
-                              type="date"
-                              className="form-control input-default"
+                              type={"date"}
+                              min={moment().add(1, "days").format("YYYY-MM-DD")}
+                              className="form-control"
+                              onChange={getSelectedDate}
                             />
                           </div>
-                          <div className="col-lg-6">
-                            <label className="form-label">Select Slot</label>
-                            <select className="default-select form-control wide">
-                              <option>10:00 am to 12: 00 pm</option>
-                              <option>12:00 pm to 02: 00 pm</option>
-                              <option>03:00 am to 05: 00 pm</option>
-                              <option>05:00 am to 07: 00 pm</option>
+                          <div className="col-lg-12 my-1">
+                            <label className="me-sm-2">
+                              Select Time Slot For Your Measurements
+                            </label>
+                            <select
+                              className="me-sm-2  form-control"
+                              onChange={(e) => {
+                                getTimeSlot(e);
+                              }}
+                            >
+                              <option selected>Choose...</option>
+                              {AllTimeSlot &&
+                                AllTimeSlot.map((item, index) => {
+                                  return (
+                                    <option value={item.id}>
+                                      {item.start_time} - {item.end_time}
+                                    </option>
+                                  );
+                                })}
+                            </select>
+                          </div>
+                          <div className="col-lg-12 my-1">
+                            <label className="me-sm-2">
+                              Select Measurer For Your Measurements
+                            </label>
+                            <select
+                              className="me-sm-2  form-control"
+                              onChange={(e) => {
+                                getAssignedPerson(e);
+                              }}
+                            >
+                              <option selected>Choose...</option>
+                              {AllUnAssignedUser &&
+                                AllUnAssignedUser.map((item, index) => {
+                                  return (
+                                    <option value={item.id}>
+                                      {item.firstName} {item.lastName}
+                                    </option>
+                                  );
+                                })}
                             </select>
                           </div>
                         </div>
-                        <div className="buttons text-end mt-4">
-                          <button className="btn btn-warning btn-sm">
-                            Back
-                          </button>
-                          <button className="btn btn-primary btn-sm">
-                            Submit
-                          </button>
-                        </div>
+                        <button className="btn btn-primary">Submit </button>
                       </form>
                     </div>
                   </div>

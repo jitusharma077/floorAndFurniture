@@ -3,11 +3,7 @@ import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import {
-  GetDataWithToken,
-  PostDataWithToken,
-  PutDataWithToken,
-} from "../../ApiHelper/ApiHelper";
+import { GetDataWithToken, PutDataWithToken } from "../../ApiHelper/ApiHelper";
 import SuperAdminHeader from "./Common/SuperAdminHeader";
 import SuperAdminSidebar from "./Common/SuperAdminSidebar";
 

@@ -62,6 +62,18 @@ function CustomerDetials() {
                               </span>
                             </div>
                           </div>
+                          <div>
+                            <button
+                              className="btn btn-primary"
+                              onClick={() => {
+                                navigate("/addRooms", {
+                                  state: { data: CustomerDetials?.id },
+                                });
+                              }}
+                            >
+                              Add New Enquiry
+                            </button>
+                          </div>
                           <div className="row">
                             <div className="col-lg-3">
                               <div className="mt-4 check-status">

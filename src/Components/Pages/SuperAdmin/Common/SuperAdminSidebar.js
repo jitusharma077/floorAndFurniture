@@ -74,9 +74,9 @@ function SuperAdminSidebar() {
                 {/* <li>
                   <Link to={"/all-schedule"}>All Schedules</Link>
                 </li> */}
-                <li>
+                {/* <li>
                   <Link to={"/add-schedule"}>Schedule Enquiry</Link>
-                </li>
+                </li> */}
 
                 {/* <li><a href="Schedule.html">Schedule a Installer</a></li>
                       <li><a href="Schedule.html">Schedule a Tailer</a></li> */}

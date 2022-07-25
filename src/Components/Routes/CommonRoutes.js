@@ -55,6 +55,8 @@ import DispatchTeamAllOrders from "../Pages/DispatchTeam/DispatchTeamAllOrders";
 
 import CreateNewQcCheck from "../Pages/SuperAdmin/CreateNewQcCheck";
 import AllQcChecks from "../Pages/SuperAdmin/AllQcChecks";
+import AddNewEnquiry from "../Pages/SuperAdmin/AddNewEnquiry";
+import AddRooms from "../Pages/SuperAdmin/AddRooms";
 
 const CommonRoutes = () => {
   // const [type, setType] = useState({});
@@ -107,6 +109,8 @@ const CommonRoutes = () => {
             <Route path="Notification" element={<AllNotification />} />
             <Route path="CreateQcCheck" element={<CreateNewQcCheck />} />
             <Route path="AllQcChecks" element={<AllQcChecks />} />
+            <Route path="addNewEnquiry" element={<AddNewEnquiry />} />
+            <Route path="AddRooms" element={<AddRooms />} />
           </>
         )}
 

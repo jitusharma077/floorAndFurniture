@@ -46,6 +46,9 @@ function AllEnquiry() {
                 <div className="card">
                   <div className="card-header">
                     <h4 className="card-title">All Enquiry</h4>
+                    <Link to={"/AddRooms"} className="btn btn-primary">
+                      Add New Enquiry
+                    </Link>
                   </div>
                   <div className="card-body">
                     <div className="table-responsive">

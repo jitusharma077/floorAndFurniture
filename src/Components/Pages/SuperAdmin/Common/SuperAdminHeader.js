@@ -40,7 +40,7 @@ function SuperAdminHeader() {
     GetDataWithToken("superadmin/get-notification/", "").then((response) => {
       if (response.status === true) {
         setAllNotification(response.data);
-        console.log("first", response.data);
+        // console.log("first", response.data);
       }
     });
     // console.log("first useEffect");

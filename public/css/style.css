@@ -31828,9 +31828,9 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
   margin-top: 0.1875rem;
 }
 
-.form-check-inline .form-check-input {
+/* .form-check-inline .form-check-input {
   margin-right: 0.625rem;
-}
+} */
 
 .form-check-input {
   top: 0.125rem;
@@ -45422,4 +45422,9 @@ html {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+}
+
+
+.form-categories .form-check{
+  margin: 10px;
 }
