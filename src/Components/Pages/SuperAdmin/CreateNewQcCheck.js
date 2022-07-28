@@ -42,7 +42,6 @@ function CreateNewQcCheck() {
   }, []);
 
   const CreateNewQcCheck = (data) => {
-    alert();
     console.log("data", data);
     let values = {
       checks: data.checkName,

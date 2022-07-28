@@ -6,6 +6,7 @@ import Cookies from "js-cookie";
 import { GetDataWithToken } from "../../../ApiHelper/ApiHelper";
 import { toast } from "material-react-toastify";
 import moment from "moment";
+import { confirm } from "../../../Common/ConfirmModal";
 
 function SuperAdminHeader() {
   const navigate = useNavigate();
@@ -14,20 +15,23 @@ function SuperAdminHeader() {
 
   const [AllNotification, setAllNotification] = useState([]);
 
-  const logout = () => {
-    GetDataWithToken("auth/logout/user").then((response) => {
-      if (response.status === true) {
-        Cookies.remove("FandFToken");
-        Cookies.remove("userType");
-        Cookies.remove("userID");
-        dispatch(setLoggedInUserDetails({}));
-        navigate("/");
-        toast.success(response.message, {
-          position: toast.POSITION.TOP_CENTER,
-        });
-      }
-    });
+  const logout = async () => {
+    if (await confirm("Are you sure you want to logout?")) {
+      GetDataWithToken("auth/logout/user").then((response) => {
+        if (response.status === true) {
+          Cookies.remove("FandFToken");
+          Cookies.remove("userType");
+          Cookies.remove("userID");
+          dispatch(setLoggedInUserDetails({}));
+          navigate("/");
+          toast.success(response.message, {
+            position: toast.POSITION.TOP_CENTER,
+          });
+        }
+      });
+    }
   };
+
   // const logout = () => {
   //   GetDataWithToken("auth/logout").then((response) => {
   //     if

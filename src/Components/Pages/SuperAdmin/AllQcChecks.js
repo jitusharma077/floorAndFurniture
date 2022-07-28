@@ -57,6 +57,12 @@ function AllQcChecks() {
       window.location.reload();
     });
   };
+  const DeleteQc = (e) => {
+    GetDataWithToken(`quality/delete/${e}`).then((response) => {
+      alert("QC Check Deleted Successfully");
+      window.location.reload();
+    });
+  };
 
   return (
     <div
@@ -156,17 +162,29 @@ function AllQcChecks() {
                                             )}
                                           </td>
                                           <td>
-                                            <button class="btn btn-danger bg-primary">
-                                              Edit
-                                            </button>
-                                            <button
-                                              class="btn btn-danger bg-danger ms-2"
-                                              onClick={(e) =>
-                                                BlockQc(response.id)
-                                              }
-                                            >
-                                              Block
-                                            </button>
+                                            <div className="d-flex">
+                                              {/* <button class="btn btn-danger bg-primary">
+                                              <i className="fa fa-edit"></i>
+                                            </button> */}
+                                              <button
+                                                class="btn btn-danger bg-danger ms-2"
+                                                onClick={(e) =>
+                                                  BlockQc(response.id)
+                                                }
+                                                title="Block"
+                                              >
+                                                <i className="fa fa-ban"></i>
+                                              </button>
+                                              <button
+                                                class="btn btn-danger bg-danger ms-2"
+                                                onClick={(e) =>
+                                                  DeleteQc(response.id)
+                                                }
+                                                title="Delete"
+                                              >
+                                                <i className="fa fa-trash"></i>
+                                              </button>
+                                            </div>
                                           </td>
                                         </tr>
                                       );
@@ -240,17 +258,29 @@ function AllQcChecks() {
                                             )}
                                           </td>
                                           <td>
-                                            <button class="btn btn-danger bg-primary">
-                                              Edit
-                                            </button>
-                                            <button
-                                              class="btn btn-danger bg-danger ms-2"
-                                              onClick={(e) =>
-                                                BlockQc(response.id)
-                                              }
-                                            >
-                                              Block
-                                            </button>
+                                            <div className="d-flex">
+                                              {/* <button class="btn btn-danger bg-primary">
+                                              <i className="fa fa-edit"></i>
+                                            </button> */}
+                                              <button
+                                                class="btn btn-danger bg-danger ms-2"
+                                                onClick={(e) =>
+                                                  BlockQc(response.id)
+                                                }
+                                                title="Block"
+                                              >
+                                                <i className="fa fa-ban"></i>
+                                              </button>
+                                              <button
+                                                class="btn btn-danger bg-danger ms-2"
+                                                onClick={(e) =>
+                                                  DeleteQc(response.id)
+                                                }
+                                                title="Delete"
+                                              >
+                                                <i className="fa fa-trash"></i>
+                                              </button>
+                                            </div>
                                           </td>
                                         </tr>
                                       );
@@ -301,8 +331,7 @@ function AllQcChecks() {
                                     </thead>
 
                                     {firstQcCheck.QC3 &&
-                                    firstQcCheck.QC3.hasownProperty("QC3") ? (
-                                      firstQcCheck?.QC3.map(
+                                      firstQcCheck.QC3.map(
                                         (response, index) => {
                                           return (
                                             <tr>
@@ -329,25 +358,34 @@ function AllQcChecks() {
                                                 ).format("DD-MM-YYYY")}
                                               </td>
                                               <td>
-                                                <button class="btn btn-danger bg-primary">
-                                                  Edit
-                                                </button>
-                                                <button
-                                                  class="btn btn-danger bg-danger ms-2"
-                                                  onClick={(e) =>
-                                                    BlockQc(response.id)
-                                                  }
-                                                >
-                                                  Block
-                                                </button>
+                                                <div className="d-flex">
+                                                  {/* <button class="btn btn-danger bg-primary">
+                                              <i className="fa fa-edit"></i>
+                                            </button> */}
+                                                  <button
+                                                    class="btn btn-danger bg-danger ms-2"
+                                                    onClick={(e) =>
+                                                      BlockQc(response.id)
+                                                    }
+                                                    title="Block"
+                                                  >
+                                                    <i className="fa fa-ban"></i>
+                                                  </button>
+                                                  <button
+                                                    class="btn btn-danger bg-danger ms-2"
+                                                    onClick={(e) =>
+                                                      DeleteQc(response.id)
+                                                    }
+                                                    title="Delete"
+                                                  >
+                                                    <i className="fa fa-trash"></i>
+                                                  </button>
+                                                </div>
                                               </td>
                                             </tr>
                                           );
                                         }
-                                      )
-                                    ) : (
-                                      <p>No Data</p>
-                                    )}
+                                      )}
                                   </table>
                                 </div>
                               </div>
