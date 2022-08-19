@@ -2,24 +2,18 @@ import React, { useEffect, useState } from "react";
 import DataTable from "react-data-table-component";
 import { Link, useNavigate } from "react-router-dom";
 import { GetDataWithToken } from "../../ApiHelper/ApiHelper";
+import Loader from "../../Common/Loader";
+import useFetch from "../../Hooks/CallBack";
 import DataTableBase from "./Common/DataTablebasic";
 import SuperAdminHeader from "./Common/SuperAdminHeader";
 import SuperAdminSidebar from "./Common/SuperAdminSidebar";
 
 function AllCustomer() {
   const navigate = useNavigate();
-  const [allCustomer, setAllCustomer] = useState([]);
-  useEffect(() => {
-    GetDataWithToken("superadmin/get-customers").then((response) => {
-      if (response.status === true) {
-        setAllCustomer(response.data);
-      }
-    });
-  }, [""]);
+  const { data, Error, isLoading } = useFetch("superadmin/get-customers");
 
   return (
     <>
-      {console.log("all customers", allCustomer)}
       <div
         data-typography="poppins"
         data-theme-version="light"
@@ -65,7 +59,10 @@ function AllCustomer() {
                           </tr>
                         </thead>
                         <tbody>
-                          {allCustomer && allCustomer.length === 0 && (
+                          {isLoading && <Loader />}
+                          {Error && <div>Error</div>}
+
+                          {data && data.length === 0 && (
                             <h3
                               style={{
                                 position: "absolute",
@@ -76,7 +73,7 @@ function AllCustomer() {
                               No data found
                             </h3>
                           )}
-                          {allCustomer.map((customer, index) => {
+                          {data.map((customer, index) => {
                             return (
                               <tr key={index}>
                                 <td>

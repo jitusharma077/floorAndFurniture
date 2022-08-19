@@ -5,6 +5,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
 import { GetDataWithToken, PostDataWithToken } from "../../ApiHelper/ApiHelper";
 import CreateOutletModal from "../../Common/CreateOutletModal";
+import Loader from "../../Common/Loader";
+import useFetch from "../../Hooks/CallBack";
 import SuperAdminHeader from "./Common/SuperAdminHeader";
 import SuperAdminSidebar from "./Common/SuperAdminSidebar";
 
@@ -12,26 +14,26 @@ function AllOutlet(props) {
   const navigate = useNavigate();
   const [modal, setModal] = useState(false);
   const toggle = () => setModal(!modal);
-
   const [allOutlets, setAllOutlets] = useState([]);
-
   const [CallApi, setCallApi] = useState(true);
+  const { data, isLoading, error } = useFetch("superadmin/get-outlet");
 
-  useEffect(() => {
-    if (CallApi === true) {
-      GetDataWithToken("superadmin/get-outlet").then((response) => {
-        if (response.status === true) {
-          console.log("outlets", response.data);
-          setAllOutlets(response.data);
-        } else {
-          toast.error(response.data.message, {
-            position: "top-right",
-          });
-        }
-        setCallApi(false);
-      });
-    }
-  }, [CallApi]);
+  // useEffect(() => {
+  //   if (CallApi === true) {
+  //     // GetDataWithToken("superadmin/get-outlet").then((response) => {
+  //     //   if (response.status === true) {
+  //     //     console.log("outlets", response.data);
+  //     //     setAllOutlets(response.data);
+  //     //   } else {
+  //     //     toast.error(response.data.message, {
+  //     //       position: "top-right",
+  //     //     });
+  //     //   }
+  //     //   setCallApi(false);
+  //     // });
+
+  //   }
+  // }, [CallApi]);
 
   return (
     <>
@@ -87,46 +89,38 @@ function AllOutlet(props) {
                           </tr>
                         </thead>
                         <tbody>
-                          {allOutlets && allOutlets.length === 0 ? (
-                            <h3
-                              style={{
-                                position: "absolute",
-                                left: "40%",
-                                padding: "10px",
-                              }}
-                            >
-                              No data found
-                            </h3>
-                          ) : (
-                            allOutlets.map((outlet, index) => {
-                              return (
-                                <tr key={index}>
-                                  <td>{outlet.id}</td>
-                                  <td>{outlet.firstName}</td>
-                                  <td>
-                                    {outlet.outletAddress?.street}{" "}
-                                    {outlet.outletAddress?.city}{" "}
-                                    {outlet.outletAddress?.state}
-                                  </td>
-                                  <td>{outlet.phone}</td>
-                                  <td>{outlet.email}</td>
+                          {isLoading && <Loader />}
+                          {error && <div>Error</div>}
+                          {/* {console.log("data", data)} */}
 
-                                  <td>
-                                    <button
-                                      onClick={() => {
-                                        navigate("/OutletDashboard", {
-                                          state: { data: outlet.id },
-                                        });
-                                      }}
-                                      className="btn btn-primary"
-                                    >
-                                      View
-                                    </button>
-                                  </td>
-                                </tr>
-                              );
-                            })
-                          )}
+                          {data.map((outlet, index) => {
+                            return (
+                              <tr key={index}>
+                                <td>{outlet.id}</td>
+                                <td>{outlet.firstName}</td>
+                                <td>
+                                  {outlet.outletAddress?.street}{" "}
+                                  {outlet.outletAddress?.city}{" "}
+                                  {outlet.outletAddress?.state}
+                                </td>
+                                <td>{outlet.phone}</td>
+                                <td>{outlet.email}</td>
+
+                                <td>
+                                  <button
+                                    onClick={() => {
+                                      navigate("/OutletDashboard", {
+                                        state: { data: outlet.id },
+                                      });
+                                    }}
+                                    className="btn btn-primary"
+                                  >
+                                    View
+                                  </button>
+                                </td>
+                              </tr>
+                            );
+                          })}
                         </tbody>
                       </table>
                     </div>

@@ -1,21 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { GetDataWithToken } from "../../ApiHelper/ApiHelper";
+import Loader from "../../Common/Loader";
 import { SalesPerson } from "../../Common/RoleType";
+import useFetch from "../../Hooks/CallBack";
 import SuperAdminHeader from "./Common/SuperAdminHeader";
 import SuperAdminSidebar from "./Common/SuperAdminSidebar";
 
 function AllSalesPerson() {
   const navigate = useNavigate();
-  const [Allsalesperson, setAllsalesperson] = useState([]);
-  useEffect(() => {
-    GetDataWithToken(`superadmin/get-users?type=${SalesPerson}`).then(
-      (response) => {
-        console.log("all outlet manager", response);
-        setAllsalesperson(response.data);
-      }
-    );
-  }, [""]);
+
+  const { data, Error, isLoading } = useFetch(
+    `superadmin/get-users?type=${SalesPerson}`
+  );
+
   return (
     <>
       <div
@@ -65,14 +62,16 @@ function AllSalesPerson() {
                           </tr>
                         </thead>
                         <tbody>
-                          {Allsalesperson && Allsalesperson.length === 0 ? (
+                          {Error && <div>Error</div>}
+                          {isLoading && <Loader />}
+                          {data && data.length === 0 ? (
                             <div>
                               <h4 className="text-center d-block w-100 position-absolute">
                                 No Data Found
                               </h4>
                             </div>
                           ) : (
-                            Allsalesperson.map((outletManager, index) => (
+                            data.map((outletManager, index) => (
                               <tr key={index}>
                                 <td>
                                   {outletManager.firstName}{" "}

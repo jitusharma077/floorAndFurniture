@@ -1,19 +1,18 @@
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { GetDataWithToken } from "../../ApiHelper/ApiHelper";
+import React from "react";
+import { Link, useNavigate } from "react-router-dom";
+
+import Loader from "../../Common/Loader";
 import { Measurer } from "../../Common/RoleType";
+import useFetch from "../../Hooks/CallBack";
 import SuperAdminHeader from "./Common/SuperAdminHeader";
 import SuperAdminSidebar from "./Common/SuperAdminSidebar";
 
 function AllMeasurer() {
-  const [AllMeasurer, setAllMeasurer] = useState([]);
-  useEffect(() => {
-    GetDataWithToken(`superadmin/get-users?type=${Measurer}`).then(
-      (response) => {
-        setAllMeasurer(response.data);
-      }
-    );
-  }, [""]);
+  const navigate = useNavigate();
+  const { data, Error, isLoading } = useFetch(
+    `superadmin/get-users?type=${Measurer}`
+  );
+
   return (
     <>
       <div
@@ -64,29 +63,30 @@ function AllMeasurer() {
                           </tr>
                         </thead>
                         <tbody>
-                          {AllMeasurer && AllMeasurer.length === 0 ? (
+                          {Error && <div>Error</div>}
+                          {isLoading && <Loader />}
+                          {data && data.length === 0 ? (
                             <div>
                               <h4 className="text-center d-block w-100 position-absolute">
                                 No Data Found
                               </h4>
                             </div>
                           ) : (
-                            AllMeasurer.map((outletManager, index) => (
+                            data.map((Measurer, index) => (
                               <tr key={index}>
                                 <td>
-                                  {outletManager.firstName}{" "}
-                                  {outletManager.lastName}
+                                  {Measurer.firstName} {Measurer.lastName}
                                 </td>
-                                <td>{outletManager.id}</td>
-                                <td>{outletManager.phone}</td>
-                                <td>{outletManager.email}</td>
+                                <td>{Measurer.id}</td>
+                                <td>{Measurer.phone}</td>
+                                <td>{Measurer.email}</td>
                                 <td>
                                   <button
-                                    // onClick={() => {
-                                    //   navigate("/customer-detials", {
-                                    //     state: { data: customer.id },
-                                    //   });
-                                    // }}
+                                    onClick={() => {
+                                      navigate("/Measurer-detials", {
+                                        state: { data: Measurer.id },
+                                      });
+                                    }}
                                     className="btn btn-primary"
                                   >
                                     View

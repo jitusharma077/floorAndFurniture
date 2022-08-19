@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { Toast } from "reactstrap";
 import { GetDataWithToken, PostDataWithToken } from "../../ApiHelper/ApiHelper";
 import { Measurer } from "../../Common/RoleType";
+import UsePostCallBack from "../../Hooks/UsePostCallBack";
 import SuperAdminHeader from "./Common/SuperAdminHeader";
 import SuperAdminSidebar from "./Common/SuperAdminSidebar";
 
@@ -29,6 +30,7 @@ function CreateTimeSlot() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+
     PostDataWithToken(`superadmin/create-schedule/`, formValues).then(
       (response) => {
         if (response.status === true) {

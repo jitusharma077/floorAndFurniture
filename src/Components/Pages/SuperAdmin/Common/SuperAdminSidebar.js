@@ -120,21 +120,22 @@ function SuperAdminSidebar() {
                 <li>
                   <Link to={"/all-sales-person"}>All Sales Person </Link>
                 </li>
-                <li>
+                {/* <li>
                   <Link to={"/all-dispatch"}> All Dispatch Person</Link>
-                </li>
-                <li>
-                  <Link to={"/All-stitching"}> All Stitching Manager</Link>
-                </li>
+                </li> */}
                 <li>
                   <Link to={"/All-measurer"}> All Measurer</Link>
                 </li>
                 <li>
+                  <Link to={"/All-stitching"}> All Stitching Manager</Link>
+                </li>
+
+                {/* <li>
                   <Link to={"/all-Tailor"}> All Tailor</Link>
-                </li>
-                <li>
+                </li> */}
+                {/* <li>
                   <Link to={"/All-Qc"}> All QC</Link>
-                </li>
+                </li> */}
                 <li>
                   <Link to={"/All-Installer"}> All Installer</Link>
                 </li>

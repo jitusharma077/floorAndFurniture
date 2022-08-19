@@ -1,17 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
-import { GetDataWithToken } from "../../ApiHelper/ApiHelper";
+import Loader from "../../Common/Loader";
 import { QC } from "../../Common/RoleType";
+import useFetch from "../../Hooks/CallBack";
 import SuperAdminHeader from "./Common/SuperAdminHeader";
 import SuperAdminSidebar from "./Common/SuperAdminSidebar";
 
 function AllQc() {
-  const [AllQc, setAllQc] = useState([]);
-  useEffect(() => {
-    GetDataWithToken(`superadmin/get-users?type=${QC}`).then((response) => {
-      setAllQc(response.data);
-    });
-  }, [""]);
+  const { data, Error, isLoading } = useFetch(
+    `superadmin/get-users?type=${QC}`
+  );
+
   return (
     <>
       <div
@@ -61,14 +60,16 @@ function AllQc() {
                           </tr>
                         </thead>
                         <tbody>
-                          {AllQc && AllQc.length === 0 ? (
+                          {Error && <div>Error</div>}
+                          {isLoading && <Loader />}
+                          {data && data.length === 0 ? (
                             <div>
                               <h4 className="text-center d-block w-100 position-absolute">
                                 No Data Found
                               </h4>
                             </div>
                           ) : (
-                            AllQc.map((outletManager, index) => (
+                            data.map((outletManager, index) => (
                               <tr key={index}>
                                 <td>
                                   {outletManager.firstName}{" "}

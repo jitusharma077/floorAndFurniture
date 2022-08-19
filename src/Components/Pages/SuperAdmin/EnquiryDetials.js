@@ -69,25 +69,27 @@ function EnquiryDetials() {
                     <h4 className="card-title">
                       Enquiry No. {EnquiryDetials?.id}
                     </h4>
-                    <button
-                      onClick={() => {
-                        sendEmail();
-                      }}
-                      className="btn btn-primary"
-                    >
-                      {" "}
-                      Send Email
-                    </button>
-                    <button
-                      onClick={() => {
-                        navigate("/add-schedule", {
-                          state: { data: enquiryId },
-                        });
-                      }}
-                      className="btn btn-primary"
-                    >
-                      Schedule Enquiry
-                    </button>
+                    <>
+                      <button
+                        onClick={() => {
+                          sendEmail();
+                        }}
+                        className="btn btn-primary"
+                      >
+                        {" "}
+                        Send Email
+                      </button>
+                      <button
+                        onClick={() => {
+                          navigate("/add-schedule", {
+                            state: { data: enquiryId },
+                          });
+                        }}
+                        className="btn btn-primary"
+                      >
+                        Schedule Enquiry
+                      </button>
+                    </>
                     <Link
                       to={"/edit-enquiry"}
                       className="btn btn-primary btn-xs sharp me-1"
@@ -379,7 +381,7 @@ function EnquiryDetials() {
                                                   {room.numberOfWindow}
                                                 </span>
                                               </div>
-                                              {room.selectedcurtain ===
+                                              {room?.selectedcurtain ===
                                               null ? null : (
                                                 <>
                                                   <h5 className="text-white py-3">
@@ -455,8 +457,8 @@ function EnquiryDetials() {
                                                   </div>
                                                 </>
                                               )}
-                                              {room.selectedcurtain
-                                                .belt_required === "Yes" ? (
+                                              {room?.selectedcurtain
+                                                ?.belt_required === "Yes" ? (
                                                 <>
                                                   <h5 className="text-white py-3">
                                                     Selected Belts
@@ -516,8 +518,8 @@ function EnquiryDetials() {
                                                 </>
                                               ) : null}
 
-                                              {room.selectedcurtain
-                                                .pelmet_required === "Yes" ? (
+                                              {room?.selectedcurtain
+                                                ?.pelmet_required === "Yes" ? (
                                                 <>
                                                   <h5 className="text-white py-3">
                                                     Selected pelmet
@@ -641,8 +643,8 @@ function EnquiryDetials() {
                                                 </>
                                               ) : null}
 
-                                              {room.selectedcurtain
-                                                .border_required === "Yes" ? (
+                                              {room?.selectedcurtain
+                                                ?.border_required === "Yes" ? (
                                                 <>
                                                   <h5 className="text-white py-3">
                                                     Selected Border Fabric
@@ -1151,6 +1153,159 @@ function EnquiryDetials() {
                                                     </li>
                                                   </ul>
                                                 </div>
+                                              )}
+
+                                              {room?.room_assets?.length ===
+                                              0 ? (
+                                                <div className="room-heading border-top">
+                                                  <h3 className>
+                                                    Measurer have not filled
+                                                    data yet
+                                                  </h3>
+                                                </div>
+                                              ) : (
+                                                room?.room_assets?.map(
+                                                  (asset, index) => (
+                                                    <>
+                                                      <h3 className="text-white border-top">
+                                                        window {index + 1}
+                                                      </h3>
+                                                      <div class="card text-white bg-white  text-black">
+                                                        <div className="row">
+                                                          <div className="col-lg-6">
+                                                            <ul class="list-group list-group-flush">
+                                                              <li class="list-group-item d-flex justify-content-between">
+                                                                <span class="mb-0">
+                                                                  Window Height
+                                                                </span>
+                                                                <strong>
+                                                                  {asset.height}
+                                                                  CM
+                                                                </strong>
+                                                              </li>
+                                                              <li class="list-group-item d-flex justify-content-between">
+                                                                <span class="mb-0">
+                                                                  Window Width
+                                                                </span>
+                                                                <strong>
+                                                                  {asset.width}
+                                                                  CM
+                                                                </strong>
+                                                              </li>
+                                                              <li class="list-group-item d-flex justify-content-between">
+                                                                <span class="mb-0">
+                                                                  Ladder Height
+                                                                </span>
+                                                                <strong>
+                                                                  {
+                                                                    asset.ladderHeight
+                                                                  }
+                                                                </strong>
+                                                              </li>
+                                                              <li class="list-group-item d-flex justify-content-between">
+                                                                <span class="mb-0">
+                                                                  Mount Type
+                                                                </span>
+                                                                <strong>
+                                                                  {
+                                                                    asset.mount_type
+                                                                  }
+                                                                </strong>
+                                                              </li>
+                                                              <li class="list-group-item d-flex justify-content-between">
+                                                                <span class="mb-0">
+                                                                  Width of Cove
+                                                                </span>
+                                                                <strong>
+                                                                  {
+                                                                    asset.widhtOfCove
+                                                                  }
+                                                                </strong>
+                                                              </li>
+                                                            </ul>
+                                                          </div>
+                                                          <div className="col-lg-6">
+                                                            <ul class="list-group list-group-flush">
+                                                              <li class="list-group-item d-flex justify-content-between">
+                                                                <span class="mb-0">
+                                                                  Ceiling Type
+                                                                </span>
+                                                                <strong>
+                                                                  {
+                                                                    asset
+                                                                      ?.ceiling_type
+                                                                      ?.type
+                                                                  }
+                                                                </strong>
+                                                              </li>
+                                                              <li class="list-group-item d-flex justify-content-between">
+                                                                <span class="mb-0">
+                                                                  NOTE:
+                                                                </span>
+                                                                <span className="font-size-10 ps-4">
+                                                                  {
+                                                                    asset
+                                                                      ?.ceiling_type
+                                                                      ?.note
+                                                                  }
+                                                                </span>
+                                                              </li>
+                                                              <li class="list-group-item d-flex justify-content-between">
+                                                                <span class="mb-0">
+                                                                  Wall type :
+                                                                </span>
+                                                                <strong>
+                                                                  {asset
+                                                                    ?.ceiling_type
+                                                                    ?.wall_type ==
+                                                                  null ? (
+                                                                    <p>NUll</p>
+                                                                  ) : (
+                                                                    ""
+                                                                  )}
+                                                                </strong>
+                                                              </li>
+                                                              <li class="list-group-item d-flex justify-content-between">
+                                                                <span class="mb-0">
+                                                                  Curtain
+                                                                  operation
+                                                                </span>
+                                                                <strong>
+                                                                  {/* {asset?.curtain -
+                                                                    operation?.operationType} */}
+                                                                </strong>
+                                                              </li>
+                                                              <li class="list-group-item d-flex justify-content-between">
+                                                                <span class="mb-0">
+                                                                  ladder Type :
+                                                                </span>
+                                                                <strong>
+                                                                  {
+                                                                    asset
+                                                                      ?.ladder
+                                                                      ?.ladder
+                                                                  }
+                                                                </strong>
+                                                              </li>
+                                                              <li class="list-group-item d-flex justify-content-between">
+                                                                <span class="mb-0">
+                                                                  ladder Note :
+                                                                </span>
+                                                                <span className="font-size-10 ps-4">
+                                                                  {
+                                                                    asset
+                                                                      ?.ladder
+                                                                      ?.note
+                                                                  }
+                                                                </span>
+                                                              </li>
+                                                            </ul>
+                                                          </div>
+                                                        </div>
+                                                      </div>
+                                                    </>
+                                                  )
+                                                )
                                               )}
                                             </div>
                                           )

@@ -1,11 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
 import SuperAdminHeader from "./Common/SuperAdminHeader";
 import SuperAdminSidebar from "./Common/SuperAdminSidebar";
 
 function Dashboard() {
   // useEffect(() => {
-  //   window.location.reload();
+  //   let resp = (123456).toString();
+  //   console.log("resp", resp);
   // }, [""]);
+
   return (
     <>
       <div

@@ -57,6 +57,7 @@ import CreateNewQcCheck from "../Pages/SuperAdmin/CreateNewQcCheck";
 import AllQcChecks from "../Pages/SuperAdmin/AllQcChecks";
 import AddNewEnquiry from "../Pages/SuperAdmin/AddNewEnquiry";
 import AddRooms from "../Pages/SuperAdmin/AddRooms";
+import MesurerDetials from "../Pages/SuperAdmin/MesurerDetials";
 
 const CommonRoutes = () => {
   // const [type, setType] = useState({});
@@ -100,6 +101,7 @@ const CommonRoutes = () => {
             <Route path="all-schedule" element={<AllSchedule />} />
             <Route path="Search" element={<Search />} />
             <Route path="Staff-detials" element={<StaffDetials />} />
+            <Route path="Measurer-detials" element={<MesurerDetials />} />
             <Route path="create-time-slot" element={<CreateTimeSlot />} />
             <Route
               path="Customer-requested-time-slot"

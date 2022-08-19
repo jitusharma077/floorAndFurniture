@@ -2,19 +2,15 @@ import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { GetDataWithToken } from "../../ApiHelper/ApiHelper";
+import Loader from "../../Common/Loader";
+import useFetch from "../../Hooks/CallBack";
 import SuperAdminHeader from "./Common/SuperAdminHeader";
 import SuperAdminSidebar from "./Common/SuperAdminSidebar";
 
 function AllEnquiry() {
   const navigate = useNavigate();
   const [AllEnquiry, setAllEnquiry] = useState([]);
-  useEffect(() => {
-    GetDataWithToken("superadmin/get-enquiries").then((response) => {
-      if (response.status === true) {
-        setAllEnquiry(response.data);
-      }
-    });
-  }, [""]);
+  const { data, Error, isLoading } = useFetch("superadmin/get-enquiries");
 
   return (
     <>
@@ -70,7 +66,10 @@ function AllEnquiry() {
                         </thead>
                         <tbody>
                           {/* {console.log("length", AllEnquiry.length)} */}
-                          {AllEnquiry && AllEnquiry.length === 0 ? (
+                          {Error && <div>Error</div>}
+                          {isLoading && <Loader />}
+
+                          {data && data.length === 0 ? (
                             <h3
                               style={{
                                 position: "absolute",
@@ -81,7 +80,7 @@ function AllEnquiry() {
                               No data found
                             </h3>
                           ) : (
-                            AllEnquiry.map((data, index) => (
+                            data.map((data, index) => (
                               <tr>
                                 <>
                                   {" "}

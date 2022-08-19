@@ -1,8 +1,8 @@
 import axios from "axios";
 import Cookies from "js-cookie";
 
-// Api Url's
-const serverUrl = "https://fapi.zidni.academy/api/v1/";
+// Api Url's for the API's
+export const serverUrl = "https://fapi.zidni.academy/api/v1/";
 
 // Api's Function
 export function PostData(url, data) {
@@ -29,6 +29,7 @@ export function PostData(url, data) {
 }
 
 export const PostDataWithToken = (url, data) => {
+  const cancelToken = axios.CancelToken.source();
   let tokens = "";
   if (Cookies.get("FandFToken")) {
     tokens = Cookies.get("FandFToken");
@@ -38,17 +39,27 @@ export const PostDataWithToken = (url, data) => {
     "Accept-Language": "en",
   };
   return axios
-    .post(serverUrl + url, data, { headers: headers })
+    .post(
+      serverUrl + url,
+      data,
+      { headers: headers },
+      { cancelToken: cancelToken.token }
+    )
     .then((response) => {
       return response.data;
     })
     .catch((error) => {
-      let errorStatus = JSON.parse(JSON.stringify(error.response));
-      return errorStatus;
+      if (axios.isCancel(error)) {
+        console.log("Request canceled", error.message);
+      } else {
+        let errorStatus = JSON.parse(JSON.stringify(error.response));
+        return errorStatus;
+      }
     });
 };
 
 export const GetDataWithToken = (url) => {
+  const cancelToken = axios.CancelToken.source();
   let tokens = "";
   if (Cookies.get("FandFToken")) {
     tokens = Cookies.get("FandFToken");
@@ -61,17 +72,22 @@ export const GetDataWithToken = (url) => {
     params: {},
   };
   return axios
-    .get(serverUrl + url, config)
+    .get(serverUrl + url, config, { cancelToken: cancelToken.token })
     .then((response) => {
       return response.data;
     })
     .catch((error) => {
-      let errorStatus = JSON.parse(JSON.stringify(error.response));
-      return errorStatus;
+      if (axios.isCancel(error)) {
+        console.log("Request canceled", error.message);
+      } else {
+        let errorStatus = JSON.parse(JSON.stringify(error.response));
+        return errorStatus;
+      }
     });
 };
 
 export function PutDataWithToken(url, data) {
+  const cancelToken = axios.CancelToken.source();
   // body..
   //
   let tokens = "";
@@ -84,17 +100,23 @@ export function PutDataWithToken(url, data) {
     Accept: "application/json",
   };
   return axios
-    .put(serverUrl + url, data, { headers: headers })
+    .put(
+      serverUrl + url,
+      data,
+      { headers: headers },
+      { cancelToken: cancelToken.token }
+    )
     .then((response) => {
       //console.log(res);
       //console.log(res.data);
       return response.data;
     })
     .catch((error) => {
-      //return error.data;
-      //console.log(error.response);
-      let errorStatus = JSON.parse(JSON.stringify(error.response));
-      //console.log(errorStatus.data);
-      return errorStatus;
+      if (axios.isCancel(error)) {
+        console.log("Request canceled", error.message);
+      } else {
+        let errorStatus = JSON.parse(JSON.stringify(error.response));
+        return errorStatus;
+      }
     });
 }

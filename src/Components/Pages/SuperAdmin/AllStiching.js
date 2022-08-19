@@ -1,20 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
-import { GetDataWithToken } from "../../ApiHelper/ApiHelper";
+import Loader from "../../Common/Loader";
 import { StitchingStoreManager } from "../../Common/RoleType";
+import useFetch from "../../Hooks/CallBack";
 import SuperAdminHeader from "./Common/SuperAdminHeader";
 import SuperAdminSidebar from "./Common/SuperAdminSidebar";
 
 function AllStiching() {
-  const [Allstiching, setAllstiching] = useState([]);
-  useEffect(() => {
-    GetDataWithToken(`superadmin/get-users?type=${StitchingStoreManager}`).then(
-      (response) => {
-        console.log("all dispatch manager", response);
-        setAllstiching(response.data);
-      }
-    );
-  }, [""]);
+  const { data, Error, isLoading } = useFetch(
+    `superadmin/get-users?type=${StitchingStoreManager}`
+  );
+
   return (
     <>
       <div
@@ -64,14 +60,16 @@ function AllStiching() {
                           </tr>
                         </thead>
                         <tbody>
-                          {Allstiching && Allstiching.length === 0 ? (
+                          {Error && <div>Error</div>}
+                          {isLoading && <Loader />}
+                          {data && data.length === 0 ? (
                             <div>
                               <h4 className="text-center d-block w-100 position-absolute">
                                 No Data Found
                               </h4>
                             </div>
                           ) : (
-                            Allstiching.map((outletManager, index) => (
+                            data.map((outletManager, index) => (
                               <tr key={index}>
                                 <td>
                                   {outletManager.firstName}{" "}
