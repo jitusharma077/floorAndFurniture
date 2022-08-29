@@ -37,7 +37,7 @@ function OutletStaffDetials() {
         }
       }
     );
-  }, [""]);
+  }, []);
 
   const EditUserDetials = (data) => {
     alert();

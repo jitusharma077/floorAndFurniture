@@ -18,7 +18,7 @@ function OutletCustomerDetials() {
         }
       }
     );
-  }, [""]);
+  }, []);
   return (
     <>
       <div

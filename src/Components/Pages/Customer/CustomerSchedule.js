@@ -24,7 +24,7 @@ function CustomerSchedule() {
         setAllTimeSlot(response.data);
       }
     });
-  }, [""]);
+  }, []);
 
   const getAssignedPerson = (e) => {
     setAssignedPerson(e.target.value);

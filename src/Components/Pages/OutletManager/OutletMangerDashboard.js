@@ -10,13 +10,13 @@ function OutletMangerDashboard() {
     Cookies.remove("userType");
     navigate("/");
   };
-  const [outletData, setOutletData] = useState([]);
+  // const [outletData, setOutletData] = useState([]);
   const [IcList, setIcList] = useState([]);
   useEffect(() => {
     GetDataWithToken(`superadmin/get-outlet/${Cookies.get("userID")}`).then(
       (response) => {
-        console.log(response.data);
-        setOutletData(response.data);
+        // console.log(response.data);
+        // setOutletData(response.data);
         setIcList(response.data.ic);
       }
     );

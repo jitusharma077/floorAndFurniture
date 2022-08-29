@@ -2,7 +2,9 @@ import { toast } from "material-react-toastify";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Button, Offcanvas, OffcanvasBody, OffcanvasHeader } from "reactstrap";
 import { GetDataWithToken } from "../../ApiHelper/ApiHelper";
+import { confirm } from "../../Common/ConfirmModal";
 import SuperAdminHeader from "./Common/SuperAdminHeader";
 import SuperAdminSidebar from "./Common/SuperAdminSidebar";
 
@@ -25,17 +27,21 @@ function EnquiryDetials() {
       }
     );
   }, [""]);
-  const sendEmail = () => {
-    GetDataWithToken(`superadmin/send-mail-customer/${enquiryId}`).then(
-      (response) => {
-        if (response.status === true) {
-          console.log("response", response);
-          toast.success("Mail Sent Successfully", {
-            position: toast.POSITION.TOP_CENTER,
-          });
+  const sendEmail = async () => {
+    if (
+      await confirm("Are you sure you want to Send Notification To Customer")
+    ) {
+      GetDataWithToken(`superadmin/send-mail-customer/${enquiryId}`).then(
+        (response) => {
+          if (response.status === true) {
+            console.log("response", response);
+            toast.success("Mail Sent Successfully", {
+              position: toast.POSITION.TOP_CENTER,
+            });
+          }
         }
-      }
-    );
+      );
+    }
   };
 
   return (
@@ -63,2282 +69,1681 @@ function EnquiryDetials() {
           {/* row */}
           <div className="container-fluid">
             <div className="row">
-              <div className="col-xl-8">
+              <div className="col-xl-12">
+                <div className="Buttons">
+                  <div className="d-flex flex-column">
+                    <button
+                      className="btn btn-mybutton"
+                      data-bs-toggle="modal"
+                      data-bs-target=".bd-example-modal-lg"
+                    >
+                      View Mesurement
+                    </button>
+                    <button
+                      data-bs-toggle="modal"
+                      data-bs-target="#exampleModalCenter"
+                      className="btn btn-mybutton"
+                    >
+                      View Stauts
+                    </button>
+                    <button
+                      onClick={() => sendEmail()}
+                      className="btn btn-mybutton"
+                    >
+                      Send Email
+                    </button>
+                    <button
+                      onClick={() => {
+                        navigate("/add-schedule", {
+                          state: { data: enquiryId },
+                        });
+                      }}
+                      className="btn btn-mybutton"
+                    >
+                      asign Mesurer
+                    </button>
+                    <button className="btn btn-mybutton">asign Instaler</button>
+                  </div>
+                </div>
                 <div className="card">
                   <div className="card-header">
                     <h4 className="card-title">
-                      Enquiry No. {EnquiryDetials?.id}
+                      Enquiry No: {EnquiryDetials?.data?.id}
                     </h4>
-                    <>
-                      <button
-                        onClick={() => {
-                          sendEmail();
-                        }}
-                        className="btn btn-primary"
-                      >
-                        {" "}
-                        Send Email
-                      </button>
-                      <button
-                        onClick={() => {
-                          navigate("/add-schedule", {
-                            state: { data: enquiryId },
-                          });
-                        }}
-                        className="btn btn-primary"
-                      >
-                        Schedule Enquiry
-                      </button>
-                    </>
-                    <Link
-                      to={"/edit-enquiry"}
+
+                    <a
+                      href="edit_enquiry.html"
                       className="btn btn-primary btn-xs sharp me-1"
                     >
                       <i className="fas fa-pencil-alt" />
-                    </Link>
+                    </a>
                   </div>
                   <div className="card-body">
+                    <div className="row">
+                      <div className="col-lg-6">
+                        <div className="heading">
+                          <h3 className="">Customer Detials</h3>
+                        </div>
+                        <ul className="list-group list-group-flush">
+                          <li className="list-group-item d-flex justify-content-between ">
+                            <span className="mb-0">Customer Name :</span>
+                            <strong>
+                              {EnquiryDetials?.data?.customer?.firstName}{" "}
+                              {EnquiryDetials?.data?.customer?.lastName}{" "}
+                            </strong>
+                          </li>
+                          <li className="list-group-item d-flex justify-content-between">
+                            <span className="mb-0">Contact No. :</span>
+                            <strong>
+                              {EnquiryDetials?.data?.customer?.primary_phone}
+                            </strong>
+                          </li>
+                          <li className="list-group-item d-flex justify-content-between">
+                            <span className="mb-0">
+                              Secondary Contact No. :
+                            </span>
+                            <strong>
+                              {EnquiryDetials?.data?.customer?.secondary_phone}
+                            </strong>
+                          </li>
+                          <li className="list-group-item d-flex justify-content-between">
+                            <span className="mb-0">Email :</span>
+                            <strong>
+                              {EnquiryDetials?.data?.customer?.primary_email}
+                            </strong>
+                          </li>
+                          <li className="list-group-item d-flex justify-content-between ">
+                            <span className="mb-0">Secondary Email :</span>
+                            <strong>
+                              {EnquiryDetials?.data?.customer?.secondary_email}
+                            </strong>
+                          </li>
+                        </ul>
+                      </div>
+                      <div className="col-lg-6">
+                        <div className="heading">
+                          <h3 className="">Billing Address</h3>
+                        </div>
+                        <ul className="list-group list-group-flush">
+                          <li className="list-group-item d-flex justify-content-between ">
+                            <span className="mb-0">Customer Name :</span>
+                            <strong>
+                              {EnquiryDetials?.billingAddress?.contactPerson}
+                            </strong>
+                          </li>
+                          <li className="list-group-item d-flex justify-content-between ">
+                            <span className="mb-0">Contact No. :</span>
+                            <strong>
+                              {EnquiryDetials?.billingAddress?.contactNumber}
+                            </strong>
+                          </li>
+                          <li className="list-group-item d-flex justify-content-between ">
+                            <span className="mb-0">State :</span>
+                            <strong>
+                              {" "}
+                              {EnquiryDetials?.billingAddress?.state}
+                            </strong>
+                          </li>
+                          <li className="list-group-item d-flex justify-content-between ">
+                            <span className="mb-0">Pincode :</span>
+                            <strong>
+                              {EnquiryDetials?.billingAddress?.pincode}
+                            </strong>
+                          </li>
+                          <li className="list-group-item d-flex justify-content-between ">
+                            <span className="mb-0">Address :</span>
+                            <strong>
+                              {" "}
+                              {EnquiryDetials?.billingAddress?.street}
+                            </strong>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+
+                    {/*---- Tabs -----*/}
                     <div
-                      className="accordion accordion-solid-bg"
-                      id="accordion-eight"
+                      className="list-group roomtab mb-4 mt-5 flex-row"
+                      id="list-tab"
+                      role="tablist"
                     >
-                      <div className="accordion-item">
-                        <div
-                          className="accordion-header rounded-lg"
-                          id="accord-8One"
-                          data-bs-toggle="collapse"
-                          data-bs-target="#collapse8One"
-                          aria-controls="collapse8One"
-                          aria-expanded="true"
-                          role="button"
-                        >
-                          <span className="accordion-header-icon" />
-                          <span className="accordion-header-text">
-                            Customer Detials
-                          </span>
-                          <span className="accordion-header-indicator" />
-                        </div>
-                        <div
-                          id="collapse8One"
-                          className="collapse accordion__body show"
-                          aria-labelledby="accord-8One"
-                          data-bs-parent="#accordion-eight"
-                        >
-                          <div className="accordion-body-text">
-                            <ul className="list-group list-group-flush">
-                              <li className="list-group-item d-flex justify-content-between text-white">
-                                <span className="mb-0">Customer Name :</span>
-                                <strong>
-                                  {EnquiryDetials?.data?.customer?.firstName}{" "}
-                                  {EnquiryDetials?.data?.customer?.lastName}{" "}
-                                </strong>
-                              </li>
-                              <li className="list-group-item d-flex justify-content-between text-white">
-                                <span className="mb-0">Contact No. :</span>
-                                <strong>
-                                  {
-                                    EnquiryDetials?.data?.customer
-                                      ?.primary_phone
-                                  }
-                                </strong>
-                              </li>
-                              <li className="list-group-item d-flex justify-content-between text-white">
-                                <span className="mb-0">
-                                  Secondary Contact No. :
-                                </span>
-                                <strong>
-                                  {
-                                    EnquiryDetials?.data?.customer
-                                      ?.secondary_phone
-                                  }
-                                </strong>
-                              </li>
-                              <li className="list-group-item d-flex justify-content-between text-white">
-                                <span className="mb-0">Email :</span>
-                                <strong>
-                                  {
-                                    EnquiryDetials?.data?.customer
-                                      ?.primary_email
-                                  }
-                                </strong>
-                              </li>
-                              <li className="list-group-item d-flex justify-content-between text-white">
-                                <span className="mb-0">Secondary Email :</span>
-                                <strong>
-                                  {
-                                    EnquiryDetials?.data?.customer
-                                      ?.secondary_email
-                                  }
-                                </strong>
-                              </li>
-                            </ul>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="accordion-item">
-                        <div
-                          className="accordion-header collapsed rounded-lg"
-                          id="accord-8Two"
-                          data-bs-toggle="collapse"
-                          data-bs-target="#collapse8Two"
-                          aria-controls="collapse8Two"
-                          aria-expanded="true"
-                          role="button"
-                        >
-                          <span className="accordion-header-icon" />
-                          <span className="accordion-header-text">
-                            Billing Address
-                          </span>
-                          <span className="accordion-header-indicator" />
-                        </div>
-                        <div
-                          id="collapse8Two"
-                          className="collapse accordion__body"
-                          aria-labelledby="accord-8Two"
-                          data-bs-parent="#accordion-eight"
-                        >
-                          <div className="accordion-body-text">
-                            <ul className="list-group list-group-flush">
-                              <li className="list-group-item d-flex justify-content-between text-white">
-                                <span className="mb-0">Customer Name :</span>
-                                <strong>
-                                  {
-                                    EnquiryDetials?.billingAddress
-                                      ?.contactPerson
-                                  }
-                                </strong>
-                              </li>
-                              <li className="list-group-item d-flex justify-content-between text-white">
-                                <span className="mb-0">Contact No. :</span>
-                                <strong>
-                                  {
-                                    EnquiryDetials?.billingAddress
-                                      ?.contactNumber
-                                  }
-                                </strong>
-                              </li>
-                              <li className="list-group-item d-flex justify-content-between text-white">
-                                <span className="mb-0">State :</span>
-                                <strong>
-                                  {" "}
-                                  {EnquiryDetials?.billingAddress?.state}
-                                </strong>
-                              </li>
-                              <li className="list-group-item d-flex justify-content-between text-white">
-                                <span className="mb-0">Pincode :</span>
-                                <strong>
-                                  {EnquiryDetials?.billingAddress?.pincode}
-                                </strong>
-                              </li>
-                              <li className="list-group-item d-flex justify-content-between text-white">
-                                <span className="mb-0">Address :</span>
-                                <strong>
-                                  {" "}
-                                  {EnquiryDetials?.billingAddress?.street}
-                                </strong>
-                              </li>
-                            </ul>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="accordion-item">
-                        <div
-                          className="accordion-header collapsed rounded-lg"
-                          id="delivery-address"
-                          data-bs-toggle="collapse"
-                          data-bs-target="#deliveryAddress"
-                          aria-controls="deliveryAddress"
-                          aria-expanded="true"
-                          role="button"
-                        >
-                          <span className="accordion-header-icon" />
-                          <span className="accordion-header-text">
-                            Delivery Address
-                          </span>
-                          <span className="accordion-header-indicator" />
-                        </div>
-                        <div
-                          id="deliveryAddress"
-                          className="collapse accordion__body"
-                          aria-labelledby="delivery-address"
-                          data-bs-parent="#deliveryAddress"
-                        >
-                          <div className="accordion-body-text">
-                            <ul className="list-group list-group-flush">
-                              <li className="list-group-item d-flex justify-content-between text-white">
-                                <span className="mb-0">Customer Name :</span>
-                                <strong>
-                                  {
-                                    EnquiryDetials?.deliveryAddress
-                                      ?.contactPerson
-                                  }
-                                </strong>
-                              </li>
-                              <li className="list-group-item d-flex justify-content-between text-white">
-                                <span className="mb-0">Contact No. :</span>
-                                <strong>
-                                  {
-                                    EnquiryDetials?.deliveryAddress
-                                      ?.contactNumber
-                                  }
-                                </strong>
-                              </li>
-                              <li className="list-group-item d-flex justify-content-between text-white">
-                                <span className="mb-0">State :</span>
-                                <strong>
-                                  {" "}
-                                  {EnquiryDetials?.deliveryAddress?.state}
-                                </strong>
-                              </li>
-                              <li className="list-group-item d-flex justify-content-between text-white">
-                                <span className="mb-0">Pincode :</span>
-                                <strong>
-                                  {EnquiryDetials?.deliveryAddress?.pincode}
-                                </strong>
-                              </li>
-                              <li className="list-group-item d-flex justify-content-between text-white">
-                                <span className="mb-0">Address :</span>
-                                <strong>
-                                  {" "}
-                                  {EnquiryDetials?.deliveryAddress?.street}
-                                </strong>
-                              </li>
-                            </ul>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="accordion-item">
-                        <div
-                          className="accordion-header collapsed rounded-lg"
-                          id="accord-8three"
-                          data-bs-toggle="collapse"
-                          data-bs-target="#collapse8three"
-                          aria-controls="collapse8three"
-                          aria-expanded="true"
-                          role="button"
-                        >
-                          <span className="accordion-header-icon" />
-                          <span className="accordion-header-text">Rooms</span>
-                          <span className="accordion-header-indicator" />
-                        </div>
-                        <div
-                          id="collapse8three"
-                          className="collapse accordion__body"
-                          aria-labelledby="accord-8three"
-                          data-bs-parent="#accordion-eight"
-                        >
-                          <div className="accordion-body-text">
-                            <div className="col-lg-12">
-                              {/* <h4 className="card-title fw-bold text-white">
-                              Room's
-                            </h4> */}
-                              <div className="basic-list-group">
-                                <div className="row">
-                                  <div className="col-lg-12 col-xl-12">
-                                    <div
-                                      className="list-group mb-4 flex-row"
-                                      id="list-tab"
-                                      role="tablist"
-                                    >
-                                      {EnquiryDetials?.data &&
-                                        EnquiryDetials?.data?.rooms.map(
-                                          (rooms, index) => (
-                                            <a
-                                              className={`list-group-item list-group-item-action text-white ${
-                                                index === 0 ? "active" : ""
-                                              }`}
-                                              data-bs-toggle="list"
-                                              href={`#list-home-${index}`}
-                                              role="tab"
-                                            >
-                                              {rooms.roomName}
-                                            </a>
-                                          )
-                                        )}
+                      {EnquiryDetials?.data &&
+                        EnquiryDetials?.data?.rooms.map((rooms, index) => (
+                          <a
+                            className={`list-group-item list-group-item-action text-white ${
+                              index === 0 ? "active" : ""
+                            }`}
+                            data-bs-toggle="list"
+                            href={`#list-home-${index}`}
+                            role="tab"
+                          >
+                            Room Name: {rooms.roomName}
+                            <hr />
+                            Floor : {rooms.floor}, No. of windows :{" "}
+                            {rooms.numberOfWindow}
+                          </a>
+                        ))}
+                    </div>
+                    <div className="tab-content" id="nav-tabContent1">
+                      {EnquiryDetials?.data &&
+                        EnquiryDetials?.data?.rooms.map((room, index) => {
+                          console.log("fabric", room?.selectedcurtain);
+                          return (
+                            <>
+                              <div
+                                className={`tab-pane fade show ${
+                                  index === 0 ? "active" : ""
+                                }`}
+                                id={`list-home-${index}`}
+                              >
+                                <h5>Main Curtain Fabric Description</h5>
+                                <div className="border border-1 p-3 rounded-2 mb-3">
+                                  <div className="row">
+                                    <div className="col-lg-3">
+                                      <img
+                                        src={
+                                          room?.selectedcurtain
+                                            ?.curtain_fabric_style?.image
+                                        }
+                                        alt="fabric"
+                                        className="newimg"
+                                      />
+                                    </div>
+                                    <div className="col-lg-9">
+                                      <ul className="list-group list-group-flush">
+                                        <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                          <span className="mb-0">
+                                            Fabric Name :
+                                          </span>
+                                          <strong>
+                                            {" "}
+                                            {
+                                              room?.selectedcurtain?.fabric1
+                                                ?.fabric
+                                            }
+                                          </strong>
+                                        </li>
+                                        <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                          <span className="mb-0">Width. :</span>
+                                          <strong>
+                                            {" "}
+                                            {
+                                              room?.selectedcurtain?.fabric1
+                                                ?.width
+                                            }
+                                          </strong>
+                                        </li>
+                                        <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                          <span className="mb-0">
+                                            Repeat Horizontal :
+                                          </span>
+                                          <strong>
+                                            {" "}
+                                            {
+                                              room?.selectedcurtain?.fabric1
+                                                ?.repeat_horizontal
+                                            }
+                                          </strong>
+                                        </li>
+
+                                        <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                          <span className="mb-0">Weight :</span>
+                                          <strong>
+                                            {" "}
+                                            {
+                                              room?.selectedcurtain
+                                                ?.weight_required
+                                            }
+                                          </strong>
+                                        </li>
+                                        <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                          <span className="mb-0">
+                                            Hand Hamming :
+                                          </span>
+                                          <strong>
+                                            {" "}
+                                            {
+                                              room?.selectedcurtain
+                                                ?.hand_hammering_required
+                                            }
+                                          </strong>
+                                        </li>
+                                        <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                          <span className="mb-0">
+                                            Curtain Style :
+                                          </span>
+                                          <strong>
+                                            {
+                                              room?.selectedcurtain
+                                                ?.curtain_fabric_style
+                                                ?.curtainStyle
+                                            }
+                                          </strong>
+                                        </li>
+                                        <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                          <span className="mb-0">
+                                            Curtain gathering:
+                                          </span>
+                                          <strong>
+                                            {
+                                              room?.selectedcurtain
+                                                ?.fabricGathering?.type
+                                            }
+                                          </strong>
+                                        </li>
+                                      </ul>
                                     </div>
                                   </div>
-                                  <div className="col-lg-6 col-xl-12">
-                                    <div
-                                      className="tab-content"
-                                      id="nav-tabContent1"
-                                    >
-                                      {EnquiryDetials?.data &&
-                                        EnquiryDetials?.data?.rooms.map(
-                                          (room, index) => (
-                                            <div
-                                              className={`tab-pane fade show ${
-                                                index === 0 ? "active" : ""
-                                              }`}
-                                              id={`list-home-${index}`}
-                                            >
-                                              <div className="room-heading">
-                                                <h4 className>
-                                                  {room.roomDescription}
-                                                </h4>
-                                                <span>
-                                                  Floor : {room.floor}, No. of
-                                                  windows :{" "}
-                                                  {room.numberOfWindow}
+                                </div>
+                                {room?.selectedcurtain?.fabric2 === null ? (
+                                  ""
+                                ) : (
+                                  <>
+                                    <h5>Main Curtain Fabric 2 Description</h5>
+                                    <div className="border border-1 p-3 rounded-2 mb-3">
+                                      <div className="row">
+                                        <div className="col-lg-3">
+                                          <img
+                                            src={
+                                              room?.selectedcurtain
+                                                ?.curtain_fabric_style?.image
+                                            }
+                                            alt="fabric"
+                                            className="newimg"
+                                          />
+                                        </div>
+                                        <div className="col-lg-9">
+                                          <ul className="list-group list-group-flush">
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                Fabric Name :
+                                              </span>
+                                              <strong>
+                                                {" "}
+                                                {
+                                                  room?.selectedcurtain?.fabric2
+                                                    ?.fabric
+                                                }
+                                              </strong>
+                                            </li>
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                Width. :
+                                              </span>
+                                              <strong>
+                                                {" "}
+                                                {
+                                                  room?.selectedcurtain?.fabric2
+                                                    ?.width
+                                                }
+                                              </strong>
+                                            </li>
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                Repeat Horizontal :
+                                              </span>
+                                              <strong>
+                                                {" "}
+                                                {
+                                                  room?.selectedcurtain?.fabric2
+                                                    ?.repeat_horizontal
+                                                }
+                                              </strong>
+                                            </li>
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                Repeat vertical :
+                                              </span>
+                                              <strong>
+                                                {" "}
+                                                {
+                                                  room?.selectedcurtain?.fabric2
+                                                    ?.repeat_vertical
+                                                }
+                                              </strong>
+                                            </li>
+                                          </ul>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </>
+                                )}
+
+                                {room?.selectedcurtain?.mock_fabric_required ===
+                                "No" ? (
+                                  ""
+                                ) : (
+                                  <>
+                                    <h5>Mock Curtain Fabric Description</h5>
+                                    <div className="border border-1 p-3 rounded-2 mb-3">
+                                      <div className="row">
+                                        <div className="col-lg-8">
+                                          <ul className="list-group list-group-flush">
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                Fabric Name :
+                                              </span>
+                                              <strong>
+                                                {" "}
+                                                {
+                                                  room?.selectedcurtain
+                                                    ?.mock_fabric?.fabric
+                                                }
+                                              </strong>
+                                            </li>
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                Width. :
+                                              </span>
+                                              <strong>
+                                                {" "}
+                                                {
+                                                  room?.selectedcurtain
+                                                    ?.mock_fabric?.width
+                                                }
+                                              </strong>
+                                            </li>
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                Repeat Horizontal :
+                                              </span>
+                                              <strong>
+                                                {" "}
+                                                {
+                                                  room?.selectedcurtain
+                                                    ?.mock_fabric
+                                                    ?.repeat_horizontal
+                                                }
+                                              </strong>
+                                            </li>
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                Repeat vertical :
+                                              </span>
+                                              <strong>
+                                                {" "}
+                                                {
+                                                  room?.selectedcurtain
+                                                    ?.mock_fabric
+                                                    ?.repeat_vertical
+                                                }
+                                              </strong>
+                                            </li>
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                Repeat vertical :
+                                              </span>
+                                              <strong>
+                                                {" "}
+                                                {
+                                                  room?.selectedcurtain
+                                                    ?.mockFabric_gathering?.type
+                                                }
+                                              </strong>
+                                            </li>
+                                          </ul>
+                                        </div>
+                                        <div className="col-lg-4">
+                                          <img
+                                            src={
+                                              room?.selectedcurtain?.mock_fabric
+                                                ?.image === null
+                                                ? ""
+                                                : room?.selectedcurtain
+                                                    ?.mock_fabric?.image
+                                            }
+                                            alt="fabric"
+                                            className="newimg"
+                                          />
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </>
+                                )}
+                                {room?.selectedcurtain?.LiningType === null ? (
+                                  ""
+                                ) : (
+                                  <>
+                                    {" "}
+                                    <h5>Lining Description</h5>
+                                    <div className="border border-1 p-3 rounded-2 mb-3">
+                                      <div className="row">
+                                        <div className="col-lg-3">
+                                          <img
+                                            src={
+                                              room?.selectedcurtain?.lining
+                                                ?.image === null
+                                                ? ""
+                                                : room?.selectedcurtain?.lining
+                                                    ?.image
+                                            }
+                                            alt="Lining Fabric"
+                                            className="newimg"
+                                          />
+                                        </div>
+                                        <div className="col-lg-9">
+                                          <ul className="list-group list-group-flush">
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                Lining Type :
+                                              </span>
+                                              <div>
+                                                <strong>
+                                                  {
+                                                    room?.selectedcurtain
+                                                      ?.lining?.type
+                                                  }
+                                                </strong>
+                                                <span className="d-block">
+                                                  Note:{" "}
+                                                  {
+                                                    room?.selectedcurtain
+                                                      ?.lining?.note
+                                                  }
                                                 </span>
                                               </div>
-                                              {room?.selectedcurtain ===
-                                              null ? null : (
-                                                <>
-                                                  <h5 className="text-white py-3">
-                                                    Selected Curtains
-                                                  </h5>
-                                                  <div>
-                                                    <ul className="list-group list-group-flush">
-                                                      <li className="list-group-item d-flex justify-content-between text-white">
-                                                        <span className="mb-0">
-                                                          CURTAIN FABRIC
-                                                          SELECTED :
-                                                        </span>
-                                                        <strong>
-                                                          {
-                                                            room
-                                                              ?.selectedcurtain
-                                                              ?.fabric1?.fabric
-                                                          }
-                                                        </strong>
-                                                      </li>
-                                                      <li className="list-group-item d-flex justify-content-between text-white">
-                                                        <span className="mb-0">
-                                                          BRAND. :
-                                                        </span>
-                                                        <strong>
-                                                          {
-                                                            room
-                                                              ?.selectedcurtain
-                                                              ?.fabric1?.book
-                                                              ?.brand?.brand
-                                                          }
-                                                        </strong>
-                                                      </li>
-                                                      <li className="list-group-item d-flex justify-content-between text-white">
-                                                        <span className="mb-0">
-                                                          Book. :
-                                                        </span>
-                                                        <strong>
-                                                          {
-                                                            room
-                                                              ?.selectedcurtain
-                                                              ?.fabric1?.book
-                                                              ?.book
-                                                          }
-                                                        </strong>
-                                                      </li>
-                                                      <li className="list-group-item d-flex justify-content-between text-white">
-                                                        <span className="mb-0">
-                                                          CURTAIN STYLE :
-                                                        </span>
-                                                        <strong>
-                                                          {
-                                                            room
-                                                              ?.selectedcurtain
-                                                              ?.fabric1style
-                                                              ?.curtainStyle
-                                                          }
-                                                        </strong>
-                                                      </li>
-
-                                                      <li className="list-group-item d-flex justify-content-between text-white">
-                                                        <span className="mb-0">
-                                                          LINIING REQUIRED :
-                                                        </span>
-                                                        <strong>
-                                                          {
-                                                            room?.selectedlining
-                                                              ?.lining?.type
-                                                          }{" "}
-                                                        </strong>
-                                                      </li>
-                                                    </ul>
-                                                  </div>
-                                                </>
-                                              )}
-                                              {room?.selectedcurtain
-                                                ?.belt_required === "Yes" ? (
-                                                <>
-                                                  <h5 className="text-white py-3">
-                                                    Selected Belts
-                                                  </h5>
-                                                  <div>
-                                                    <ul className="list-group list-group-flush">
-                                                      <li className="list-group-item d-flex justify-content-between text-white">
-                                                        <span className="mb-0">
-                                                          Belt Fabric :
-                                                        </span>
-                                                        <strong>
-                                                          {
-                                                            room.selectedcurtain
-                                                              .belt?.fabric
-                                                          }
-                                                        </strong>
-                                                      </li>
-                                                      <li className="list-group-item d-flex justify-content-between text-white">
-                                                        <span className="mb-0">
-                                                          BRAND. :
-                                                        </span>
-                                                        <strong>
-                                                          {
-                                                            room
-                                                              ?.selectedcurtain
-                                                              ?.belt?.book
-                                                              ?.brand?.brand
-                                                          }
-                                                        </strong>
-                                                      </li>
-                                                      <li className="list-group-item d-flex justify-content-between text-white">
-                                                        <span className="mb-0">
-                                                          Book. :
-                                                        </span>
-                                                        <strong>
-                                                          {
-                                                            room
-                                                              ?.selectedcurtain
-                                                              ?.belt?.book?.book
-                                                          }
-                                                        </strong>
-                                                      </li>
-                                                      <li className="list-group-item d-flex justify-content-between text-white">
-                                                        <span className="mb-0">
-                                                          Belt Type :
-                                                        </span>
-                                                        <strong>
-                                                          {
-                                                            room
-                                                              ?.selectedcurtain
-                                                              ?.belt_type?.type
-                                                          }
-                                                        </strong>
-                                                      </li>
-                                                    </ul>
-                                                  </div>
-                                                </>
-                                              ) : null}
-
-                                              {room?.selectedcurtain
-                                                ?.pelmet_required === "Yes" ? (
-                                                <>
-                                                  <h5 className="text-white py-3">
-                                                    Selected pelmet
-                                                  </h5>
-                                                  <div>
-                                                    <ul className="list-group list-group-flush">
-                                                      <li className="list-group-item d-flex justify-content-between text-white">
-                                                        <span className="mb-0">
-                                                          Pelmet Fabric :
-                                                        </span>
-                                                        <strong>
-                                                          {
-                                                            room.selectedcurtain
-                                                              .pelmet?.fabric
-                                                          }
-                                                        </strong>
-                                                      </li>
-                                                      <li className="list-group-item d-flex justify-content-between text-white">
-                                                        <span className="mb-0">
-                                                          BRAND. :
-                                                        </span>
-                                                        <strong>
-                                                          {
-                                                            room
-                                                              ?.selectedcurtain
-                                                              ?.pelmet?.book
-                                                              ?.brand?.brand
-                                                          }
-                                                        </strong>
-                                                      </li>
-                                                      <li className="list-group-item d-flex justify-content-between text-white">
-                                                        <span className="mb-0">
-                                                          Book. :
-                                                        </span>
-                                                        <strong>
-                                                          {
-                                                            room
-                                                              ?.selectedcurtain
-                                                              ?.pelmet?.book
-                                                              ?.book
-                                                          }
-                                                        </strong>
-                                                      </li>
-                                                      <li className="list-group-item d-flex justify-content-between text-white">
-                                                        <span className="mb-0">
-                                                          Pelmet Type :
-                                                        </span>
-                                                        <strong>
-                                                          {
-                                                            room
-                                                              ?.selectedcurtain
-                                                              ?.pelmet_type
-                                                          }
-                                                        </strong>
-                                                      </li>
-
-                                                      <li className="list-group-item d-flex justify-content-between text-white">
-                                                        <span className="mb-0">
-                                                          Pelmet Width :
-                                                        </span>
-                                                        <strong>
-                                                          {
-                                                            room
-                                                              ?.selectedcurtain
-                                                              ?.pelmet_width
-                                                          }
-                                                        </strong>
-                                                      </li>
-                                                      <li className="list-group-item d-flex justify-content-between text-white">
-                                                        <span className="mb-0">
-                                                          Pelmet Height/Drop :
-                                                        </span>
-                                                        <strong>
-                                                          {
-                                                            room
-                                                              ?.selectedcurtain
-                                                              ?.pelmet_drop
-                                                          }
-                                                        </strong>
-                                                      </li>
-                                                      <li className="list-group-item d-flex justify-content-between text-white">
-                                                        <span className="mb-0">
-                                                          Pelmet Turning :
-                                                        </span>
-                                                        <strong>
-                                                          {room?.selectedcurtain
-                                                            ?.pelmet_turning ===
-                                                          true
-                                                            ? "Yes"
-                                                            : "No"}
-                                                        </strong>
-                                                      </li>
-                                                      <li className="list-group-item d-flex justify-content-between text-white">
-                                                        <span className="mb-0">
-                                                          Pelmet LBracket
-                                                          Required :
-                                                        </span>
-                                                        <strong>
-                                                          {
-                                                            room
-                                                              ?.selectedcurtain
-                                                              ?.pelmet_LBracket_required
-                                                          }
-                                                        </strong>
-                                                      </li>
-                                                      <li className="list-group-item d-flex justify-content-between text-white">
-                                                        <span className="mb-0">
-                                                          Pelmet LBracket
-                                                          quantity
-                                                        </span>
-                                                        <strong>
-                                                          {
-                                                            room
-                                                              ?.selectedcurtain
-                                                              ?.pelmet_LBracket_quantity
-                                                          }
-                                                        </strong>
-                                                      </li>
-                                                    </ul>
-                                                  </div>
-                                                </>
-                                              ) : null}
-
-                                              {room?.selectedcurtain
-                                                ?.border_required === "Yes" ? (
-                                                <>
-                                                  <h5 className="text-white py-3">
-                                                    Selected Border Fabric
-                                                  </h5>
-                                                  <div>
-                                                    <ul className="list-group list-group-flush">
-                                                      <li className="list-group-item d-flex justify-content-between text-white">
-                                                        <span className="mb-0">
-                                                          Border Fabric :
-                                                        </span>
-                                                        <strong>
-                                                          {
-                                                            room.selectedcurtain
-                                                              .border?.fabric
-                                                          }
-                                                        </strong>
-                                                      </li>
-                                                      <li className="list-group-item d-flex justify-content-between text-white">
-                                                        <span className="mb-0">
-                                                          BRAND. :
-                                                        </span>
-                                                        <strong>
-                                                          {
-                                                            room
-                                                              ?.selectedcurtain
-                                                              ?.border?.book
-                                                              ?.brand?.brand
-                                                          }
-                                                        </strong>
-                                                      </li>
-                                                      <li className="list-group-item d-flex justify-content-between text-white">
-                                                        <span className="mb-0">
-                                                          Book. :
-                                                        </span>
-                                                        <strong>
-                                                          {
-                                                            room
-                                                              ?.selectedcurtain
-                                                              ?.border?.book
-                                                              ?.book
-                                                          }
-                                                        </strong>
-                                                      </li>
-                                                    </ul>
-                                                  </div>
-                                                </>
-                                              ) : null}
-
-                                              {room?.selectedsheer ==
-                                              null ? null : (
-                                                <div>
-                                                  <h5 className="text-white py-3">
-                                                    Selected Sheers
-                                                  </h5>
-                                                  <ul className="list-group list-group-flush">
-                                                    <li className="list-group-item d-flex justify-content-between text-white">
-                                                      <span className="mb-0">
-                                                        SHEER REQUIRED :
-                                                      </span>
-                                                      <strong>Yes</strong>
-                                                    </li>
-                                                    <li className="list-group-item d-flex justify-content-between text-white">
-                                                      <span className="mb-0">
-                                                        SHEER FABRIC SELECTED :
-                                                      </span>
-                                                      <strong>
-                                                        {
-                                                          room?.selectedsheer
-                                                            ?.sheerfabric
-                                                            ?.fabric
-                                                        }
-                                                      </strong>
-                                                    </li>
-                                                    <li className="list-group-item d-flex justify-content-between text-white">
-                                                      <span className="mb-0">
-                                                        BRAND. :
-                                                      </span>
-                                                      <strong>
-                                                        {" "}
-                                                        {
-                                                          room?.selectedsheer
-                                                            ?.sheerfabric?.book
-                                                            ?.brand?.brand
-                                                        }
-                                                      </strong>
-                                                    </li>
-                                                    <li className="list-group-item d-flex justify-content-between text-white">
-                                                      <span className="mb-0">
-                                                        Book. :
-                                                      </span>
-                                                      <strong>
-                                                        {" "}
-                                                        {
-                                                          room?.selectedsheer
-                                                            ?.sheerfabric?.book
-                                                            ?.book
-                                                        }
-                                                      </strong>
-                                                    </li>
-                                                    <li className="list-group-item d-flex justify-content-between text-white">
-                                                      <span className="mb-0">
-                                                        width :{" "}
-                                                      </span>
-                                                      <strong>
-                                                        {" "}
-                                                        {
-                                                          room?.selectedsheer
-                                                            ?.sheerfabric?.width
-                                                        }
-                                                      </strong>
-                                                    </li>
-                                                    <li className="list-group-item d-flex justify-content-between text-white">
-                                                      <span className="mb-0">
-                                                        repeat_horizontal:
-                                                      </span>
-                                                      <strong>
-                                                        {
-                                                          room?.selectedsheer
-                                                            ?.sheerfabric
-                                                            ?.repeat_horizontal
-                                                        }
-                                                      </strong>
-                                                    </li>
-                                                    <li className="list-group-item d-flex justify-content-between text-white">
-                                                      <span className="mb-0">
-                                                        repeat_vertical :
-                                                      </span>
-                                                      <strong>
-                                                        {" "}
-                                                        {
-                                                          room?.selectedsheer
-                                                            ?.sheerfabric
-                                                            ?.repeat_vertical
-                                                        }
-                                                      </strong>
-                                                    </li>
-                                                    <li className="list-group-item d-flex justify-content-between text-white">
-                                                      <span className="mb-0">
-                                                        leadChain :
-                                                      </span>
-                                                      {room?.selectedsheer
-                                                        ?.leadChain === true ? (
-                                                        <strong>Yes</strong>
-                                                      ) : (
-                                                        <strong>No</strong>
-                                                      )}
-                                                    </li>
-                                                    <li className="list-group-item d-flex justify-content-between text-white">
-                                                      <span className="mb-0">
-                                                        hand Hammering :
-                                                      </span>
-                                                      {room?.selectedsheer
-                                                        ?.handHammering ===
-                                                      true ? (
-                                                        <strong>Yes</strong>
-                                                      ) : (
-                                                        <strong>No</strong>
-                                                      )}
-                                                    </li>
-                                                    <li className="list-group-item d-flex justify-content-between text-white">
-                                                      <span className="mb-0">
-                                                        Sheer Style :
-                                                      </span>
-                                                      <strong>
-                                                        {
-                                                          room?.selectedsheer
-                                                            ?.sheerStyle
-                                                            ?.curtainStyle
-                                                        }
-                                                      </strong>
-                                                    </li>
-                                                  </ul>
-                                                </div>
-                                              )}
-                                              {room?.selectedbelt ==
-                                              null ? null : (
-                                                <div>
-                                                  <h5 className="text-white py-3">
-                                                    Selected Belt
-                                                  </h5>
-                                                  <ul className="list-group list-group-flush">
-                                                    <li className="list-group-item d-flex justify-content-between text-white">
-                                                      <span className="mb-0">
-                                                        BELT REQUIRED :
-                                                      </span>
-                                                      <strong>Yes</strong>
-                                                    </li>
-                                                    <li className="list-group-item d-flex justify-content-between text-white">
-                                                      <span className="mb-0">
-                                                        BELT FABRIC SELECTED :
-                                                      </span>
-                                                      <strong>
-                                                        {
-                                                          room?.selectedbelt
-                                                            ?.belt?.fabric
-                                                        }
-                                                      </strong>
-                                                    </li>
-                                                    <li className="list-group-item d-flex justify-content-between text-white">
-                                                      <span className="mb-0">
-                                                        REPEAT :
-                                                      </span>
-                                                      <strong>
-                                                        {" "}
-                                                        {
-                                                          room?.selectedbelt
-                                                            ?.belt?.repeat
-                                                        }
-                                                      </strong>
-                                                    </li>
-                                                    <li className="list-group-item d-flex justify-content-between text-white">
-                                                      <span className="mb-0">
-                                                        Book. :
-                                                      </span>
-                                                      <strong>
-                                                        {
-                                                          room?.selectedbelt
-                                                            ?.belt?.book?.book
-                                                        }
-                                                      </strong>
-                                                    </li>
-                                                    <li className="list-group-item d-flex justify-content-between text-white">
-                                                      <span className="mb-0">
-                                                        width :{" "}
-                                                      </span>
-                                                      <strong>
-                                                        {" "}
-                                                        {
-                                                          room?.selectedbelt
-                                                            ?.belt?.width
-                                                        }
-                                                      </strong>
-                                                    </li>
-                                                  </ul>
-                                                </div>
-                                              )}
-                                              {room?.selectedborder ==
-                                              null ? null : (
-                                                <div>
-                                                  <h5 className="text-white py-3">
-                                                    Selected Border
-                                                  </h5>
-                                                  <ul className="list-group list-group-flush">
-                                                    <li className="list-group-item d-flex justify-content-between text-white">
-                                                      <span className="mb-0">
-                                                        BORDER REQUIRED :
-                                                      </span>
-                                                      <strong>Yes</strong>
-                                                    </li>
-                                                    <li className="list-group-item d-flex justify-content-between text-white">
-                                                      <span className="mb-0">
-                                                        BORDER TYPE :
-                                                      </span>
-                                                      <strong>
-                                                        {
-                                                          room?.selectedborder
-                                                            ?.border_type?.type
-                                                        }
-                                                      </strong>
-                                                    </li>
-                                                    <li className="list-group-item d-flex justify-content-between text-white">
-                                                      <span className="mb-0">
-                                                        Border FABRIC SELECTED :
-                                                      </span>
-                                                      <strong>
-                                                        {
-                                                          room?.selectedborder
-                                                            ?.border?.brand
-                                                            ?.brand
-                                                        }
-                                                      </strong>
-                                                    </li>
-                                                    <li className="list-group-item d-flex justify-content-between text-white">
-                                                      <span className="mb-0">
-                                                        REPEAT :
-                                                      </span>
-                                                      <strong>
-                                                        {" "}
-                                                        {
-                                                          room?.selectedborder
-                                                            ?.border?.repeat
-                                                        }
-                                                      </strong>
-                                                    </li>
-                                                    <li className="list-group-item d-flex justify-content-between text-white">
-                                                      <span className="mb-0">
-                                                        Book. :
-                                                      </span>
-                                                      <strong>
-                                                        {
-                                                          room?.selectedborder
-                                                            ?.border?.book?.book
-                                                        }
-                                                      </strong>
-                                                    </li>
-                                                    <li className="list-group-item d-flex justify-content-between text-white">
-                                                      <span className="mb-0">
-                                                        Brand. :
-                                                      </span>
-                                                      <strong>
-                                                        {
-                                                          room?.selectedborder
-                                                            ?.border?.book?.book
-                                                        }
-                                                      </strong>
-                                                    </li>
-                                                    <li className="list-group-item d-flex justify-content-between text-white">
-                                                      <span className="mb-0">
-                                                        width :{" "}
-                                                      </span>
-                                                      <strong>
-                                                        {" "}
-                                                        {
-                                                          room?.selectedborder
-                                                            ?.border?.width
-                                                        }
-                                                      </strong>
-                                                    </li>
-                                                  </ul>
-                                                </div>
-                                              )}
-                                              {room?.selectedpattern ==
-                                              null ? null : (
-                                                <div>
-                                                  <h5 className="text-white py-3">
-                                                    Selected Pattern
-                                                  </h5>
-                                                  <ul className="list-group list-group-flush">
-                                                    <li className="list-group-item d-flex justify-content-between text-white">
-                                                      <span className="mb-0">
-                                                        Curtain pattern :
-                                                      </span>
-                                                      <strong>
-                                                        {
-                                                          room?.selectedpattern
-                                                            ?.curtainpattern
-                                                            ?.pattern
-                                                        }
-                                                      </strong>
-                                                    </li>
-                                                    <li className="list-group-item d-flex justify-content-between text-white">
-                                                      <span className="mb-0">
-                                                        curtain style :
-                                                      </span>
-                                                      <strong>
-                                                        {
-                                                          room?.selectedpattern
-                                                            ?.curtainstyle
-                                                            ?.curtainStyle
-                                                        }
-                                                      </strong>
-                                                    </li>
-                                                    <li className="list-group-item d-flex justify-content-between text-white">
-                                                      <span className="mb-0">
-                                                        fabric 1 SELECTED :
-                                                      </span>
-                                                      <strong>
-                                                        {
-                                                          room?.selectedpattern
-                                                            ?.fabric1?.fabric
-                                                        }
-                                                      </strong>
-                                                    </li>
-                                                    <li className="list-group-item d-flex justify-content-between text-white">
-                                                      <span className="mb-0">
-                                                        Width :
-                                                      </span>
-                                                      <strong>
-                                                        {" "}
-                                                        {
-                                                          room?.selectedpattern
-                                                            ?.fabric1?.width
-                                                        }
-                                                      </strong>
-                                                    </li>
-                                                    <li className="list-group-item d-flex justify-content-between text-white">
-                                                      <span className="mb-0">
-                                                        Fabric 1 Book :
-                                                      </span>
-                                                      <strong>
-                                                        {" "}
-                                                        {
-                                                          room?.selectedpattern
-                                                            ?.fabric1?.book
-                                                            ?.book
-                                                        }
-                                                      </strong>
-                                                    </li>
-                                                    <li className="list-group-item d-flex justify-content-between text-white">
-                                                      <span className="mb-0">
-                                                        Fabric 1 Brand. :
-                                                      </span>
-                                                      <strong>
-                                                        {" "}
-                                                        {
-                                                          room?.selectedpattern
-                                                            ?.fabric1?.book
-                                                            ?.brand?.brand
-                                                        }
-                                                      </strong>
-                                                    </li>
-                                                    <li className="list-group-item d-flex justify-content-between text-white">
-                                                      <span className="mb-0">
-                                                        Fabric 1 repeat
-                                                        horizontal :{" "}
-                                                      </span>
-                                                      <strong>
-                                                        {" "}
-                                                        {
-                                                          room?.selectedpattern
-                                                            ?.fabric1
-                                                            ?.repeat_horizontal
-                                                        }
-                                                      </strong>
-                                                    </li>
-                                                    <li className="list-group-item d-flex justify-content-between text-white">
-                                                      <span className="mb-0">
-                                                        Fabric 1 repeat vertical
-                                                        :{" "}
-                                                      </span>
-                                                      <strong>
-                                                        {" "}
-                                                        {
-                                                          room?.selectedpattern
-                                                            ?.fabric1
-                                                            ?.repeat_vertical
-                                                        }
-                                                      </strong>
-                                                    </li>
-                                                    <li className="list-group-item d-flex justify-content-between text-white">
-                                                      <span className="mb-0">
-                                                        fabric 2 SELECTED :
-                                                      </span>
-                                                      <strong>
-                                                        {
-                                                          room?.selectedpattern
-                                                            ?.fabric2?.fabric
-                                                        }
-                                                      </strong>
-                                                    </li>
-                                                    <li className="list-group-item d-flex justify-content-between text-white">
-                                                      <span className="mb-0">
-                                                        Width :
-                                                      </span>
-                                                      <strong>
-                                                        {" "}
-                                                        {
-                                                          room?.selectedpattern
-                                                            ?.fabric2?.width
-                                                        }
-                                                      </strong>
-                                                    </li>
-                                                    <li className="list-group-item d-flex justify-content-between text-white">
-                                                      <span className="mb-0">
-                                                        Fabric 2 Book :
-                                                      </span>
-                                                      <strong>
-                                                        {" "}
-                                                        {
-                                                          room?.selectedpattern
-                                                            ?.fabric2?.book
-                                                            ?.book
-                                                        }
-                                                      </strong>
-                                                    </li>
-                                                    <li className="list-group-item d-flex justify-content-between text-white">
-                                                      <span className="mb-0">
-                                                        Fabric 2 Brand. :
-                                                      </span>
-                                                      <strong>
-                                                        {" "}
-                                                        {
-                                                          room?.selectedpattern
-                                                            ?.fabric2?.book
-                                                            ?.brand?.brand
-                                                        }
-                                                      </strong>
-                                                    </li>
-                                                    <li className="list-group-item d-flex justify-content-between text-white">
-                                                      <span className="mb-0">
-                                                        Fabric 2 repeat
-                                                        horizontal :{" "}
-                                                      </span>
-                                                      <strong>
-                                                        {" "}
-                                                        {
-                                                          room?.selectedpattern
-                                                            ?.fabric2
-                                                            ?.repeat_horizontal
-                                                        }
-                                                      </strong>
-                                                    </li>
-                                                    <li className="list-group-item d-flex justify-content-between text-white">
-                                                      <span className="mb-0">
-                                                        Fabric 2 repeat vertical
-                                                        :{" "}
-                                                      </span>
-                                                      <strong>
-                                                        {" "}
-                                                        {
-                                                          room?.selectedpattern
-                                                            ?.fabric2
-                                                            ?.repeat_vertical
-                                                        }
-                                                      </strong>
-                                                    </li>
-                                                  </ul>
-                                                </div>
-                                              )}
-
-                                              {room?.room_assets?.length ===
-                                              0 ? (
-                                                <div className="room-heading border-top">
-                                                  <h3 className>
-                                                    Measurer have not filled
-                                                    data yet
-                                                  </h3>
-                                                </div>
-                                              ) : (
-                                                room?.room_assets?.map(
-                                                  (asset, index) => (
-                                                    <>
-                                                      <h3 className="text-white border-top">
-                                                        window {index + 1}
-                                                      </h3>
-                                                      <div class="card text-white bg-white  text-black">
-                                                        <div className="row">
-                                                          <div className="col-lg-6">
-                                                            <ul class="list-group list-group-flush">
-                                                              <li class="list-group-item d-flex justify-content-between">
-                                                                <span class="mb-0">
-                                                                  Window Height
-                                                                </span>
-                                                                <strong>
-                                                                  {asset.height}
-                                                                  CM
-                                                                </strong>
-                                                              </li>
-                                                              <li class="list-group-item d-flex justify-content-between">
-                                                                <span class="mb-0">
-                                                                  Window Width
-                                                                </span>
-                                                                <strong>
-                                                                  {asset.width}
-                                                                  CM
-                                                                </strong>
-                                                              </li>
-                                                              <li class="list-group-item d-flex justify-content-between">
-                                                                <span class="mb-0">
-                                                                  Ladder Height
-                                                                </span>
-                                                                <strong>
-                                                                  {
-                                                                    asset.ladderHeight
-                                                                  }
-                                                                </strong>
-                                                              </li>
-                                                              <li class="list-group-item d-flex justify-content-between">
-                                                                <span class="mb-0">
-                                                                  Mount Type
-                                                                </span>
-                                                                <strong>
-                                                                  {
-                                                                    asset.mount_type
-                                                                  }
-                                                                </strong>
-                                                              </li>
-                                                              <li class="list-group-item d-flex justify-content-between">
-                                                                <span class="mb-0">
-                                                                  Width of Cove
-                                                                </span>
-                                                                <strong>
-                                                                  {
-                                                                    asset.widhtOfCove
-                                                                  }
-                                                                </strong>
-                                                              </li>
-                                                            </ul>
-                                                          </div>
-                                                          <div className="col-lg-6">
-                                                            <ul class="list-group list-group-flush">
-                                                              <li class="list-group-item d-flex justify-content-between">
-                                                                <span class="mb-0">
-                                                                  Ceiling Type
-                                                                </span>
-                                                                <strong>
-                                                                  {
-                                                                    asset
-                                                                      ?.ceiling_type
-                                                                      ?.type
-                                                                  }
-                                                                </strong>
-                                                              </li>
-                                                              <li class="list-group-item d-flex justify-content-between">
-                                                                <span class="mb-0">
-                                                                  NOTE:
-                                                                </span>
-                                                                <span className="font-size-10 ps-4">
-                                                                  {
-                                                                    asset
-                                                                      ?.ceiling_type
-                                                                      ?.note
-                                                                  }
-                                                                </span>
-                                                              </li>
-                                                              <li class="list-group-item d-flex justify-content-between">
-                                                                <span class="mb-0">
-                                                                  Wall type :
-                                                                </span>
-                                                                <strong>
-                                                                  {asset
-                                                                    ?.ceiling_type
-                                                                    ?.wall_type ==
-                                                                  null ? (
-                                                                    <p>NUll</p>
-                                                                  ) : (
-                                                                    ""
-                                                                  )}
-                                                                </strong>
-                                                              </li>
-                                                              <li class="list-group-item d-flex justify-content-between">
-                                                                <span class="mb-0">
-                                                                  Curtain
-                                                                  operation
-                                                                </span>
-                                                                <strong>
-                                                                  {/* {asset?.curtain -
-                                                                    operation?.operationType} */}
-                                                                </strong>
-                                                              </li>
-                                                              <li class="list-group-item d-flex justify-content-between">
-                                                                <span class="mb-0">
-                                                                  ladder Type :
-                                                                </span>
-                                                                <strong>
-                                                                  {
-                                                                    asset
-                                                                      ?.ladder
-                                                                      ?.ladder
-                                                                  }
-                                                                </strong>
-                                                              </li>
-                                                              <li class="list-group-item d-flex justify-content-between">
-                                                                <span class="mb-0">
-                                                                  ladder Note :
-                                                                </span>
-                                                                <span className="font-size-10 ps-4">
-                                                                  {
-                                                                    asset
-                                                                      ?.ladder
-                                                                      ?.note
-                                                                  }
-                                                                </span>
-                                                              </li>
-                                                            </ul>
-                                                          </div>
-                                                        </div>
-                                                      </div>
-                                                    </>
-                                                  )
-                                                )
-                                              )}
-                                            </div>
-                                          )
-                                        )}
+                                            </li>
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                Lining Fabric Name :
+                                              </span>
+                                              <strong>
+                                                {
+                                                  room?.selectedcurtain
+                                                    ?.lining_fabric?.fabric
+                                                }
+                                              </strong>
+                                            </li>
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                Lining Width. :
+                                              </span>
+                                              <strong>
+                                                {" "}
+                                                {
+                                                  room?.selectedcurtain
+                                                    ?.lining_fabric?.width
+                                                }
+                                              </strong>
+                                            </li>
+                                          </ul>
+                                        </div>
+                                      </div>
                                     </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="accordion-item">
-                        <div
-                          className="accordion-header collapsed rounded-lg"
-                          id="accord-8Tw2o"
-                          data-bs-toggle="collapse"
-                          data-bs-target="#collapse8fou2r"
-                          aria-controls="collapse8four"
-                          aria-expanded="true"
-                          role="button"
-                        >
-                          <span className="accordion-header-icon" />
-                          <span className="accordion-header-text">
-                            Token Amount
-                          </span>
-                          <span className="accordion-header-indicator" />
-                        </div>
-                        <div
-                          id="collapse8fou2r"
-                          className="collapse accordion__body"
-                          aria-labelledby="accord-8Tw2o"
-                          data-bs-parent="#accordion-eight"
-                        >
-                          <div className="accordion-body-text">
-                            <h5 className="text-white">
-                              Token Amount Received :{" "}
-                              <span className=" text-success">
-                                {EnquiryDetials?.data?.amount}
-                              </span>
-                            </h5>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="accordion-item">
-                        <div
-                          className="accordion-header collapsed rounded-lg"
-                          id="accord-8Two"
-                          data-bs-toggle="collapse"
-                          data-bs-target="#collapse8four"
-                          aria-controls="collapse8four"
-                          aria-expanded="true"
-                          role="button"
-                        >
-                          <span className="accordion-header-icon" />
-                          <span className="accordion-header-text">
-                            Schedule Measurer
-                          </span>
-                          <span className="accordion-header-indicator" />
-                        </div>
-                        <div
-                          id="collapse8four"
-                          className="collapse accordion__body"
-                          aria-labelledby="accord-8Two"
-                          data-bs-parent="#accordion-eight"
-                        >
-                          <div className="accordion-body-text">
-                            <ul className="list-group list-group-flush">
-                              <li className="list-group-item d-flex justify-content-between text-white">
-                                <span className="mb-0">Measurer Name :</span>
-                                <Link to={"/"}>
-                                  <h5 className="text-white">
-                                    {
-                                      EnquiryDetials?.EnquirySchedule?.user
-                                        ?.firstName
-                                    }{" "}
-                                    {
-                                      EnquiryDetials?.EnquirySchedule?.user
-                                        ?.lastName
-                                    }
-                                  </h5>
-                                </Link>
-                              </li>
-                              <li className="list-group-item d-flex justify-content-between text-white">
-                                <span className="mb-0">Schedule Date :</span>
-                                <strong>
-                                  {moment(
-                                    EnquiryDetials?.EnquirySchedule?.schedule
-                                      ?.updatedAt
-                                  ).format("ll")}
-                                </strong>
-                              </li>
-                              <li className="list-group-item d-flex justify-content-between text-white">
-                                <span className="mb-0">Tile SLot :</span>
-                                <strong>
-                                  {
-                                    EnquiryDetials?.EnquirySchedule?.schedule
-                                      ?.start_time
-                                  }{" "}
-                                  -{" "}
-                                  {
-                                    EnquiryDetials?.EnquirySchedule?.schedule
-                                      ?.end_time
-                                  }{" "}
-                                </strong>
-                              </li>
+                                  </>
+                                )}
+                                {console.log(
+                                  "first`111111",
+                                  room?.selectedcurtain?.border_required
+                                )}
+                                {room?.selectedcurtain?.border_required ===
+                                "No" ? (
+                                  ""
+                                ) : (
+                                  <>
+                                    <h5>Border Description</h5>
+                                    <div className="border border-1 p-3 rounded-2 mb-3">
+                                      <p className="text-white rounded-pill bg-primary px-3 py-1">
+                                        Border Fabric 1 Description
+                                      </p>
+                                      <div className="row">
+                                        <div className="col-lg-3">
+                                          <img
+                                            src={
+                                              room?.selectedcurtain?.border_type
+                                                ?.image === null
+                                                ? ""
+                                                : room?.selectedcurtain
+                                                    ?.border_type?.image
+                                            }
+                                            alt="borderimage"
+                                            className="newimg"
+                                          />
+                                        </div>
+                                        <div className="col-lg-9">
+                                          <ul className="list-group list-group-flush">
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                Border Type :
+                                              </span>
+                                              <strong>
+                                                {" "}
+                                                {
+                                                  room?.selectedcurtain
+                                                    ?.border_type?.type
+                                                }
+                                              </strong>
+                                            </li>
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                Fabric Name :
+                                              </span>
+                                              <strong>
+                                                {
+                                                  room?.selectedcurtain
+                                                    ?.p_border?.fabric
+                                                }
+                                              </strong>
+                                            </li>
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                Width. :
+                                              </span>
+                                              <strong>
+                                                {" "}
+                                                {
+                                                  room?.selectedcurtain
+                                                    ?.p_border?.width
+                                                }
+                                              </strong>
+                                            </li>
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                Repeat Horizontal :
+                                              </span>
+                                              <strong>
+                                                {" "}
+                                                {
+                                                  room?.selectedcurtain
+                                                    ?.p_border
+                                                    ?.repeat_horizontal
+                                                }
+                                              </strong>
+                                            </li>
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                Repeat Vertical :
+                                              </span>
+                                              <strong>
+                                                {" "}
+                                                {
+                                                  room?.selectedcurtain
+                                                    ?.p_border?.repeat_vertical
+                                                }
+                                              </strong>
+                                            </li>
+                                            <p className="text-white rounded-pill bg-primary px-3 py-1 mt-3">
+                                              Border Fabric 2 Description
+                                            </p>
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                Fabric Name :
+                                              </span>
+                                              <strong>
+                                                {
+                                                  room?.selectedcurtain
+                                                    ?.s_border?.fabric
+                                                }
+                                              </strong>
+                                            </li>
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                Width. :
+                                              </span>
+                                              <strong>
+                                                {" "}
+                                                {
+                                                  room?.selectedcurtain
+                                                    ?.s_border?.width
+                                                }
+                                              </strong>
+                                            </li>
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                Repeat Horizontal :
+                                              </span>
+                                              <strong>
+                                                {" "}
+                                                {
+                                                  room?.selectedcurtain
+                                                    ?.s_border
+                                                    ?.repeat_horizontal
+                                                }
+                                              </strong>
+                                            </li>
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                Repeat Vertical :
+                                              </span>
+                                              <strong>
+                                                {" "}
+                                                {
+                                                  room?.selectedcurtain
+                                                    ?.s_border?.repeat_vertical
+                                                }
+                                              </strong>
+                                            </li>
+                                          </ul>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </>
+                                )}
 
-                              {/* <li className="list-group-item d-flex justify-content-between text-white">
-                                <span className="mb-0">Status :</span>
-                                <strong>
-                                  <span className="badge badge-primary">
-                                    Pending
+                                {room?.selectedsheer === null ? (
+                                  ""
+                                ) : (
+                                  <>
+                                    {" "}
+                                    <h5>Sheer Description</h5>
+                                    <div className="border border-1 p-3 rounded-2 mb-3">
+                                      <div className="row">
+                                        <div className="col-lg-3">
+                                          <img
+                                            src={
+                                              room?.selectedsheer?.sheerStyle
+                                                ?.image === null
+                                                ? ""
+                                                : room?.selectedsheer
+                                                    ?.sheerStyle?.image
+                                            }
+                                            alt="Lining Fabric"
+                                            className="newimg"
+                                          />
+                                        </div>
+                                        <div className="col-lg-9">
+                                          <ul className="list-group list-group-flush">
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                Sheer Curtain Style :
+                                              </span>
+                                              <div>
+                                                <strong>
+                                                  {
+                                                    room?.selectedsheer
+                                                      ?.sheerStyle?.curtainStyle
+                                                  }
+                                                </strong>
+                                              </div>
+                                            </li>
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                Lining Fabric Name :
+                                              </span>
+                                              <div>
+                                                <strong>
+                                                  {
+                                                    room?.selectedsheer
+                                                      ?.sheerfabric?.fabric
+                                                  }
+                                                </strong>
+                                              </div>
+                                            </li>
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                Lining Fabric Width :
+                                              </span>
+                                              <strong>
+                                                {
+                                                  room?.selectedsheer
+                                                    ?.sheerfabric?.width
+                                                }
+                                              </strong>
+                                            </li>
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                Lining Fabric Repeat Horizontal.
+                                                :
+                                              </span>
+                                              <strong>
+                                                {" "}
+                                                {
+                                                  room?.selectedsheer
+                                                    ?.sheerfabric
+                                                    ?.repeat_horizontal
+                                                }
+                                              </strong>
+                                            </li>
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                Lining Fabric Repeat Vertical. :
+                                              </span>
+                                              <strong>
+                                                {" "}
+                                                {
+                                                  room?.selectedsheer
+                                                    ?.sheerfabric
+                                                    ?.repeat_vertical
+                                                }
+                                              </strong>
+                                            </li>
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                Lining Fabric Book :
+                                              </span>
+                                              <strong>
+                                                {" "}
+                                                {
+                                                  room?.selectedsheer
+                                                    ?.sheerfabric?.book?.book
+                                                }
+                                              </strong>
+                                            </li>
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                Lining Fabric Brand :
+                                              </span>
+                                              <strong>
+                                                {" "}
+                                                {
+                                                  room?.selectedsheer
+                                                    ?.sheerfabric?.book?.brand
+                                                    ?.brand
+                                                }
+                                              </strong>
+                                            </li>
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                Hand Hamming :
+                                              </span>
+                                              <strong>
+                                                {" "}
+                                                {
+                                                  room?.selectedsheer
+                                                    ?.handHammering
+                                                }
+                                              </strong>
+                                            </li>
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                Lead Chain :
+                                              </span>
+                                              <strong>
+                                                {" "}
+                                                {room?.selectedsheer?.leadChain}
+                                              </strong>
+                                            </li>
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                Gathering :
+                                              </span>
+                                              <strong>
+                                                {" "}
+                                                {
+                                                  room?.selectedsheer
+                                                    ?.GatheredSheer?.type
+                                                }
+                                              </strong>
+                                            </li>
+                                          </ul>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </>
+                                )}
+
+                                {room?.selectedcurtain?.beltType === null ? (
+                                  ""
+                                ) : (
+                                  <>
+                                    <h5>Belt Description</h5>
+                                    <div className="border border-1 p-3 rounded-2 mb-3">
+                                      <div className="row">
+                                        <div className="col-lg-3">
+                                          <img
+                                            src={
+                                              room?.selectedcurtain?.belt_type
+                                                ?.image === null
+                                                ? ""
+                                                : room?.selectedcurtain
+                                                    ?.belt_type?.image
+                                            }
+                                            alt="Belt Fabric"
+                                            className="newimg"
+                                          />
+                                        </div>
+                                        <div className="col-lg-9">
+                                          <ul className="list-group list-group-flush">
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                Belt Type:
+                                              </span>
+                                              <strong>
+                                                {
+                                                  room?.selectedcurtain
+                                                    ?.belt_type?.type
+                                                }
+                                              </strong>
+                                            </li>
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                Belt Fabric Name :
+                                              </span>
+                                              <strong>
+                                                {
+                                                  room?.selectedcurtain?.belt
+                                                    ?.fabric
+                                                }
+                                              </strong>
+                                            </li>
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                Width. :
+                                              </span>
+                                              <strong>
+                                                {" "}
+                                                {
+                                                  room?.selectedcurtain?.belt
+                                                    ?.width
+                                                }
+                                              </strong>
+                                            </li>
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                Repeat Horizontal :
+                                              </span>
+                                              <strong>
+                                                {" "}
+                                                {
+                                                  room?.selectedcurtain?.belt
+                                                    ?.repeat_horizontal
+                                                }{" "}
+                                              </strong>
+                                            </li>
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                Repeat Vertical :
+                                              </span>
+                                              <strong>
+                                                {" "}
+                                                {
+                                                  room?.selectedcurtain?.belt
+                                                    ?.repeat_vertical
+                                                }{" "}
+                                              </strong>
+                                            </li>
+                                          </ul>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </>
+                                )}
+
+                                {room?.selectedcurtain?.pelmetTypeId ===
+                                null ? (
+                                  ""
+                                ) : (
+                                  <>
+                                    {" "}
+                                    <h5>Pelmet Description</h5>
+                                    <div className="border border-1 p-3 rounded-2 mb-3">
+                                      <div className="row">
+                                        <div className="col-lg-3">
+                                          <img
+                                            src={
+                                              room?.selectedcurtain?.pelmet_type
+                                                ?.image === null
+                                                ? ""
+                                                : room?.selectedcurtain
+                                                    ?.pelmet_type?.image
+                                            }
+                                            alt="Belt Fabric"
+                                            className="newimg"
+                                          />
+                                        </div>
+
+                                        <div className="col-lg-9">
+                                          <ul className="list-group list-group-flush">
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                Pelmet Type :
+                                              </span>
+                                              <strong>
+                                                {
+                                                  room?.selectedcurtain
+                                                    ?.pelmet_type?.type
+                                                }
+                                              </strong>
+                                            </li>
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                Pelmet Fabric Name :
+                                              </span>
+                                              <strong>
+                                                {
+                                                  room?.selectedcurtain?.pelmet
+                                                    ?.fabric
+                                                }
+                                              </strong>
+                                            </li>
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                Width. :
+                                              </span>
+                                              <strong>
+                                                {
+                                                  room?.selectedcurtain?.pelmet
+                                                    ?.width
+                                                }
+                                              </strong>
+                                            </li>
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                Repeat Horizontal :
+                                              </span>
+                                              <strong>
+                                                {
+                                                  room?.selectedcurtain?.pelmet
+                                                    ?.repeat_horizontal
+                                                }
+                                              </strong>
+                                            </li>
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                Repeat Vertical :
+                                              </span>
+                                              <strong>
+                                                {
+                                                  room?.selectedcurtain?.pelmet
+                                                    ?.repeat_vertical
+                                                }
+                                              </strong>
+                                            </li>
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                Pelmet Width :
+                                              </span>
+                                              <strong>
+                                                {
+                                                  room?.selectedcurtain
+                                                    ?.pelmet_width
+                                                }
+                                              </strong>
+                                            </li>
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                Pelmet drop/Height :
+                                              </span>
+                                              <strong>
+                                                {
+                                                  room?.selectedcurtain
+                                                    ?.pelmet_drop
+                                                }
+                                              </strong>
+                                            </li>
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                Pelmet Turning :
+                                              </span>
+                                              <strong>
+                                                {" "}
+                                                {
+                                                  room?.selectedcurtain
+                                                    ?.pelmet_turning
+                                                }
+                                              </strong>
+                                            </li>
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                L Brackets :
+                                              </span>
+                                              <strong>
+                                                {
+                                                  room?.selectedcurtain
+                                                    ?.pelmet_LBracket_required
+                                                }
+                                              </strong>
+                                            </li>
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                Number of L Brackets :
+                                              </span>
+                                              <strong>
+                                                {
+                                                  room?.selectedcurtain
+                                                    ?.pelmet_LBracket_quantity
+                                                }
+                                              </strong>
+                                            </li>
+                                          </ul>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </>
+                                )}
+
+                                {room?.selectedTrack === null ? (
+                                  ""
+                                ) : (
+                                  <>
+                                    <h5>Track Information</h5>
+                                    <div className="border border-1 p-3 rounded-2 mb-3">
+                                      <p class="text-white rounded-pill bg-primary px-3 py-1">
+                                        Main Curtain track Description
+                                      </p>
+                                      <div className="row">
+                                        <div className="col-lg-3">
+                                          <img
+                                            src={
+                                              room?.selectedTrack
+                                                ?.primaryTrackType?.image ===
+                                              null
+                                                ? ""
+                                                : room?.selectedTrack
+                                                    ?.primaryTrackType?.image
+                                            }
+                                            alt="Belt Fabric"
+                                            className="newimg"
+                                          />
+                                        </div>
+                                        <div className="col-lg-9">
+                                          <ul className="list-group list-group-flush">
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <strong className="mb-0">
+                                                Main Curtain track type :
+                                              </strong>
+                                              <span>
+                                                {
+                                                  room?.selectedTrack
+                                                    ?.primaryTrackType?.type
+                                                }
+                                              </span>
+                                            </li>
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <strong className="mb-0">
+                                                Curtain track length. :
+                                              </strong>
+                                              <span>
+                                                {
+                                                  room?.selectedTrack
+                                                    ?.primary_track_length
+                                                }
+                                              </span>
+                                            </li>
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <strong className="mb-0">
+                                                Main Curtain Track Moter
+                                                operation :
+                                              </strong>
+                                              <span>
+                                                {
+                                                  room?.selectedTrack
+                                                    ?.primary_motor_operation
+                                                }
+                                              </span>
+                                            </li>
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <strong className="mb-0">
+                                                Main Curtain track extra bracket
+                                                Required :
+                                              </strong>
+                                              <span>
+                                                {" "}
+                                                {
+                                                  room?.selectedTrack
+                                                    ?.primary_extra_track_bracket_required
+                                                }
+                                              </span>
+                                            </li>
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <strong className="mb-0">
+                                                Main Curtain track extra bracket
+                                                Quantity :
+                                              </strong>
+                                              <span>
+                                                {" "}
+                                                {
+                                                  room?.selectedTrack
+                                                    ?.primary_extra_track_bracket_quantity
+                                                }
+                                              </span>
+                                            </li>
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <strong className="mb-0">
+                                                Main Curtain track over lapper
+                                                required :
+                                              </strong>
+                                              <span>
+                                                {
+                                                  room?.selectedTrack
+                                                    ?.primary_overlappper_required
+                                                }
+                                              </span>
+                                            </li>
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <strong className="mb-0">
+                                                Main curtain track over lapper :
+                                              </strong>
+                                              <span>
+                                                {
+                                                  room?.selectedTrack
+                                                    ?.primary_number_of_overlappper_pair
+                                                }
+                                              </span>
+                                            </li>
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <strong className="mb-0">
+                                                Main curatin Track Stick
+                                                Required :
+                                              </strong>
+                                              <span>
+                                                {room?.selectedTrack
+                                                  ?.primary_track_curatin_stick_required ===
+                                                null
+                                                  ? "No"
+                                                  : "Yes"}
+                                              </span>
+                                            </li>
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <strong className="mb-0">
+                                                Main curatin tie Knobs Required
+                                                :
+                                              </strong>
+                                              <span>
+                                                {room?.selectedTrack
+                                                  ?.primary_tie_knobs_required ===
+                                                null
+                                                  ? "No"
+                                                  : "Yes"}
+                                              </span>
+                                            </li>
+                                          </ul>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </>
+                                )}
+                                {room?.selectedRod === null ? (
+                                  ""
+                                ) : (
+                                  <>
+                                    {" "}
+                                    <h5>Roads Information</h5>
+                                    <div className="border border-1 p-3 rounded-2 mb-3">
+                                      <div className="row">
+                                        <div className="col-lg-3">
+                                          <img
+                                            src={
+                                              room?.selectedRod?.primaryRod
+                                                ?.image === null
+                                                ? ""
+                                                : room?.selectedRod?.primaryRod
+                                                    ?.image
+                                            }
+                                            alt="Belt Fabric"
+                                            className="newimg"
+                                          />
+                                        </div>
+                                        <div className="col-lg-9">
+                                          <ul className="list-group list-group-flush">
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                Rod channel type :
+                                              </span>
+                                              <strong>
+                                                {
+                                                  room?.selectedRod
+                                                    ?.rod_selection
+                                                }
+                                              </strong>
+                                            </li>
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                Curtain rod Type :
+                                              </span>
+                                              <strong>
+                                                {
+                                                  room?.selectedRod?.primaryRod
+                                                    ?.type
+                                                }
+                                              </strong>
+                                            </li>
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                Curtain rod length. :
+                                              </span>
+                                              <strong>
+                                                {
+                                                  room?.selectedRod
+                                                    ?.primary_rod_length
+                                                }
+                                              </strong>
+                                            </li>
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                Curtain rod extra bracket
+                                                required :
+                                              </span>
+                                              <strong>
+                                                {
+                                                  room?.selectedRod
+                                                    ?.extra_bracket_required
+                                                }
+                                              </strong>
+                                            </li>
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                No of curtain rod extra bracket
+                                                :
+                                              </span>
+                                              <strong>
+                                                {
+                                                  room?.selectedRod
+                                                    ?.extra_bracket_quantity
+                                                }
+                                              </strong>
+                                            </li>
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                extra bracket support required :
+                                              </span>
+                                              <strong>
+                                                {
+                                                  room?.selectedRod
+                                                    ?.extra_bracket_support_required
+                                                }
+                                              </strong>
+                                            </li>
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                extra bracket support quantity :
+                                              </span>
+                                              <strong>
+                                                {
+                                                  room?.selectedRod
+                                                    ?.extra_bracket_support_required
+                                                }
+                                              </strong>
+                                            </li>
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                Curtain rod ring required :
+                                              </span>
+                                              <strong>
+                                                {
+                                                  room?.selectedRod
+                                                    ?.extra_ring_required
+                                                }
+                                              </strong>
+                                            </li>
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                no of curtain rod ring :
+                                              </span>
+                                              <strong>
+                                                {
+                                                  room?.selectedRod
+                                                    ?.extra_ring_quantity
+                                                }
+                                              </strong>
+                                            </li>
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                Curtain rod tie knob required :
+                                              </span>
+                                              <strong>
+                                                {room?.selectedRod
+                                                  ?.rod_tie_knobs_required ===
+                                                null
+                                                  ? "No"
+                                                  : "Yes"}
+                                              </strong>
+                                            </li>
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                Curtain rod tie knobs pair :
+                                              </span>
+                                              <strong>
+                                                {room?.selectedRod
+                                                  ?.rod_number_of_tie_knobs_pair ===
+                                                null
+                                                  ? "No"
+                                                  : "Yes"}
+                                              </strong>
+                                            </li>
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                Curtain rod finial quantity :
+                                              </span>
+                                              <strong>
+                                                {room?.selectedRod
+                                                  ?.finial_quantity === null
+                                                  ? "N/A"
+                                                  : room?.selectedRod
+                                                      ?.finial_quantity}
+                                              </strong>
+                                            </li>
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                Curtain rod end cap required :
+                                              </span>
+                                              <strong>
+                                                {room?.selectedRod
+                                                  ?.end_cap_required === null
+                                                  ? "No"
+                                                  : "Yes"}
+                                              </strong>
+                                            </li>
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                No of curtain rod end cap :
+                                              </span>
+                                              <strong>
+                                                {room?.selectedRod
+                                                  ?.end_cap_quantity === null
+                                                  ? "N/A"
+                                                  : room?.selectedRod
+                                                      ?.end_cap_quantity}
+                                              </strong>
+                                            </li>
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                Curtain rod end cap wall support
+                                                required :
+                                              </span>
+                                              <strong>
+                                                {room?.selectedRod
+                                                  ?.end_cap_wall_support_required ===
+                                                null
+                                                  ? "No"
+                                                  : "Yes"}
+                                              </strong>
+                                            </li>
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                No of curtain rod end cap wall
+                                                support :
+                                              </span>
+                                              <strong>
+                                                {room?.selectedRod
+                                                  ?.end_cap_wall_support_required ===
+                                                null
+                                                  ? "No"
+                                                  : room?.selectedRod
+                                                      ?.end_cap_wall_support_required}
+                                              </strong>
+                                            </li>
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                Curtain rod stick required :
+                                              </span>
+                                              <strong>
+                                                {room?.selectedRod
+                                                  ?.curatin_stick_required ===
+                                                null
+                                                  ? "No"
+                                                  : "Yes"}
+                                              </strong>
+                                            </li>
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                No of curtain rod stick Pair :
+                                              </span>
+                                              <strong>
+                                                {" "}
+                                                {room?.selectedRod
+                                                  ?.number_of_curatin_stick_pair ===
+                                                null
+                                                  ? "No"
+                                                  : room?.selectedRod
+                                                      ?.number_of_curatin_stick_pair}
+                                              </strong>
+                                            </li>
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                Secondary Rod Length :
+                                              </span>
+                                              <strong>
+                                                {" "}
+                                                {room?.selectedRod
+                                                  ?.secondary_rod_length ===
+                                                null
+                                                  ? "No"
+                                                  : room?.selectedRod
+                                                      ?.secondary_rod_length}
+                                              </strong>
+                                            </li>
+                                          </ul>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </>
+                                )}
+                              </div>
+                            </>
+                          );
+                        })}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {/* modals  */}
+      <div class="modal fade" id="exampleModalCenter">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Enquiry Status</h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <div className="card">
+                <div className="card-body">
+                  <h4 className="card-intro-title">Enquiry No.</h4>
+                  <div
+                    id="DZ_W_TimeLine"
+                    className="widget-timeline dlab-scroll"
+                  >
+                    <ul className="timeline">
+                      {EnquiryDetials?.data?.enquirystatuses &&
+                        EnquiryDetials?.data?.enquirystatuses.map(
+                          (item, index) => {
+                            return (
+                              <li>
+                                <div className="timeline-badge primary" />
+                                <a
+                                  className="timeline-panel text-muted"
+                                  href="#"
+                                >
+                                  <span className="text-white">
+                                    {moment(item.createdAt).format("LLL")}
                                   </span>
-                                </strong>
-                              </li> */}
+                                  <h6 className="mb-0 text-white">
+                                    {item.remark} #{item.enquiryId}
+                                    {/* <strong className="text-primary"></strong>. */}
+                                  </h6>
+                                </a>
+                              </li>
+                            );
+                          }
+                        )}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-danger light"
+                data-bs-dismiss="modal"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="modal fade bd-example-modal-lg"
+        tabindex="-1"
+        role="dialog"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Room Detials</h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <ul className="nav nav-pills justify-content-start mb-4">
+                {EnquiryDetials?.data &&
+                  EnquiryDetials?.data?.rooms.map((rooms, index) => (
+                    <li className=" nav-item">
+                      <a
+                        className={`"nav-link list-group-item ${
+                          index === 0 ? "active" : ""
+                        }`}
+                        data-bs-toggle="tab"
+                        href={`#navpills${index}`}
+                        aria-expanded="false"
+                      >
+                        Room Name: {rooms.roomName}
+                      </a>
+                    </li>
+                  ))}
+              </ul>
+              <div className="tab-content">
+                {EnquiryDetials?.data &&
+                  EnquiryDetials?.data?.rooms.map((rooms, index) => (
+                    <>
+                      <div
+                        id={`navpills${index}`}
+                        className={`tab-pane  ${index === 0 ? "active" : ""}`}
+                      >
+                        <div className="row">
+                          <div className="col-lg-12">
+                            <ul className="nav nav-pills justify-content-start mb-4">
+                              {rooms?.room_assets &&
+                                rooms?.room_assets.map((window, index) => (
+                                  <li className=" nav-item">
+                                    <a
+                                      className={` "nav-link rounded-pill  px-4 py-2 me-2 border ${
+                                        index === 0
+                                          ? "active bg-primary text-white"
+                                          : ""
+                                      }`}
+                                      data-bs-toggle="tab"
+                                      href={`#navpillschild${index}`}
+                                      aria-expanded="false"
+                                    >
+                                      {`window-${index + 1}`}
+                                    </a>
+                                  </li>
+                                ))}
                             </ul>
                           </div>
-                        </div>
-                      </div>
-                      {/* <div className="accordion-item">
-                      <div
-                        className="accordion-header collapsed rounded-lg"
-                        id="accord-8Two"
-                        data-bs-toggle="collapse"
-                        data-bs-target="#collapse8five"
-                        aria-controls="collapse8five"
-                        aria-expanded="true"
-                        role="button"
-                      >
-                        <span className="accordion-header-icon" />
-                        <span className="accordion-header-text">
-                          {" "}
-                          Stitching{" "}
-                        </span>
-                        <span className="accordion-header-indicator" />
-                      </div>
-                      <div
-                        id="collapse8five"
-                        className="collapse accordion__body"
-                        aria-labelledby="accord-8Two"
-                        data-bs-parent="#accordion-eight"
-                      >
-                        <div className="accordion-body-text">
-                          <h4 className="ms-4 mb-4 fw-bold text-white">
-                            Estimate Date for Complete Order - 2 June 2022
-                          </h4>
-                          <div className="basic-list-group">
-                            <div className="row">
-                              <div className="col-lg-12 col-xl-12">
-                                <div
-                                  className="list-group mb-4 flex-row"
-                                  id="list-tab"
-                                  role="tablist"
-                                >
-                                  <a
-                                    className="list-group-item list-group-item-action text-white active"
-                                    data-bs-toggle="list"
-                                    href="#list-home1"
-                                    role="tab"
-                                  >
-                                    curtains
-                                  </a>
-                                  <a
-                                    className="list-group-item list-group-item-action text-white"
-                                    data-bs-toggle="list"
-                                    href="#list-profile1"
-                                    role="tab"
-                                  >
-                                    Wallpapers
-                                  </a>
-                                  <a
-                                    className="list-group-item list-group-item-action text-white"
-                                    data-bs-toggle="list"
-                                    href="#list-messages1"
-                                    role="tab"
-                                  >
-                                    Floor
-                                  </a>
-                                  <a
-                                    className="list-group-item list-group-item-action text-white"
-                                    data-bs-toggle="list"
-                                    href="#list-settings1"
-                                    role="tab"
-                                  >
-                                    Mattress
-                                  </a>
-                                </div>
-                              </div>
-                              <div className="col-lg-6 col-xl-12">
-                                <div
-                                  className="tab-content"
-                                  id="nav-tabContent1"
-                                >
+                          <div className="col-lg-12">
+                            <div className="tab-content">
+                              {rooms?.room_assets &&
+                                rooms?.room_assets.map((window, index) => (
                                   <div
-                                    className="tab-pane fade show active"
-                                    id="list-home1"
+                                    id={`navpillschild${index}`}
+                                    className={`tab-pane ${
+                                      index === 0 ? "active" : ""
+                                    }`}
                                   >
-                                    <div className="room-heading">
-                                      <h4 className>Room 1</h4>
-                                      <span>Daughters Room</span>
-                                    </div>
-                                    <div>
-                                      <ul className="list-group list-group-flush">
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">
-                                            CURTAIN FABRIC SELECTED :
-                                          </span>
-                                          <strong>Xieriya</strong>
-                                        </li>
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">BRAND. :</span>
-                                          <strong>Brands</strong>
-                                        </li>
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">Book. :</span>
-                                          <strong>#tredf</strong>
-                                        </li>
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">
-                                            CURTAIN STYLE :
-                                          </span>
-                                          <strong>EYELET</strong>
-                                        </li>
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">
-                                            LINIING REQUIRED :
-                                          </span>
-                                          <strong>
-                                            Yes (BLACKOUT,DIMOUT,LIGHT
-                                            FILTERING)
-                                          </strong>
-                                        </li>
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">
-                                            SHEER REQUIRED :
-                                          </span>
-                                          <strong>YES</strong>
-                                        </li>
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">
-                                            SHEER FABRIC SELECTED :
-                                          </span>
-                                          <strong>EYELET</strong>
-                                        </li>
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">BRAND. :</span>
-                                          <strong>Brands</strong>
-                                        </li>
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">Book. :</span>
-                                          <strong>#tredf</strong>
-                                        </li>
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">
-                                            Assigned Tailor. :
-                                          </span>
-                                          <strong>
-                                            Chandra Prakash Pandey
-                                          </strong>
-                                        </li>
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">
-                                            Total windows. :
-                                          </span>
-                                          <strong>3</strong>
-                                        </li>
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">
-                                            Total Doors. :
-                                          </span>
-                                          <strong>1</strong>
-                                        </li>
-                                      </ul>
-                                    </div>
-                                    <div className="room-heading">
-                                      <h4 className>Room 2</h4>
-                                      <span>Guest Room</span>
-                                    </div>
-                                    <div>
-                                      <ul className="list-group list-group-flush">
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">
-                                            CURTAIN FABRIC SELECTED :
-                                          </span>
-                                          <strong>Xieriya</strong>
-                                        </li>
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">BRAND. :</span>
-                                          <strong>Brands</strong>
-                                        </li>
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">Book. :</span>
-                                          <strong>#tredf</strong>
-                                        </li>
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">
-                                            CURTAIN STYLE :
-                                          </span>
-                                          <strong>EYELET</strong>
-                                        </li>
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">
-                                            LINIING REQUIRED :
-                                          </span>
-                                          <strong>
-                                            Yes (BLACKOUT,DIMOUT,LIGHT
-                                            FILTERING)
-                                          </strong>
-                                        </li>
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">
-                                            SHEER REQUIRED :
-                                          </span>
-                                          <strong>YES</strong>
-                                        </li>
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">
-                                            SHEER FABRIC SELECTED :
-                                          </span>
-                                          <strong>EYELET</strong>
-                                        </li>
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">BRAND. :</span>
-                                          <strong>Brands</strong>
-                                        </li>
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">Book. :</span>
-                                          <strong>#tredf</strong>
-                                        </li>
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">
-                                            Assigned Tailor. :
-                                          </span>
-                                          <strong>Not Yet Assigned</strong>
-                                        </li>
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">
-                                            Total windows. :
-                                          </span>
-                                          <strong>3</strong>
-                                        </li>
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">
-                                            Total Doors. :
-                                          </span>
-                                          <strong>1</strong>
-                                        </li>
-                                      </ul>
-                                    </div>
-                                  </div>
-                                  <div
-                                    className="tab-pane fade"
-                                    id="list-profile1"
-                                    role="tabpanel"
-                                  >
-                                    <div className="room-heading">
-                                      <h4 className>Room 3</h4>
-                                      <span>Father's Room</span>
-                                    </div>
                                     <ul className="list-group list-group-flush">
-                                      <li className="list-group-item d-flex justify-content-between text-white">
-                                        Room wallpaper details
+                                      <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                        <span className="mb-0">Fabric :</span>
+                                        <strong>
+                                          {
+                                            rooms?.selectedcurtain?.fabric1
+                                              ?.fabric
+                                          }
+                                        </strong>
+                                      </li>
+                                      <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                        <span className="mb-0">Width :</span>
+                                        <strong>
+                                          {" "}
+                                          {
+                                            rooms?.selectedcurtain?.fabric1
+                                              ?.width
+                                          }
+                                        </strong>
+                                      </li>
+                                      <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                        <span className="mb-0">Repeat H :</span>
+                                        <strong>
+                                          {" "}
+                                          {
+                                            rooms?.selectedcurtain?.fabric1
+                                              ?.repeat_horizontal
+                                          }
+                                        </strong>
+                                      </li>
+                                      <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                        <span className="mb-0">Repeat V :</span>
+                                        <strong>
+                                          {" "}
+                                          {
+                                            rooms?.selectedcurtain?.fabric1
+                                              ?.repeat_vertical
+                                          }
+                                        </strong>
+                                      </li>
+                                      <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                        <span className="mb-0">Brand :</span>
+                                        <strong>
+                                          {" "}
+                                          {
+                                            rooms?.selectedcurtain?.fabric1
+                                              ?.book?.book
+                                          }
+                                        </strong>
+                                      </li>
+                                      <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                        <span className="mb-0">Book :</span>
+                                        <strong>
+                                          {" "}
+                                          {
+                                            rooms?.selectedcurtain?.fabric1
+                                              ?.book?.brand?.brand
+                                          }
+                                        </strong>
+                                      </li>
+                                      <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                        <span className="mb-0">
+                                          No of Panel :
+                                        </span>
+                                        <strong>
+                                          {window?.number_of_panel}
+                                        </strong>
+                                      </li>
+                                      <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                        <span className="mb-0">
+                                          Total Fabric :
+                                        </span>
+                                        <strong>
+                                          {window?.total_fabric_required}
+                                        </strong>
                                       </li>
                                     </ul>
                                   </div>
-                                  <div
-                                    className="tab-pane fade"
-                                    id="list-messages1"
-                                  >
-                                    <div className="room-heading mb-4">
-                                      <h4 className>Room 4</h4>
-                                      <span>Grand Mother's Room</span>
-                                    </div>
-                                    <h4 className="mb-4 text-white">
-                                      Floor Detials
-                                    </h4>
-                                  </div>
-                                  <div
-                                    className="tab-pane fade"
-                                    id="list-settings1"
-                                  >
-                                    <div className="room-heading mb-4">
-                                      <h4 className>Room 5</h4>
-                                      <span>Grand Father's Room</span>
-                                    </div>
-                                    <h4 className="mb-4 text-white">
-                                      Mattress Detials
-                                    </h4>
-                                    <p />
-                                  </div>
-                                </div>
-                              </div>
+                                ))}
                             </div>
+                          </div>
+                          <div className="col-lg-4">
+                            <img src={""} alt="imageof" />
                           </div>
                         </div>
                       </div>
-                    </div>
-                    <div className="accordion-item">
-                      <div
-                        className="accordion-header collapsed rounded-lg"
-                        id="accord-8Two11"
-                        data-bs-toggle="collapse"
-                        data-bs-target="#collapse8five11"
-                        aria-controls="collapse8five"
-                        aria-expanded="true"
-                        role="button"
-                      >
-                        <span className="accordion-header-icon" />
-                        <span className="accordion-header-text">
-                          {" "}
-                          QC Details{" "}
-                        </span>
-                        <span className="accordion-header-indicator" />
-                      </div>
-                      <div
-                        id="collapse8five11"
-                        className="collapse accordion__body"
-                        aria-labelledby="accord-8Two"
-                        data-bs-parent="#accordion-eight"
-                      >
-                        <div className="accordion-body-text">
-                          <div className="basic-list-group">
-                            <div className="row">
-                              <div className="col-lg-12 col-xl-12">
-                                <div
-                                  className="list-group mb-4 flex-row"
-                                  id="list-tab"
-                                  role="tablist"
-                                >
-                                  <a
-                                    className="list-group-item list-group-item-action text-white active"
-                                    data-bs-toggle="list"
-                                    href="#list-home12"
-                                    role="tab"
-                                  >
-                                    curtains
-                                  </a>
-                                  <a
-                                    className="list-group-item list-group-item-action text-white"
-                                    data-bs-toggle="list"
-                                    href="#list-profile12"
-                                    role="tab"
-                                  >
-                                    Wallpapers
-                                  </a>
-                                  <a
-                                    className="list-group-item list-group-item-action text-white"
-                                    data-bs-toggle="list"
-                                    href="#list-messages12"
-                                    role="tab"
-                                  >
-                                    Floor
-                                  </a>
-                                  <a
-                                    className="list-group-item list-group-item-action text-white"
-                                    data-bs-toggle="list"
-                                    href="#list-settings12"
-                                    role="tab"
-                                  >
-                                    Mattress
-                                  </a>
-                                </div>
-                              </div>
-                              <div className="col-lg-6 col-xl-12">
-                                <div
-                                  className="tab-content"
-                                  id="nav-tabContent1"
-                                >
-                                  <div
-                                    className="tab-pane fade show active"
-                                    id="list-home12"
-                                  >
-                                    <div className="room-heading">
-                                      <h4 className>Room 1</h4>
-                                      <span>Daughters Room</span>
-                                    </div>
-                                    <div>
-                                      <ul className="list-group list-group-flush">
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">
-                                            Client Name :
-                                          </span>
-                                          <strong>Jitu Sharma</strong>
-                                        </li>
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">
-                                            IC Name :
-                                          </span>
-                                          <strong>
-                                            Chandra prakash padney
-                                          </strong>
-                                        </li>
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">
-                                            Quality Cheacker Name :
-                                          </span>
-                                          <strong>Akram </strong>
-                                        </li>
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">
-                                            Inspection date :
-                                          </span>
-                                          <strong>22-june-2022</strong>
-                                        </li>
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">
-                                            Measurements :
-                                          </span>
-                                          <strong>Pass</strong>
-                                        </li>
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">
-                                            Design/style :
-                                          </span>
-                                          <strong>Pass</strong>
-                                        </li>
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">
-                                            Ironing :
-                                          </span>
-                                          <strong>Pass</strong>
-                                        </li>
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">
-                                            Thread on curtains :
-                                          </span>
-                                          <strong>Failed</strong>
-                                        </li>
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">
-                                            Belts Include :
-                                          </span>
-                                          <strong>Failed</strong>
-                                        </li>
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">
-                                            Channels/Rods Include :
-                                          </span>
-                                          <strong>Failed</strong>
-                                        </li>
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">
-                                            Brackets include for channels :
-                                          </span>
-                                          <strong>Pass</strong>
-                                        </li>
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">Weight :</span>
-                                          <strong>Failed</strong>
-                                        </li>
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">
-                                            Led chain :
-                                          </span>
-                                          <strong>No</strong>
-                                        </li>
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">
-                                            Tpe of opening :
-                                          </span>
-                                          <strong>Manual</strong>
-                                        </li>
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">
-                                            Stitching quality :
-                                          </span>
-                                          <strong>average</strong>
-                                        </li>
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">Fall :</span>
-                                          <strong>No</strong>
-                                        </li>
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">
-                                            Cut Marks :
-                                          </span>
-                                          <strong>Pass</strong>
-                                        </li>
-                                      </ul>
-                                    </div>
-                                    <div className="room-heading">
-                                      <h4 className>Room 2</h4>
-                                      <span>Guest Room</span>
-                                    </div>
-                                    <div>
-                                      <ul className="list-group list-group-flush">
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">
-                                            Client Name :
-                                          </span>
-                                          <strong>Jitu Sharma</strong>
-                                        </li>
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">
-                                            IC Name :
-                                          </span>
-                                          <strong>
-                                            Chandra prakash padney
-                                          </strong>
-                                        </li>
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">
-                                            Quality Cheacker Name :
-                                          </span>
-                                          <strong>Akram </strong>
-                                        </li>
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">
-                                            Inspection date :
-                                          </span>
-                                          <strong>22-june-2022</strong>
-                                        </li>
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">
-                                            Measurements :
-                                          </span>
-                                          <strong>Pass</strong>
-                                        </li>
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">
-                                            Design/style :
-                                          </span>
-                                          <strong>Pass</strong>
-                                        </li>
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">
-                                            Ironing :
-                                          </span>
-                                          <strong>Pass</strong>
-                                        </li>
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">
-                                            Thread on curtains :
-                                          </span>
-                                          <strong>Failed</strong>
-                                        </li>
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">
-                                            Belts Include :
-                                          </span>
-                                          <strong>Failed</strong>
-                                        </li>
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">
-                                            Channels/Rods Include :
-                                          </span>
-                                          <strong>Failed</strong>
-                                        </li>
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">
-                                            Brackets include for channels :
-                                          </span>
-                                          <strong>Pass</strong>
-                                        </li>
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">Weight :</span>
-                                          <strong>Failed</strong>
-                                        </li>
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">
-                                            Led chain :
-                                          </span>
-                                          <strong>No</strong>
-                                        </li>
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">
-                                            Tpe of opening :
-                                          </span>
-                                          <strong>Manual</strong>
-                                        </li>
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">
-                                            Stitching quality :
-                                          </span>
-                                          <strong>average</strong>
-                                        </li>
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">Fall :</span>
-                                          <strong>No</strong>
-                                        </li>
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">
-                                            Cut Marks :
-                                          </span>
-                                          <strong>Pass</strong>
-                                        </li>
-                                      </ul>
-                                    </div>
-                                  </div>
-                                  <div
-                                    className="tab-pane fade"
-                                    id="list-profile12"
-                                    role="tabpanel"
-                                  >
-                                    <div className="room-heading">
-                                      <h4 className>Room 3</h4>
-                                      <span>Father's Room</span>
-                                    </div>
-                                    <ul className="list-group list-group-flush">
-                                      <li className="list-group-item d-flex justify-content-between text-white">
-                                        Room wallpaper QC details
-                                      </li>
-                                    </ul>
-                                  </div>
-                                  <div
-                                    className="tab-pane fade"
-                                    id="list-messages12"
-                                  >
-                                    <div className="room-heading mb-4">
-                                      <h4 className>Room 4</h4>
-                                      <span>Grand Mother's Room</span>
-                                    </div>
-                                    <h4 className="mb-4 text-white">
-                                      Floor QC details
-                                    </h4>
-                                  </div>
-                                  <div
-                                    className="tab-pane fade"
-                                    id="list-settings12"
-                                  >
-                                    <div className="room-heading mb-4">
-                                      <h4 className>Room 5</h4>
-                                      <span>Grand Father's Room</span>
-                                    </div>
-                                    <h4 className="mb-4 text-white">
-                                      Mattress QC details
-                                    </h4>
-                                    <p />
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="accordion-item">
-                      <div
-                        className="accordion-header collapsed rounded-lg"
-                        id="accord-8Two"
-                        data-bs-toggle="collapse"
-                        data-bs-target="#collapse8T22wo"
-                        aria-controls="collapse8Two"
-                        aria-expanded="true"
-                        role="button"
-                      >
-                        <span className="accordion-header-icon" />
-                        <span className="accordion-header-text">
-                          Delivery Details
-                        </span>
-                        <span className="accordion-header-indicator" />
-                      </div>
-                      <div
-                        id="collapse8T22wo"
-                        className="collapse accordion__body"
-                        aria-labelledby="accord-8Two"
-                        data-bs-parent="#accordion-eight"
-                      >
-                        <div className="accordion-body-text">
-                          <h4 className="text-success">Delivered</h4>
-                          <h4 className="text-danger">Not yet Delivered</h4>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="accordion-item">
-                      <div
-                        className="accordion-header collapsed rounded-lg"
-                        id="accord-8Two11"
-                        data-bs-toggle="collapse"
-                        data-bs-target="#collapse8five1155"
-                        aria-controls="collapse8five"
-                        aria-expanded="true"
-                        role="button"
-                      >
-                        <span className="accordion-header-icon" />
-                        <span className="accordion-header-text">
-                          {" "}
-                          Installation Details{" "}
-                        </span>
-                        <span className="accordion-header-indicator" />
-                      </div>
-                      <div
-                        id="collapse8five1155"
-                        className="collapse accordion__body"
-                        aria-labelledby="accord-8Two"
-                        data-bs-parent="#accordion-eight"
-                      >
-                        <div className="accordion-body-text">
-                          <div className="basic-list-group">
-                            <div className="row">
-                              <div className="col-lg-12 col-xl-12">
-                                <div
-                                  className="list-group mb-4 flex-row"
-                                  id="list-tab"
-                                  role="tablist"
-                                >
-                                  <a
-                                    className="list-group-item list-group-item-action text-white active"
-                                    data-bs-toggle="list"
-                                    href="#list-home125"
-                                    role="tab"
-                                  >
-                                    curtains
-                                  </a>
-                                  <a
-                                    className="list-group-item list-group-item-action text-white"
-                                    data-bs-toggle="list"
-                                    href="#list-profile125"
-                                    role="tab"
-                                  >
-                                    Wallpapers
-                                  </a>
-                                  <a
-                                    className="list-group-item list-group-item-action text-white"
-                                    data-bs-toggle="list"
-                                    href="#list-messages125"
-                                    role="tab"
-                                  >
-                                    Floor
-                                  </a>
-                                  <a
-                                    className="list-group-item list-group-item-action text-white"
-                                    data-bs-toggle="list"
-                                    href="#list-settings125"
-                                    role="tab"
-                                  >
-                                    Mattress
-                                  </a>
-                                </div>
-                              </div>
-                              <div className="col-lg-6 col-xl-12">
-                                <div
-                                  className="tab-content"
-                                  id="nav-tabContent1"
-                                >
-                                  <div
-                                    className="tab-pane fade show active"
-                                    id="list-home125"
-                                  >
-                                    <div className="room-heading">
-                                      <h4 className>Room 1</h4>
-                                      <span>Daughters Room</span>
-                                    </div>
-                                    <div>
-                                      <ul className="list-group list-group-flush">
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">
-                                            Installer Name :
-                                          </span>
-                                          <strong>Jitu Sharma</strong>
-                                        </li>
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">
-                                            Inataller ID :
-                                          </span>
-                                          <strong>#45tt555</strong>
-                                        </li>
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">
-                                            Installation date :
-                                          </span>
-                                          <strong>12-jan-2022</strong>
-                                        </li>
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">
-                                            Installation time :
-                                          </span>
-                                          <strong>05:35 PM</strong>
-                                        </li>
-                                      </ul>
-                                    </div>
-                                    <div className="room-heading">
-                                      <h4 className>Room 2</h4>
-                                      <span>Guest Room</span>
-                                    </div>
-                                    <div>
-                                      <ul className="list-group list-group-flush">
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">
-                                            Installer Name :
-                                          </span>
-                                          <strong>Jitu Sharma</strong>
-                                        </li>
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">
-                                            Inataller ID :
-                                          </span>
-                                          <strong>#45tt555</strong>
-                                        </li>
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">
-                                            Installation date :
-                                          </span>
-                                          <strong>12-jan-2022</strong>
-                                        </li>
-                                        <li className="list-group-item d-flex justify-content-between text-white">
-                                          <span className="mb-0">
-                                            Installation time :
-                                          </span>
-                                          <strong>05:35 PM</strong>
-                                        </li>
-                                      </ul>
-                                    </div>
-                                  </div>
-                                  <div
-                                    className="tab-pane fade"
-                                    id="list-profile125"
-                                    role="tabpanel"
-                                  >
-                                    <div className="room-heading">
-                                      <h4 className>Room 3</h4>
-                                      <span>Father's Room</span>
-                                    </div>
-                                    <ul className="list-group list-group-flush">
-                                      <li className="list-group-item d-flex justify-content-between text-white">
-                                        Room wallpaper not installed yet
-                                      </li>
-                                    </ul>
-                                  </div>
-                                  <div
-                                    className="tab-pane fade"
-                                    id="list-messages125"
-                                  >
-                                    <div className="room-heading mb-4">
-                                      <h4 className>Room 4</h4>
-                                      <span>Grand Mother's Room</span>
-                                    </div>
-                                    <h4 className="mb-4 text-white">
-                                      Floor Not installed yet
-                                    </h4>
-                                  </div>
-                                  <div
-                                    className="tab-pane fade"
-                                    id="list-settings125"
-                                  >
-                                    <div className="room-heading mb-4">
-                                      <h4 className>Room 5</h4>
-                                      <span>Grand Father's Room</span>
-                                    </div>
-                                    <h4 className="mb-4 text-white">
-                                      Not yet Installed
-                                    </h4>
-                                    <p />
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="accordion-item">
-                      <div
-                        className="accordion-header collapsed rounded-lg"
-                        id="accord-8Tw2o"
-                        data-bs-toggle="collapse"
-                        data-bs-target="#collapse8fou2r45"
-                        aria-controls="collapse8four"
-                        aria-expanded="true"
-                        role="button"
-                      >
-                        <span className="accordion-header-icon" />
-                        <span className="accordion-header-text">
-                          Customer Feedback
-                        </span>
-                        <span className="accordion-header-indicator" />
-                      </div>
-                      <div
-                        id="collapse8fou2r45"
-                        className="collapse accordion__body"
-                        aria-labelledby="accord-8Tw2o"
-                        data-bs-parent="#accordion-eight"
-                      >
-                        <div className="accordion-body-text">
-                          <h5 className="text-white">
-                            Download Customer Feedback
-                          </h5>
-                          <a href="#" className="d-inline-block mt-4">
-                            <img
-                              src="./images/pdfimage.webp"
-                              style={{
-                                width: "80px",
-                                border: "2px solid #ffffff",
-                                padding: "10px",
-                                borderRadius: "8px",
-                              }}
-                            />
-                          </a>
-                        </div>
-                      </div>
-                    </div> */}
-                    </div>
-                  </div>
-                </div>
+                    </>
+                  ))}
               </div>
-              <div className="col-xl-4">
-                <div className="card">
-                  <div className="card-header border-0 pb-0">
-                    <h4 className="card-title">Timeline</h4>
-                  </div>
-                  <div className="card-body">
-                    <div
-                      id="DZ_W_TimeLine"
-                      className="widget-timeline dlab-scroll"
-                    >
-                      <ul className="timeline">
-                        {EnquiryDetials?.data?.enquirystatuses &&
-                          EnquiryDetials?.data?.enquirystatuses.map(
-                            (item, index) => {
-                              return (
-                                <li>
-                                  <div className="timeline-badge primary" />
-                                  <a
-                                    className="timeline-panel text-muted"
-                                    href="#"
-                                  >
-                                    <span className="text-white">
-                                      {moment(item.createdAt).format("LLL")}
-                                    </span>
-                                    <h6 className="mb-0 text-white">
-                                      {item.remark} #{item.enquiryId}
-                                      {/* <strong className="text-primary"></strong>. */}
-                                    </h6>
-                                  </a>
-                                </li>
-                              );
-                            }
-                          )}
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              </div>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-danger light"
+                data-bs-dismiss="modal"
+              >
+                Close
+              </button>
             </div>
           </div>
         </div>

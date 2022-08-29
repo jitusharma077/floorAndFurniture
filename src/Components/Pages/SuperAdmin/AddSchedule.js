@@ -59,16 +59,13 @@ function AddSchedule() {
     PostDataWithToken(`auth/assign-schedule-enquiry`, data).then((response) => {
       if (response.status === true) {
         console.log("response", response);
-        test.success("Schedule Confirmed Successfully", {
-          position: toast.POSITION.TOP_CENTER,
-        });
-        setTimeout(() => {
-          window.close();
-        }, 5000);
+        toast.success(response.message);
+        // response.success("Schedule Confirmed Successfully", {
+        //   position: toast.POSITION.TOP_CENTER,
+        // });
       } else {
-        console.log("res", response);
         toast.error(response?.data?.message, {
-          position: toast.POSITION.TOP_CENTER,
+          position: toast.POSITION.TOP_RIGHT,
         });
       }
     });

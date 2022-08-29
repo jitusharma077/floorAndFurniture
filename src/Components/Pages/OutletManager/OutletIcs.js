@@ -15,7 +15,7 @@ function OutletIcs() {
         setAllOutletsalesperson(response.data);
       }
     );
-  }, [""]);
+  }, []);
 
   return (
     <>
