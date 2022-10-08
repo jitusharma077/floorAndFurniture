@@ -58,6 +58,8 @@ import AllQcChecks from "../Pages/SuperAdmin/AllQcChecks";
 import AddNewEnquiry from "../Pages/SuperAdmin/AddNewEnquiry";
 import AddRooms from "../Pages/SuperAdmin/AddRooms";
 import MesurerDetials from "../Pages/SuperAdmin/MesurerDetials";
+import { AllWarehouse } from "../Pages/SuperAdmin/Warehouse/AllWarehouse";
+import AddInstalerSchdule from "../Pages/SuperAdmin/AddInstalerSchdule";
 
 const CommonRoutes = () => {
   // const [type, setType] = useState({});
@@ -113,6 +115,8 @@ const CommonRoutes = () => {
             <Route path="AllQcChecks" element={<AllQcChecks />} />
             <Route path="addNewEnquiry" element={<AddNewEnquiry />} />
             <Route path="AddRooms" element={<AddRooms />} />
+            <Route path="Allwarehouse" element={<AllWarehouse />} />
+            <Route path="AddInstalerSchdule" element={<AddInstalerSchdule />} />
           </>
         )}
 

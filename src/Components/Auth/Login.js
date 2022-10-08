@@ -98,6 +98,7 @@ const Login = () => {
             break;
         }
       } else {
+        setIsLoading(false);
         toast.error(response.data.message, {
           position: "top-right",
         });

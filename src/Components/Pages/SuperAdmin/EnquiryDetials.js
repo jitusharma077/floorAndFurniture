@@ -69,7 +69,7 @@ function EnquiryDetials() {
           {/* row */}
           <div className="container-fluid">
             <div className="row">
-              <div className="col-xl-12">
+              <div className="col-xl-11">
                 <div className="Buttons">
                   <div className="d-flex flex-column">
                     <button
@@ -100,9 +100,22 @@ function EnquiryDetials() {
                       }}
                       className="btn btn-mybutton"
                     >
-                      asign Mesurer
+                      Aasign Mesurer
                     </button>
-                    <button className="btn btn-mybutton">asign Instaler</button>
+                    <button
+                      onClick={() => {
+                        navigate("/AddInstalerSchdule", {
+                          state: {
+                            enquiryId: enquiryId,
+                            customerId:
+                              EnquiryDetials?.billingAddress?.customerId,
+                          },
+                        });
+                      }}
+                      className="btn btn-mybutton"
+                    >
+                      Aasign Installer
+                    </button>
                   </div>
                 </div>
                 <div className="card">

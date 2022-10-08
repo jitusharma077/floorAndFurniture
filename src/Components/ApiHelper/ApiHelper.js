@@ -55,7 +55,7 @@ export const PostDataWithToken = (url, data) => {
         let errorStatus = JSON.parse(JSON.stringify(error.response));
         return errorStatus;
       }
-    });   
+    });
 };
 
 export const GetDataWithToken = (url) => {
