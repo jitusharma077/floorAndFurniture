@@ -63,7 +63,7 @@ function CustomerDetials() {
                             </div>
                           </div>
                           <div>
-                            <button
+                            {/* <button
                               className="btn btn-primary"
                               onClick={() => {
                                 navigate("/addRooms", {
@@ -72,7 +72,7 @@ function CustomerDetials() {
                               }}
                             >
                               Add New Enquiry
-                            </button>
+                            </button> */}
                           </div>
                           <div className="row">
                             <div className="col-lg-3">
@@ -140,12 +140,12 @@ function CustomerDetials() {
                 <div className="card">
                   <div className="card-header border-0">
                     <h4 className="fs-20">Purchase History</h4>
-                    <div className="newest ms-3">
+                    {/* <div className="newest ms-3">
                       <select className="default-select">
                         <option>Newest</option>
                         <option>Oldest</option>
                       </select>
-                    </div>
+                    </div> */}
                   </div>
                   <div className="table-responsive">
                     <table
@@ -167,7 +167,10 @@ function CustomerDetials() {
                             <tr key={index}>
                               <td>{item.id}</td>
                               <td>{item.createdAt}</td>
-                              <td>N/A</td>
+                              <td>
+                                N/A
+                                {/* {item?.enquirystatuses.map((res, item) => res.)} */}
+                              </td>
 
                               <td>
                                 <span className="badge badge-warning">

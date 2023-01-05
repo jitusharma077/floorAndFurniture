@@ -64,6 +64,7 @@ function AddInstalerSchdule() {
 
   const ConfirmSchduled = (event) => {
     console.log("enquiryid", EnquiryId);
+
     event.preventDefault();
     let data = {
       scheduleId: customerTimeSlot,

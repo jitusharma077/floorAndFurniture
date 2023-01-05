@@ -18,7 +18,7 @@ function EnquiryDetials() {
   useEffect(() => {
     console.log("location", location);
     setEnquiryId(location.state.data);
-    GetDataWithToken(`superadmin/get-enquiry/${location.state.data}`).then(
+    GetDataWithToken(`sales/get-enquiry/${location.state.data}`).then(
       (response) => {
         if (response.status === true) {
           console.log("response", response.data);
