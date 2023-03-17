@@ -11,6 +11,8 @@ import SuperAdminSidebar from "./Common/SuperAdminSidebar";
 function EnquiryDetials() {
   const location = useLocation();
   const navigate = useNavigate();
+  const [isRoomData, setIsRoomData] = useState(false);
+  const [CustomerId, setCustomerId] = useState("");
 
   const [enquiryId, setEnquiryId] = useState(null);
   const [EnquiryDetials, setEnquiryDetials] = useState({});
@@ -18,11 +20,16 @@ function EnquiryDetials() {
   useEffect(() => {
     console.log("location", location);
     setEnquiryId(location.state.data);
+
     GetDataWithToken(`sales/get-enquiry/${location.state.data}`).then(
       (response) => {
         if (response.status === true) {
           console.log("response", response.data);
           setEnquiryDetials(response);
+          setCustomerId(response?.data?.customer?.id);
+          if (response.data.rooms.length > 0) {
+            setIsRoomData(true);
+          }
         }
       }
     );
@@ -46,7 +53,7 @@ function EnquiryDetials() {
 
   return (
     <>
-      {console.log("enquiryId", EnquiryDetials)}
+      {console.log("lenghtcustomerrrrrr", CustomerId)}
       <div
         data-typography="poppins"
         data-theme-version="light"
@@ -73,49 +80,71 @@ function EnquiryDetials() {
                 <div className="Buttons">
                   <div className="d-flex flex-column">
                     <button
-                      className="btn btn-mybutton"
-                      data-bs-toggle="modal"
-                      data-bs-target=".bd-example-modal-lg"
-                    >
-                      View Mesurement
-                    </button>
-                    <button
                       data-bs-toggle="modal"
                       data-bs-target="#exampleModalCenter"
                       className="btn btn-mybutton"
                     >
-                      View Stauts
+                      View Status
                     </button>
-                    <button
-                      onClick={() => sendEmail()}
-                      className="btn btn-mybutton"
-                    >
-                      Send Email
-                    </button>
-                    <button
-                      onClick={() => {
-                        navigate("/add-schedule", {
-                          state: { data: enquiryId },
-                        });
-                      }}
-                      className="btn btn-mybutton"
-                    >
-                      Aasign Mesurer
-                    </button>
-                    <button
-                      onClick={() => {
-                        navigate("/AddInstalerSchdule", {
-                          state: {
-                            enquiryId: enquiryId,
-                            customerId:
-                              EnquiryDetials?.billingAddress?.customerId,
-                          },
-                        });
-                      }}
-                      className="btn btn-mybutton"
-                    >
-                      Aasign Installer
-                    </button>
+                    {isRoomData === true ? (
+                      <>
+                        <button
+                          className="btn btn-mybutton"
+                          data-bs-toggle="modal"
+                          data-bs-target=".bd-example-modal-lg"
+                        >
+                          View Measurements
+                        </button>
+
+                        <button
+                          onClick={() => sendEmail()}
+                          className="btn btn-mybutton"
+                        >
+                          Send Email
+                        </button>
+                        <button
+                          onClick={() => {
+                            navigate("/add-schedule", {
+                              state: { data: enquiryId },
+                            });
+                          }}
+                          className="btn btn-mybutton"
+                        >
+                          Assign Measurer
+                        </button>
+                        <button
+                          onClick={() => {
+                            navigate("/AddInstalerSchdule", {
+                              state: {
+                                enquiryId: enquiryId,
+                                customerId: CustomerId,
+                              },
+                            });
+                          }}
+                          className="btn btn-mybutton"
+                        >
+                          Assign Installer
+                        </button>
+
+                        {EnquiryDetials?.data?.status ===
+                          "measurement-complete" &&
+                          EnquiryDetials?.data?.orders.length === 0 && (
+                            <button
+                              onClick={() => {
+                                navigate("/CreateOrder", {
+                                  state: {
+                                    enquiryId: enquiryId,
+                                    customerId: CustomerId,
+                                  },
+                                });
+                              }}
+                              className="btn btn-mybutton"
+                            >
+                              Create Order
+                            </button>
+                          )}
+                      </>
+                    ) : null}
                   </div>
                 </div>
                 <div className="card">
@@ -206,7 +235,6 @@ function EnquiryDetials() {
                           <li className="list-group-item d-flex justify-content-between ">
                             <span className="mb-0">Address :</span>
                             <strong>
-                              {" "}
                               {EnquiryDetials?.billingAddress?.street}
                             </strong>
                           </li>

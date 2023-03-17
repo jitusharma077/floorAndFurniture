@@ -303,7 +303,7 @@ function OutletStaffDetials() {
                                     </tr>
                                   </thead>
                                   <tbody>
-                                    {console.log("length", StaffDetials)}
+                                    {/* {console.log("length", StaffDetials)} */}
                                     {StaffDetials?.Enquiry &&
                                     StaffDetials?.Enquiry.length < 0 ? (
                                       <p>No Enquiry Found</p>
@@ -598,7 +598,7 @@ function OutletStaffDetials() {
                             </tr>
                           </thead>
                           <tbody>
-                            {console.log("length", StaffDetials)}
+                            {/* {console.log("length", StaffDetials)} */}
                             {StaffDetials?.Enquiry &&
                             StaffDetials?.Enquiry.length < 0 ? (
                               <p>No Enquiry Found</p>

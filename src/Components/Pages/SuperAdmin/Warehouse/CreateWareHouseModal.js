@@ -22,12 +22,13 @@ function CreateWareHouseModal({ modal, toggle }) {
       location: data.Address,
       latitude: data.latitude,
       longitude: data.longitude,
+      warehouseId: data.outlet_mobile_no,
     };
 
     PostDataWithToken("superadmin/create-warehouse", values).then(
       (response) => {
         if (response.status === true) {
-          console.log("first", response.message);
+          // console.log("first", response.message);
           toast.success(response.message, {
             position: toast.POSITION.TOP_CENTER,
           });
@@ -36,6 +37,7 @@ function CreateWareHouseModal({ modal, toggle }) {
             location: "",
             latitude: "",
             longitude: "",
+            warehouseId: "",
           });
           toggle();
           setCallApi(true);
@@ -129,7 +131,7 @@ function CreateWareHouseModal({ modal, toggle }) {
               </span>
             </div>
           </div>
-          {/* <div className="mb-3 row align-items-center">
+          <div className="mb-3 row align-items-center">
             <label className="col-sm-3 col-form-label" htmlFor="Pincode">
               Pincode
             </label>
@@ -151,17 +153,17 @@ function CreateWareHouseModal({ modal, toggle }) {
 
           <div className="mb-3 row align-items-center">
             <label className="col-sm-3 col-form-label" htmlFor="fnf1">
-              Mobile No.
+              warehouse Id
             </label>
             <div className="col-sm-9">
               <input
                 {...register("outlet_mobile_no", {
-                  required: "please enter outlet mobile no.",
+                  required: "please enter ID",
                 })}
-                type="number"
+                type="text"
                 className="form-control"
                 id="fnf1"
-                placeholder="outlet mobile number"
+                placeholder="Warehouse Id "
               />
               <span className="text-danger">
                 {errors.outlet_mobile_no && errors.outlet_mobile_no.message}
@@ -205,7 +207,7 @@ function CreateWareHouseModal({ modal, toggle }) {
                 {errors.outlet_password && errors.outlet_password.message}
               </span>
             </div>
-          </div> */}
+          </div>
           <div className="form-buttons text-end">
             <button onClick={() => toggle()} className="btn btn-secondary me-3">
               Cancel

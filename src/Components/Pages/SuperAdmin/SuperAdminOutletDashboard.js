@@ -1,14 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Button } from "reactstrap";
 import { GetDataWithToken } from "../../ApiHelper/ApiHelper";
 import SuperAdminHeader from "./Common/SuperAdminHeader";
 import SuperAdminSidebar from "./Common/SuperAdminSidebar";
+import EditOutletModal from "../../Common/EditOutletModal";
 
 function SuperAdminOutletDashboard() {
   const location = useLocation();
   const [OutletDetials, setOutletDetials] = useState();
   const [IcList, setIcList] = useState([]);
   const navigate = useNavigate();
+  const [modal, setModal] = useState(false);
+  const toggle = () => setModal(!modal);
 
   useEffect(() => {
     GetDataWithToken(`superadmin/get-outlet/${location.state.data}`).then(
@@ -47,8 +51,14 @@ function SuperAdminOutletDashboard() {
               <div className="col-xl-12">
                 <div className="row">
                   <div className="col-xl-12">
-                    <div className="alert bg-secondary mb-5">
+                    <div className="alert bg-secondary mb-5 justify-content-between d-flex">
                       <h3 className="text-white ">Outlet Manager Dashboard</h3>
+                      <button
+                        className="btn btn-primary"
+                        onClick={() => setModal(!modal)}
+                      >
+                        Edit Outlet
+                      </button>
                     </div>
                     <div className="row">
                       <div className="col-xl-3 col-sm-6">
@@ -587,6 +597,11 @@ function SuperAdminOutletDashboard() {
             </div>
           </div>
         </div>
+        <EditOutletModal
+          modal={modal}
+          OutletData={OutletDetials}
+          toggle={(val) => toggle(val)}
+        />
       </div>
     </>
   );

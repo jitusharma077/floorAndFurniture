@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { GetDataWithToken } from "../../ApiHelper/ApiHelper";
 import { Installer } from "../../Common/RoleType";
 import SuperAdminHeader from "./Common/SuperAdminHeader";
 import SuperAdminSidebar from "./Common/SuperAdminSidebar";
 
 function AllInstaller() {
+  const navigate = useNavigate();
   const [AllInstaller, setAllInstaller] = useState([]);
   useEffect(() => {
     GetDataWithToken(`superadmin/get-users?type=${Installer}`).then(
@@ -41,9 +43,9 @@ function AllInstaller() {
                 <div className="card">
                   <div className="card-header">
                     <h4 className="card-title">All Installer</h4>
-                    <a href="Add-new-user.html" className="btn btn-primary">
+                    <Link to={"/Add-new-user"} className="btn btn-primary">
                       Add New
-                    </a>
+                    </Link>
                   </div>
                   <div className="card-body">
                     <div className="table-responsive">
@@ -56,8 +58,8 @@ function AllInstaller() {
                           <tr>
                             <th>User Name</th>
                             <th>User Id</th>
-                            <th>Completed Task</th>
-                            <th>Status</th>
+                            <th>Phone Number</th>
+                            <th>Email</th>
                             <th>Action</th>
                           </tr>
                         </thead>
@@ -75,16 +77,16 @@ function AllInstaller() {
                                   {outletManager.firstName}{" "}
                                   {outletManager.lastName}
                                 </td>
-                                <td>{outletManager.id}</td>
+                                <td>{outletManager.userId}</td>
                                 <td>{outletManager.phone}</td>
                                 <td>{outletManager.email}</td>
                                 <td>
                                   <button
-                                    // onClick={() => {
-                                    //   navigate("/customer-detials", {
-                                    //     state: { data: customer.id },
-                                    //   });
-                                    // }}
+                                    onClick={() => {
+                                      navigate("/InstallerDetials", {
+                                        state: { data: outletManager.id },
+                                      });
+                                    }}
                                     className="btn btn-primary"
                                   >
                                     View

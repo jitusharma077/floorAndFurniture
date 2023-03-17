@@ -21,7 +21,7 @@ function AddInstalerSchdule() {
   const [WareHouseId, setWareHouseId] = useState("");
 
   useEffect(() => {
-    console.log("first", location.state);
+    console.log("Idddddd====>>>>>", location.state);
     setEnquiryId(location.state.enquiryId);
     setCoustomerId(location.state.customerId);
     GetDataWithToken("superadmin/warehouses").then((response) => {
@@ -64,9 +64,9 @@ function AddInstalerSchdule() {
 
   const ConfirmSchduled = (event) => {
     console.log("enquiryid", EnquiryId);
-
     event.preventDefault();
     let data = {
+      
       scheduleId: customerTimeSlot,
       enquiryId: EnquiryId,
       installerId: AssignedPerson,

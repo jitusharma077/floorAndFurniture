@@ -64,7 +64,7 @@ function OutletEnquiry() {
                           </tr>
                         </thead>
                         <tbody>
-                          {console.log("length", AllOutletEnquiry)}
+                          {/* {console.log("length", AllOutletEnquiry)} */}
 
                           {AllOutletEnquiry && AllOutletEnquiry.length < 0 ? (
                             <p>No Enquiry Found</p>

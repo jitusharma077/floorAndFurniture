@@ -77,7 +77,7 @@ function AllSalesPerson() {
                                   {outletManager.firstName}{" "}
                                   {outletManager.lastName}
                                 </td>
-                                <td>{outletManager.id}</td>
+                                <td>{outletManager.userId}</td>
                                 <td>{outletManager.phone}</td>
                                 <td>{outletManager.email}</td>
                                 <td>

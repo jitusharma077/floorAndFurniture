@@ -25,12 +25,12 @@ function StaffDetials() {
     reset,
   } = useForm();
   useEffect(() => {
-    console.log("first", location.state);
+    console.log("first iddddd", location.state);
     setUserId(location.state.data);
     GetDataWithToken(`superadmin/get-user/${location.state.data}`).then(
       (response) => {
         if (response.status === true) {
-          console.log("responce data", response.data);
+          // console.log("responce data =======>", response.data);
           setStaffDetials(response.data);
 
           reset({
@@ -39,6 +39,7 @@ function StaffDetials() {
             email: response?.data?.user?.email,
             password: response?.data?.user?.password,
             phone: response?.data?.user?.phone,
+            userId: response?.data?.user?.userId,
           });
         }
       }
@@ -46,16 +47,14 @@ function StaffDetials() {
   }, [""]);
 
   const EditUserDetials = (data) => {
-    alert();
     let formData = new FormData();
     formData.append("firstName", data.firstName);
     formData.append("lastName", data.lastName);
     formData.append("email", data.email);
     formData.append("password", data.password);
-
     formData.append("phone", data.phone);
+    formData.append("userId", data.ic_id);
     formData.append("image", userImage);
-    console.log("formData", formData);
 
     PutDataWithToken(`superadmin/edit-user/${userId}`, formData).then(
       (response) => {
@@ -104,6 +103,7 @@ function StaffDetials() {
                     </div>
                     <div className="profile-info">
                       <div className="profile-photo">
+                        {console.log("ssss", StaffDetials?.user?.image)}
                         {StaffDetials?.user?.image === null ? (
                           <img
                             src="./images/profile/profile.png"
@@ -122,7 +122,7 @@ function StaffDetials() {
                       <div className="profile-details">
                         <div className="profile-name px-3 pt-2">
                           <h4 className="text-primary mb-0">
-                            {StaffDetials?.user?.firstName}{" "}
+                            {StaffDetials?.user?.firstName}
                             {StaffDetials?.user?.lastName}
                           </h4>
                           <p>{StaffDetials?.user?.type}</p>
@@ -226,7 +226,6 @@ function StaffDetials() {
                                 className="btn
                               btn-primary mb-1 me-1"
                               >
-                                {" "}
                                 Schedule Enquiry
                               </Link>
                             </div>
@@ -320,7 +319,7 @@ function StaffDetials() {
                                     </tr>
                                   </thead>
                                   <tbody>
-                                    {console.log("length", StaffDetials)}
+                                    {/* {console.log("length", StaffDetials)} */}
                                     {StaffDetials?.Enquiry &&
                                     StaffDetials?.Enquiry.length < 0 ? (
                                       <p>No Enquiry Found</p>
@@ -488,12 +487,12 @@ function StaffDetials() {
                                       {errors.lastName &&
                                         errors.lastName.message}
                                     </div>
-                                    <div className="col-md-12">
+                                    <div className="col-md-6">
                                       <label className="form-label">
                                         Phone Number
                                       </label>
                                       <input
-                                        {...register("Phone", {
+                                        {...register("phone", {
                                           required: "please Enter Phone Number",
                                         })}
                                         type="number"
@@ -501,6 +500,24 @@ function StaffDetials() {
                                         className="form-control"
                                       />
                                       {errors.Phone && errors.Phone.message}
+                                    </div>
+                                    <div className="col-lg-6">
+                                      <label className="form-label">
+                                        Enter id
+                                      </label>
+                                      <input
+                                        {...register("ic_id", {
+                                          required: "please Enter Outlet_id",
+                                          maxLength: 80,
+                                        })}
+                                        autocomplete="off"
+                                        type="text"
+                                        className="form-control input-default"
+                                      />
+                                      <span className="font-danger">
+                                        {errors.outlet_id &&
+                                          errors.outlet_id.message}
+                                      </span>
                                     </div>
                                   </div>
                                   <div className="row">
@@ -628,7 +645,7 @@ function StaffDetials() {
                             </tr>
                           </thead>
                           <tbody>
-                            {console.log("length", StaffDetials)}
+                            {/* {console.log("length", StaffDetials)} */}
                             {StaffDetials?.Enquiry &&
                             StaffDetials?.Enquiry.length < 0 ? (
                               <p>No Enquiry Found</p>

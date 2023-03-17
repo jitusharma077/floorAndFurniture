@@ -7,7 +7,7 @@ import SuperAdminSidebar from "./Common/SuperAdminSidebar";
 
 function AddNewUser() {
   const [allRoals, setAllRoals] = useState();
-  const [salesPerson, setSalesPerson] = useState(false);
+  const [salesPerson, setSalesPerson] = useState(true);
   const [AllOutlets, setAllOutlets] = useState([]);
 
   useEffect(() => {
@@ -40,7 +40,7 @@ function AddNewUser() {
     formData.append("type", data.role);
     formData.append("phone", data.phoneNumber);
     formData.append("outletId", data.outlet_id);
-    formData.append("IcId", data.ic_id);
+    formData.append("userId", data.ic_id);
     PostDataWithToken("superadmin/create-user", formData).then((response) => {
       if (response.status === true) {
         console.log("first", response.message);
@@ -125,57 +125,54 @@ function AddNewUser() {
                         </span>
                         <div className="row">
                           <div className="col-lg-12">
-                            {salesPerson === true && (
-                              <>
-                                <div className="row">
-                                  <div className="col-lg-6">
-                                    <label className="form-label">
-                                      Select Outlet
-                                    </label>
-                                    <select
-                                      {...register("outlet_id", {
-                                        required: "please Enter Outlet_id",
-                                        maxLength: 80,
-                                      })}
-                                      autocomplete="off"
-                                      type="text"
-                                      className="form-control input-default"
-                                    >
-                                      <option value="">Select Outlet</option>
-                                      {AllOutlets &&
-                                        AllOutlets.map((outlet, index) => (
-                                          <option value={outlet.id}>
-                                            {outlet.firstName}
-                                          </option>
-                                        ))}
-                                    </select>
+                            <>
+                              <div className="row">
+                                <div className="col-lg-6">
+                                  <label className="form-label">
+                                    Select Outlet
+                                  </label>
+                                  <select
+                                    {...register("outlet_id", {
+                                      required: "please Enter Outlet_id",
+                                      maxLength: 80,
+                                    })}
+                                    autocomplete="off"
+                                    type="text"
+                                    className="form-control input-default"
+                                  >
+                                    <option value="">Select Outlet</option>
+                                    {AllOutlets &&
+                                      AllOutlets.map((outlet, index) => (
+                                        <option value={outlet.id}>
+                                          {outlet.firstName}
+                                        </option>
+                                      ))}
+                                  </select>
 
-                                    <span className="font-danger">
-                                      {errors.outlet_id &&
-                                        errors.outlet_id.message}
-                                    </span>
-                                  </div>
-                                  <div className="col-lg-6">
-                                    <label className="form-label">
-                                      Enter IC id
-                                    </label>
-                                    <input
-                                      {...register("ic_id", {
-                                        required: "please Enter Outlet_id",
-                                        maxLength: 80,
-                                      })}
-                                      autocomplete="off"
-                                      type="text"
-                                      className="form-control input-default"
-                                    />
-                                    <span className="font-danger">
-                                      {errors.outlet_id &&
-                                        errors.outlet_id.message}
-                                    </span>
-                                  </div>
+                                  <span className="font-danger">
+                                    {errors.outlet_id &&
+                                      errors.outlet_id.message}
+                                  </span>
                                 </div>
-                              </>
-                            )}
+                                <div className="col-lg-6">
+                                  <label className="form-label">Enter id</label>
+                                  <input
+                                    {...register("ic_id", {
+                                      required: "please Enter Outlet_id",
+                                      maxLength: 80,
+                                    })}
+                                    autocomplete="off"
+                                    type="text"
+                                    className="form-control input-default"
+                                    type="text"
+                                  />
+                                  <span className="font-danger">
+                                    {errors.outlet_id &&
+                                      errors.outlet_id.message}
+                                  </span>
+                                </div>
+                              </div>
+                            </>
                           </div>
                         </div>
 

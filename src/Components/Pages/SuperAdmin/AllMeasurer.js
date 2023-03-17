@@ -77,7 +77,7 @@ function AllMeasurer() {
                                 <td>
                                   {Measurer.firstName} {Measurer.lastName}
                                 </td>
-                                <td>{Measurer.id}</td>
+                                <td>{Measurer.userId}</td>
                                 <td>{Measurer.phone}</td>
                                 <td>{Measurer.email}</td>
                                 <td>

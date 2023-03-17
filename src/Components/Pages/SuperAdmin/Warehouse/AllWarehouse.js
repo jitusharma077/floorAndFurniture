@@ -59,7 +59,7 @@ export const AllWarehouse = () => {
                             <th>Warehouse id</th>
                             <th>Warehouse Name</th>
                             <th>Warehouse Address</th>
-                            {/* <th>Warehouse Mobile No.</th> */}
+                            <th>longitude</th>
                             <th>latitude</th>
                             <th>Action</th>
                           </tr>

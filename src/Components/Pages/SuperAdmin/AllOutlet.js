@@ -63,7 +63,6 @@ function AllOutlet(props) {
                 <div className="card">
                   <div className="card-header">
                     <h4 className="card-title">All Outlets</h4>
-                    {console.log("modal", modal)}
                     <button
                       className="btn btn-primary"
                       onClick={() => setModal(!modal)}

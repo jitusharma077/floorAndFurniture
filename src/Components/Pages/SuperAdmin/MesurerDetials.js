@@ -38,11 +38,11 @@ function MesurerDetials() {
           console.log("responce data", response.data);
           setStaffDetials(response.data);
           reset({
-            firstName: response?.data?.user?.firstName,
-            lastName: response?.data?.user?.lastName,
-            email: response?.data?.user?.email,
-            password: response?.data?.user?.password,
-            phone: response?.data?.user?.phone,
+            firstName: response?.data?.measurer?.firstName,
+            lastName: response?.data?.measurer?.lastName,
+            email: response?.data?.measurer?.email,
+            password: response?.data?.measurer?.password,
+            phone: response?.data?.measurer?.phone,
           });
         }
       }
@@ -50,16 +50,15 @@ function MesurerDetials() {
   }, [""]);
 
   const EditUserDetials = (data) => {
-    alert();
     let formData = new FormData();
     formData.append("firstName", data.firstName);
     formData.append("lastName", data.lastName);
     formData.append("email", data.email);
     formData.append("password", data.password);
-
     formData.append("phone", data.phone);
     formData.append("image", userImage);
-    console.log("formData", formData);
+    formData.append("userId", data.ic_id);
+    // console.log("formData", formData);
 
     PutDataWithToken(`superadmin/edit-user/${userId}`, formData).then(
       (response) => {
@@ -181,7 +180,6 @@ function MesurerDetials() {
                                 className="btn
                             btn-primary mb-1 me-1"
                               >
-                                {" "}
                                 Schedule Enquiry
                               </Link>
                             </div>
@@ -190,31 +188,6 @@ function MesurerDetials() {
                       </div>
                     </div>
                   </div>
-                  {/* <div className="col-xl-12">
-                <div className="card">
-                  <div className="card-body">
-                    <div className="profile-blog">
-                      <h5 className="text-primary d-inline">Today Enquiry</h5>
-                      <img
-                        src="images/profile/1.jpg"
-                        alt=""
-                        className="img-fluid mt-4 mb-4 w-100"
-                      />
-                      <h4>
-                        <a href="post-details.html" className="text-black">
-                          Darwin Creative Agency Theme
-                        </a>
-                      </h4>
-                      <p className="mb-0">
-                        A small river named Duden flows by their place and
-                        supplies it with the necessary regelialia. It is a
-                        paradisematic country, in which roasted parts of
-                        sentences fly into your mouth.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div> */}
                 </div>
               </div>
             </div>
@@ -277,7 +250,7 @@ function MesurerDetials() {
                                     </tr>
                                   </thead>
                                   <tbody>
-                                    {console.log("length", StaffDetials)}
+                                    {/* {console.log("length", StaffDetials)} */}
                                     {StaffDetials?.enquiry &&
                                     StaffDetials?.enquiry.length < 0 ? (
                                       <p>No enquiry Found</p>
@@ -454,7 +427,7 @@ function MesurerDetials() {
                                       {errors.lastName &&
                                         errors.lastName.message}
                                     </div>
-                                    <div className="col-md-12">
+                                    <div className="col-md-6">
                                       <label className="form-label">
                                         Phone Number
                                       </label>
@@ -467,6 +440,24 @@ function MesurerDetials() {
                                         className="form-control"
                                       />
                                       {errors.Phone && errors.Phone.message}
+                                    </div>
+                                    <div className="col-lg-6">
+                                      <label className="form-label">
+                                        Enter id
+                                      </label>
+                                      <input
+                                        {...register("ic_id", {
+                                          required: "please Enter Outlet_id",
+                                          maxLength: 80,
+                                        })}
+                                        autocomplete="off"
+                                        type="text"
+                                        className="form-control input-default"
+                                      />
+                                      <span className="font-danger">
+                                        {errors.outlet_id &&
+                                          errors.outlet_id.message}
+                                      </span>
                                     </div>
                                   </div>
                                   <div className="row">
@@ -499,7 +490,7 @@ function MesurerDetials() {
                                       {errors.password &&
                                         errors.password.message}
                                     </div>
-                                    <div className="mb-3 col-md-12">
+                                    {/* <div className="mb-3 col-md-12">
                                       <label className="form-label">
                                         Profile Picture
                                       </label>
@@ -511,7 +502,7 @@ function MesurerDetials() {
                                         name="image"
                                         className="form-control"
                                       />
-                                    </div>
+                                    </div> */}
                                   </div>
 
                                   <button

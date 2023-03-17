@@ -60,6 +60,8 @@ import AddRooms from "../Pages/SuperAdmin/AddRooms";
 import MesurerDetials from "../Pages/SuperAdmin/MesurerDetials";
 import { AllWarehouse } from "../Pages/SuperAdmin/Warehouse/AllWarehouse";
 import AddInstalerSchdule from "../Pages/SuperAdmin/AddInstalerSchdule";
+import InstallerDetials from "../Pages/SuperAdmin/InstallerDetials";
+import CreateOrder from "../Pages/SuperAdmin/CreateOrder";
 
 const CommonRoutes = () => {
   // const [type, setType] = useState({});
@@ -117,6 +119,8 @@ const CommonRoutes = () => {
             <Route path="AddRooms" element={<AddRooms />} />
             <Route path="Allwarehouse" element={<AllWarehouse />} />
             <Route path="AddInstalerSchdule" element={<AddInstalerSchdule />} />
+            <Route path="InstallerDetials" element={<InstallerDetials />} />
+            <Route path="CreateOrder" element={<CreateOrder />} />
           </>
         )}
 

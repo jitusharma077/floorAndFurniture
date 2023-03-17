@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import Loader from "../../Common/Loader";
 import { StitchingStoreManager } from "../../Common/RoleType";
 import useFetch from "../../Hooks/CallBack";
@@ -7,6 +7,7 @@ import SuperAdminHeader from "./Common/SuperAdminHeader";
 import SuperAdminSidebar from "./Common/SuperAdminSidebar";
 
 function AllStiching() {
+  const navigate = useNavigate();
   const { data, Error, isLoading } = useFetch(
     `superadmin/get-users?type=${StitchingStoreManager}`
   );
@@ -75,16 +76,16 @@ function AllStiching() {
                                   {outletManager.firstName}{" "}
                                   {outletManager.lastName}
                                 </td>
-                                <td>{outletManager.id}</td>
+                                <td>{outletManager.userId}</td>
                                 <td>{outletManager.phone}</td>
                                 <td>{outletManager.email}</td>
                                 <td>
                                   <button
-                                    // onClick={() => {
-                                    //   navigate("/customer-detials", {
-                                    //     state: { data: customer.id },
-                                    //   });
-                                    // }}
+                                    onClick={() => {
+                                      navigate("/staff-detials", {
+                                        state: { data: outletManager.id },
+                                      });
+                                    }}
                                     className="btn btn-primary"
                                   >
                                     View
