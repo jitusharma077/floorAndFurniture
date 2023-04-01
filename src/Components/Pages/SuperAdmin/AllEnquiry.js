@@ -10,7 +10,7 @@ import SuperAdminSidebar from "./Common/SuperAdminSidebar";
 function AllEnquiry() {
   const navigate = useNavigate();
   const [AllEnquiry, setAllEnquiry] = useState([]);
-  const { data, Error, isLoading } = useFetch("superadmin/get-enquiries");
+  const { data, Error, isLoading } = useFetch("superadmin/get/enquiries");
 
   return (
     <>

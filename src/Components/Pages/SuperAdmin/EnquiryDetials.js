@@ -7,6 +7,7 @@ import { GetDataWithToken } from "../../ApiHelper/ApiHelper";
 import { confirm } from "../../Common/ConfirmModal";
 import SuperAdminHeader from "./Common/SuperAdminHeader";
 import SuperAdminSidebar from "./Common/SuperAdminSidebar";
+import EnquiryCustom from "./Common/EnquiryCustom";
 
 function EnquiryDetials() {
   const location = useLocation();
@@ -16,6 +17,7 @@ function EnquiryDetials() {
 
   const [enquiryId, setEnquiryId] = useState(null);
   const [EnquiryDetials, setEnquiryDetials] = useState({});
+  const [btnIndex, setBtnIndex] = useState(0);
 
   useEffect(() => {
     console.log("location", location);
@@ -33,7 +35,7 @@ function EnquiryDetials() {
         }
       }
     );
-  }, [""]);
+  }, []);
   const sendEmail = async () => {
     if (
       await confirm("Are you sure you want to Send Notification To Customer")
@@ -210,32 +212,78 @@ function EnquiryDetials() {
                           <li className="list-group-item d-flex justify-content-between ">
                             <span className="mb-0">Customer Name :</span>
                             <strong>
-                              {EnquiryDetials?.billingAddress?.contactPerson}
+                              {
+                                EnquiryDetials?.data?.customer?.addresses[0]
+                                  ?.contactPerson
+                              }
                             </strong>
                           </li>
                           <li className="list-group-item d-flex justify-content-between ">
                             <span className="mb-0">Contact No. :</span>
                             <strong>
-                              {EnquiryDetials?.billingAddress?.contactNumber}
+                              {EnquiryDetials?.data?.customer?.addresses[0]
+                                ?.contactNumber === null
+                                ? "nil"
+                                : EnquiryDetials?.data?.customer?.addresses[0]
+                                    ?.contactNumber}
+                            </strong>
+                          </li>
+                          <li className="list-group-item d-flex justify-content-between ">
+                            <span className="mb-0">city :</span>
+                            <strong>
+                              {" "}
+                              {
+                                EnquiryDetials?.data?.customer?.addresses[0]
+                                  ?.city
+                              }
                             </strong>
                           </li>
                           <li className="list-group-item d-flex justify-content-between ">
                             <span className="mb-0">State :</span>
                             <strong>
                               {" "}
-                              {EnquiryDetials?.billingAddress?.state}
+                              {
+                                EnquiryDetials?.data?.customer?.addresses[0]
+                                  ?.state
+                              }
+                            </strong>
+                          </li>
+                          <li className="list-group-item d-flex justify-content-between ">
+                            <span className="mb-0">type :</span>
+                            <strong>
+                              {" "}
+                              {
+                                EnquiryDetials?.data?.customer?.addresses[0]
+                                  ?.type
+                              }
+                            </strong>
+                          </li>
+                          <li className="list-group-item d-flex justify-content-between ">
+                            <span className="mb-0">customerId :</span>
+                            <strong>
+                              {" "}
+                              {
+                                EnquiryDetials?.data?.customer?.addresses[0]
+                                  ?.customerId
+                              }
                             </strong>
                           </li>
                           <li className="list-group-item d-flex justify-content-between ">
                             <span className="mb-0">Pincode :</span>
                             <strong>
-                              {EnquiryDetials?.billingAddress?.pincode}
+                              {
+                                EnquiryDetials?.data?.customer?.addresses[0]
+                                  ?.pincode
+                              }
                             </strong>
                           </li>
                           <li className="list-group-item d-flex justify-content-between ">
                             <span className="mb-0">Address :</span>
                             <strong>
-                              {EnquiryDetials?.billingAddress?.street}
+                              {
+                                EnquiryDetials?.data?.customer?.addresses[0]
+                                  ?.street
+                              }
                             </strong>
                           </li>
                         </ul>
@@ -258,10 +306,20 @@ function EnquiryDetials() {
                             href={`#list-home-${index}`}
                             role="tab"
                           >
-                            Room Name: {rooms.roomName}
+                            <div>Room Name: {rooms.roomName}</div>
+                            <div> Room Description:{rooms.roomDescription}</div>
                             <hr />
-                            Floor : {rooms.floor}, No. of windows :{" "}
-                            {rooms.numberOfWindow}
+                            enquiry Id : {rooms.enquiryId},Floor : {rooms.floor}
+                            , No. of windows : {rooms.numberOfWindow} ,extra
+                            Hardware : {rooms.extra_hardware} ,extra hardware
+                            required :
+                            {rooms.extra_hardware_required === null
+                              ? "no"
+                              : "yes"}
+                            , curtain Fabric:
+                            {rooms.curtainFabric === null
+                              ? "nil"
+                              : rooms.curtainFabric}
                           </a>
                         ))}
                     </div>
@@ -279,102 +337,58 @@ function EnquiryDetials() {
                               >
                                 <h5>Main Curtain Fabric Description</h5>
                                 <div className="border border-1 p-3 rounded-2 mb-3">
-                                  <div className="row">
-                                    <div className="col-lg-3">
-                                      <img
-                                        src={
-                                          room?.selectedcurtain
-                                            ?.curtain_fabric_style?.image
-                                        }
-                                        alt="fabric"
-                                        className="newimg"
-                                      />
-                                    </div>
-                                    <div className="col-lg-9">
-                                      <ul className="list-group list-group-flush">
-                                        <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                          <span className="mb-0">
-                                            Fabric Name :
-                                          </span>
-                                          <strong>
-                                            {" "}
-                                            {
-                                              room?.selectedcurtain?.fabric1
-                                                ?.fabric
-                                            }
-                                          </strong>
-                                        </li>
-                                        <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                          <span className="mb-0">Width. :</span>
-                                          <strong>
-                                            {" "}
-                                            {
-                                              room?.selectedcurtain?.fabric1
-                                                ?.width
-                                            }
-                                          </strong>
-                                        </li>
-                                        <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                          <span className="mb-0">
-                                            Repeat Horizontal :
-                                          </span>
-                                          <strong>
-                                            {" "}
-                                            {
-                                              room?.selectedcurtain?.fabric1
-                                                ?.repeat_horizontal
-                                            }
-                                          </strong>
-                                        </li>
-
-                                        <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                          <span className="mb-0">Weight :</span>
-                                          <strong>
-                                            {" "}
-                                            {
-                                              room?.selectedcurtain
-                                                ?.weight_required
-                                            }
-                                          </strong>
-                                        </li>
-                                        <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                          <span className="mb-0">
-                                            Hand Hamming :
-                                          </span>
-                                          <strong>
-                                            {" "}
-                                            {
-                                              room?.selectedcurtain
-                                                ?.hand_hammering_required
-                                            }
-                                          </strong>
-                                        </li>
-                                        <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                          <span className="mb-0">
-                                            Curtain Style :
-                                          </span>
-                                          <strong>
-                                            {
-                                              room?.selectedcurtain
-                                                ?.curtain_fabric_style
-                                                ?.curtainStyle
-                                            }
-                                          </strong>
-                                        </li>
-                                        <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                          <span className="mb-0">
-                                            Curtain gathering:
-                                          </span>
-                                          <strong>
-                                            {
-                                              room?.selectedcurtain
-                                                ?.fabricGathering?.type
-                                            }
-                                          </strong>
-                                        </li>
-                                      </ul>
-                                    </div>
-                                  </div>
+                                  <EnquiryCustom
+                                    image={
+                                      room?.selectedsheer?.sheerStyle?.image ===
+                                      null
+                                        ? ""
+                                        : room?.selectedsheer?.sheerStyle?.image
+                                    }
+                                    fabricName={
+                                      room?.selectedcurtain?.fabric1?.fabric
+                                    }
+                                    width={
+                                      room?.selectedcurtain?.fabric1?.width
+                                    }
+                                    brandName={
+                                      room?.selectedcurtain?.fabric1?.brand_name
+                                    }
+                                    repeatHorizontal={
+                                      room?.selectedcurtain?.fabric1
+                                        ?.repeat_horizontal
+                                    }
+                                    repeatVertical={
+                                      room?.selectedcurtain?.fabric1
+                                        ?.repeat_vertical
+                                    }
+                                    book={
+                                      room?.selectedcurtain?.fabric1?.book_name
+                                    }
+                                    material1={room?.material_images[0]?.image}
+                                    material2={room?.material_images[1]?.image}
+                                    style={
+                                      room?.selectedcurtain
+                                        ?.curtain_fabric_style?.curtainStyle
+                                    }
+                                    gathering={
+                                      room?.selectedcurtain?.gathering?.type
+                                    }
+                                    weight={
+                                      room?.selectedcurtain?.weight_required
+                                    }
+                                    handHammering={
+                                      room?.selectedcurtain
+                                        ?.hand_hammering_required
+                                    }
+                                    customType={
+                                      room?.selectedcurtain?.curtainpattern
+                                        ?.pattern
+                                    }
+                                    customImage={
+                                      room?.selectedcurtain?.curtainpattern
+                                        ?.image
+                                    }
+                                  />
                                 </div>
                                 {room?.selectedcurtain?.fabric2 === null ? (
                                   ""
@@ -382,70 +396,39 @@ function EnquiryDetials() {
                                   <>
                                     <h5>Main Curtain Fabric 2 Description</h5>
                                     <div className="border border-1 p-3 rounded-2 mb-3">
-                                      <div className="row">
-                                        <div className="col-lg-3">
-                                          <img
-                                            src={
-                                              room?.selectedcurtain
-                                                ?.curtain_fabric_style?.image
-                                            }
-                                            alt="fabric"
-                                            className="newimg"
-                                          />
-                                        </div>
-                                        <div className="col-lg-9">
-                                          <ul className="list-group list-group-flush">
-                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                              <span className="mb-0">
-                                                Fabric Name :
-                                              </span>
-                                              <strong>
-                                                {" "}
-                                                {
-                                                  room?.selectedcurtain?.fabric2
-                                                    ?.fabric
-                                                }
-                                              </strong>
-                                            </li>
-                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                              <span className="mb-0">
-                                                Width. :
-                                              </span>
-                                              <strong>
-                                                {" "}
-                                                {
-                                                  room?.selectedcurtain?.fabric2
-                                                    ?.width
-                                                }
-                                              </strong>
-                                            </li>
-                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                              <span className="mb-0">
-                                                Repeat Horizontal :
-                                              </span>
-                                              <strong>
-                                                {" "}
-                                                {
-                                                  room?.selectedcurtain?.fabric2
-                                                    ?.repeat_horizontal
-                                                }
-                                              </strong>
-                                            </li>
-                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                              <span className="mb-0">
-                                                Repeat vertical :
-                                              </span>
-                                              <strong>
-                                                {" "}
-                                                {
-                                                  room?.selectedcurtain?.fabric2
-                                                    ?.repeat_vertical
-                                                }
-                                              </strong>
-                                            </li>
-                                          </ul>
-                                        </div>
-                                      </div>
+                                      <EnquiryCustom
+                                        image={
+                                          room?.selectedsheer?.sheerStyle?.image
+                                        }
+                                        fabricName={
+                                          room?.selectedcurtain?.fabric2?.fabric
+                                        }
+                                        brandName={
+                                          room?.selectedcurtain?.fabric2
+                                            ?.brand_name
+                                        }
+                                        width={
+                                          room?.selectedcurtain?.fabric2?.width
+                                        }
+                                        repeatHorizontal={
+                                          room?.selectedcurtain?.fabric2
+                                            ?.repeat_horizontal
+                                        }
+                                        repeatVertical={
+                                          room?.selectedcurtain?.fabric2
+                                            ?.repeat_vertical
+                                        }
+                                        book={
+                                          room?.selectedcurtain?.fabric2
+                                            ?.book_name
+                                        }
+                                        material1={
+                                          room?.material_images[0]?.image
+                                        }
+                                        material2={
+                                          room?.material_images[1]?.image
+                                        }
+                                      />
                                     </div>
                                   </>
                                 )}
@@ -457,87 +440,49 @@ function EnquiryDetials() {
                                   <>
                                     <h5>Mock Curtain Fabric Description</h5>
                                     <div className="border border-1 p-3 rounded-2 mb-3">
-                                      <div className="row">
-                                        <div className="col-lg-8">
-                                          <ul className="list-group list-group-flush">
-                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                              <span className="mb-0">
-                                                Fabric Name :
-                                              </span>
-                                              <strong>
-                                                {" "}
-                                                {
-                                                  room?.selectedcurtain
-                                                    ?.mock_fabric?.fabric
-                                                }
-                                              </strong>
-                                            </li>
-                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                              <span className="mb-0">
-                                                Width. :
-                                              </span>
-                                              <strong>
-                                                {" "}
-                                                {
-                                                  room?.selectedcurtain
-                                                    ?.mock_fabric?.width
-                                                }
-                                              </strong>
-                                            </li>
-                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                              <span className="mb-0">
-                                                Repeat Horizontal :
-                                              </span>
-                                              <strong>
-                                                {" "}
-                                                {
-                                                  room?.selectedcurtain
-                                                    ?.mock_fabric
-                                                    ?.repeat_horizontal
-                                                }
-                                              </strong>
-                                            </li>
-                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                              <span className="mb-0">
-                                                Repeat vertical :
-                                              </span>
-                                              <strong>
-                                                {" "}
-                                                {
-                                                  room?.selectedcurtain
-                                                    ?.mock_fabric
-                                                    ?.repeat_vertical
-                                                }
-                                              </strong>
-                                            </li>
-                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                              <span className="mb-0">
-                                                Repeat vertical :
-                                              </span>
-                                              <strong>
-                                                {" "}
-                                                {
-                                                  room?.selectedcurtain
-                                                    ?.mockFabric_gathering?.type
-                                                }
-                                              </strong>
-                                            </li>
-                                          </ul>
-                                        </div>
-                                        <div className="col-lg-4">
-                                          <img
-                                            src={
-                                              room?.selectedcurtain?.mock_fabric
-                                                ?.image === null
-                                                ? ""
-                                                : room?.selectedcurtain
-                                                    ?.mock_fabric?.image
-                                            }
-                                            alt="fabric"
-                                            className="newimg"
-                                          />
-                                        </div>
-                                      </div>
+                                      <EnquiryCustom
+                                        image={
+                                          room?.selectedsheer?.sheerStyle?.image
+                                        }
+                                        fabricName={
+                                          room?.selectedcurtain?.mock_fabric
+                                            ?.fabric
+                                        }
+                                        width={
+                                          room?.selectedcurtain?.mock_fabric
+                                            ?.width
+                                        }
+                                        repeatHorizontal={
+                                          room?.selectedcurtain?.mock_fabric
+                                            ?.repeat_horizontal
+                                        }
+                                        repeatVertical={
+                                          room?.selectedcurtain?.mock_fabric
+                                            ?.repeat_vertical
+                                        }
+                                        style={
+                                          room?.selectedcurtain?.mock_style
+                                            ?.curtainStyle
+                                        }
+                                        book={
+                                          room?.selectedcurtain?.mock_fabric
+                                            ?.book_name
+                                        }
+                                        brandName={
+                                          room?.selectedcurtain?.mock_fabric
+                                            ?.brand_name
+                                        }
+                                        handHammering={
+                                          room?.selectedcurtain
+                                            ?.mock_hand_hammering_required
+                                        }
+                                        material1={
+                                          room?.material_images[0]?.image
+                                        }
+                                        material2={
+                                          room?.material_images[1]?.image
+                                        }
+                                      />
                                     </div>
                                   </>
                                 )}
@@ -548,68 +493,25 @@ function EnquiryDetials() {
                                     {" "}
                                     <h5>Lining Description</h5>
                                     <div className="border border-1 p-3 rounded-2 mb-3">
-                                      <div className="row">
-                                        <div className="col-lg-3">
-                                          <img
-                                            src={
-                                              room?.selectedcurtain?.lining
-                                                ?.image === null
-                                                ? ""
-                                                : room?.selectedcurtain?.lining
-                                                    ?.image
-                                            }
-                                            alt="Lining Fabric"
-                                            className="newimg"
-                                          />
-                                        </div>
-                                        <div className="col-lg-9">
-                                          <ul className="list-group list-group-flush">
-                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                              <span className="mb-0">
-                                                Lining Type :
-                                              </span>
-                                              <div>
-                                                <strong>
-                                                  {
-                                                    room?.selectedcurtain
-                                                      ?.lining?.type
-                                                  }
-                                                </strong>
-                                                <span className="d-block">
-                                                  Note:{" "}
-                                                  {
-                                                    room?.selectedcurtain
-                                                      ?.lining?.note
-                                                  }
-                                                </span>
-                                              </div>
-                                            </li>
-                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                              <span className="mb-0">
-                                                Lining Fabric Name :
-                                              </span>
-                                              <strong>
-                                                {
-                                                  room?.selectedcurtain
-                                                    ?.lining_fabric?.fabric
-                                                }
-                                              </strong>
-                                            </li>
-                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                              <span className="mb-0">
-                                                Lining Width. :
-                                              </span>
-                                              <strong>
-                                                {" "}
-                                                {
-                                                  room?.selectedcurtain
-                                                    ?.lining_fabric?.width
-                                                }
-                                              </strong>
-                                            </li>
-                                          </ul>
-                                        </div>
-                                      </div>
+                                      <EnquiryCustom
+                                        image={
+                                          room?.selectedcurtain?.lining?.image
+                                        }
+                                        style={
+                                          room?.selectedcurtain?.lining?.type
+                                        }
+                                        note={
+                                          room?.selectedcurtain?.lining?.note
+                                        }
+                                        fabricName={
+                                          room?.selectedcurtain?.Lining_Fabric
+                                            ?.fabric
+                                        }
+                                        width={
+                                          room?.selectedcurtain?.Lining_Fabric
+                                            ?.width
+                                        }
+                                      />
                                     </div>
                                   </>
                                 )}
@@ -627,133 +529,83 @@ function EnquiryDetials() {
                                       <p className="text-white rounded-pill bg-primary px-3 py-1">
                                         Border Fabric 1 Description
                                       </p>
+                                      <EnquiryCustom
+                                        image={
+                                          room?.selectedcurtain?.border_type
+                                            ?.image
+                                        }
+                                        type={
+                                          room?.selectedcurtain?.border_type
+                                            ?.type
+                                        }
+                                        fabricName={
+                                          room?.selectedcurtain?.p_border
+                                            ?.fabric
+                                        }
+                                        width={
+                                          room?.selectedcurtain?.p_border?.width
+                                        }
+                                        book={
+                                          room?.selectedcurtain?.p_border
+                                            ?.book_name
+                                        }
+                                        brandName={
+                                          room?.selectedcurtain?.p_border
+                                            ?.brand_name
+                                        }
+                                        repeatHorizontal={
+                                          room?.selectedcurtain?.p_border
+                                            ?.repeat_horizontal
+                                        }
+                                        repeatVertical={
+                                          room?.selectedcurtain?.p_border
+                                            ?.repeat_vertical
+                                        }
+                                        material1={
+                                          room?.material_images[6]?.image
+                                        }
+                                        material2={
+                                          room?.material_images[7]?.image
+                                        }
+                                      />
                                       <div className="row">
-                                        <div className="col-lg-3">
-                                          <img
-                                            src={
-                                              room?.selectedcurtain?.border_type
-                                                ?.image === null
-                                                ? ""
-                                                : room?.selectedcurtain
-                                                    ?.border_type?.image
-                                            }
-                                            alt="borderimage"
-                                            className="newimg"
-                                          />
-                                        </div>
                                         <div className="col-lg-9">
                                           <ul className="list-group list-group-flush">
-                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                              <span className="mb-0">
-                                                Border Type :
-                                              </span>
-                                              <strong>
-                                                {" "}
-                                                {
-                                                  room?.selectedcurtain
-                                                    ?.border_type?.type
-                                                }
-                                              </strong>
-                                            </li>
-                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                              <span className="mb-0">
-                                                Fabric Name :
-                                              </span>
-                                              <strong>
-                                                {
-                                                  room?.selectedcurtain
-                                                    ?.p_border?.fabric
-                                                }
-                                              </strong>
-                                            </li>
-                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                              <span className="mb-0">
-                                                Width. :
-                                              </span>
-                                              <strong>
-                                                {" "}
-                                                {
-                                                  room?.selectedcurtain
-                                                    ?.p_border?.width
-                                                }
-                                              </strong>
-                                            </li>
-                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                              <span className="mb-0">
-                                                Repeat Horizontal :
-                                              </span>
-                                              <strong>
-                                                {" "}
-                                                {
-                                                  room?.selectedcurtain
-                                                    ?.p_border
-                                                    ?.repeat_horizontal
-                                                }
-                                              </strong>
-                                            </li>
-                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                              <span className="mb-0">
-                                                Repeat Vertical :
-                                              </span>
-                                              <strong>
-                                                {" "}
-                                                {
-                                                  room?.selectedcurtain
-                                                    ?.p_border?.repeat_vertical
-                                                }
-                                              </strong>
-                                            </li>
                                             <p className="text-white rounded-pill bg-primary px-3 py-1 mt-3">
                                               Border Fabric 2 Description
                                             </p>
-                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                              <span className="mb-0">
-                                                Fabric Name :
-                                              </span>
-                                              <strong>
-                                                {
-                                                  room?.selectedcurtain
-                                                    ?.s_border?.fabric
-                                                }
-                                              </strong>
-                                            </li>
-                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                              <span className="mb-0">
-                                                Width. :
-                                              </span>
-                                              <strong>
-                                                {" "}
-                                                {
-                                                  room?.selectedcurtain
-                                                    ?.s_border?.width
-                                                }
-                                              </strong>
-                                            </li>
-                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                              <span className="mb-0">
-                                                Repeat Horizontal :
-                                              </span>
-                                              <strong>
-                                                {" "}
-                                                {
-                                                  room?.selectedcurtain
-                                                    ?.s_border
-                                                    ?.repeat_horizontal
-                                                }
-                                              </strong>
-                                            </li>
-                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                              <span className="mb-0">
-                                                Repeat Vertical :
-                                              </span>
-                                              <strong>
-                                                {" "}
-                                                {
-                                                  room?.selectedcurtain
-                                                    ?.s_border?.repeat_vertical
-                                                }
-                                              </strong>
-                                            </li>
+                                            <EnquiryCustom
+                                              fabricName={
+                                                room?.selectedcurtain?.s_border
+                                                  ?.fabric
+                                              }
+                                              width={
+                                                room?.selectedcurtain?.s_border
+                                                  ?.width
+                                              }
+                                              repeatHorizontal={
+                                                room?.selectedcurtain?.s_border
+                                                  ?.repeat_horizontal
+                                              }
+                                              repeatVertical={
+                                                room?.selectedcurtain?.s_border
+                                                  ?.repeat_vertical
+                                              }
+                                              book={
+                                                room?.selectedcurtain?.s_border
+                                                  ?.book_name
+                                              }
+                                              brandName={
+                                                room?.selectedcurtain?.s_border
+                                                  ?.brand_name
+                                              }
+                                              material1={
+                                                room?.material_images[15]?.image
+                                              }
+                                              material2={
+                                                room?.material_images[16]?.image
+                                              }
+                                            />
                                           </ul>
                                         </div>
                                       </div>
@@ -768,147 +620,55 @@ function EnquiryDetials() {
                                     {" "}
                                     <h5>Sheer Description</h5>
                                     <div className="border border-1 p-3 rounded-2 mb-3">
-                                      <div className="row">
-                                        <div className="col-lg-3">
-                                          <img
-                                            src={
-                                              room?.selectedsheer?.sheerStyle
-                                                ?.image === null
-                                                ? ""
-                                                : room?.selectedsheer
-                                                    ?.sheerStyle?.image
-                                            }
-                                            alt="Lining Fabric"
-                                            className="newimg"
-                                          />
-                                        </div>
-                                        <div className="col-lg-9">
-                                          <ul className="list-group list-group-flush">
-                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                              <span className="mb-0">
-                                                Sheer Curtain Style :
-                                              </span>
-                                              <div>
-                                                <strong>
-                                                  {
-                                                    room?.selectedsheer
-                                                      ?.sheerStyle?.curtainStyle
-                                                  }
-                                                </strong>
-                                              </div>
-                                            </li>
-                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                              <span className="mb-0">
-                                                Lining Fabric Name :
-                                              </span>
-                                              <div>
-                                                <strong>
-                                                  {
-                                                    room?.selectedsheer
-                                                      ?.sheerfabric?.fabric
-                                                  }
-                                                </strong>
-                                              </div>
-                                            </li>
-                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                              <span className="mb-0">
-                                                Lining Fabric Width :
-                                              </span>
-                                              <strong>
-                                                {
-                                                  room?.selectedsheer
-                                                    ?.sheerfabric?.width
-                                                }
-                                              </strong>
-                                            </li>
-                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                              <span className="mb-0">
-                                                Lining Fabric Repeat Horizontal.
-                                                :
-                                              </span>
-                                              <strong>
-                                                {" "}
-                                                {
-                                                  room?.selectedsheer
-                                                    ?.sheerfabric
-                                                    ?.repeat_horizontal
-                                                }
-                                              </strong>
-                                            </li>
-                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                              <span className="mb-0">
-                                                Lining Fabric Repeat Vertical. :
-                                              </span>
-                                              <strong>
-                                                {" "}
-                                                {
-                                                  room?.selectedsheer
-                                                    ?.sheerfabric
-                                                    ?.repeat_vertical
-                                                }
-                                              </strong>
-                                            </li>
-                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                              <span className="mb-0">
-                                                Lining Fabric Book :
-                                              </span>
-                                              <strong>
-                                                {" "}
-                                                {
-                                                  room?.selectedsheer
-                                                    ?.sheerfabric?.book?.book
-                                                }
-                                              </strong>
-                                            </li>
-                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                              <span className="mb-0">
-                                                Lining Fabric Brand :
-                                              </span>
-                                              <strong>
-                                                {" "}
-                                                {
-                                                  room?.selectedsheer
-                                                    ?.sheerfabric?.book?.brand
-                                                    ?.brand
-                                                }
-                                              </strong>
-                                            </li>
-                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                              <span className="mb-0">
-                                                Hand Hamming :
-                                              </span>
-                                              <strong>
-                                                {" "}
-                                                {
-                                                  room?.selectedsheer
-                                                    ?.handHammering
-                                                }
-                                              </strong>
-                                            </li>
-                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                              <span className="mb-0">
-                                                Lead Chain :
-                                              </span>
-                                              <strong>
-                                                {" "}
-                                                {room?.selectedsheer?.leadChain}
-                                              </strong>
-                                            </li>
-                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                              <span className="mb-0">
-                                                Gathering :
-                                              </span>
-                                              <strong>
-                                                {" "}
-                                                {
-                                                  room?.selectedsheer
-                                                    ?.GatheredSheer?.type
-                                                }
-                                              </strong>
-                                            </li>
-                                          </ul>
-                                        </div>
-                                      </div>
+                                      <EnquiryCustom
+                                        image={
+                                          room?.selectedsheer?.sheerStyle?.image
+                                        }
+                                        style={
+                                          room?.selectedsheer?.sheerStyle
+                                            ?.curtainStyle
+                                        }
+                                        fabricName={
+                                          room?.selectedsheer?.curtainfabric
+                                            ?.fabric
+                                        }
+                                        width={
+                                          room?.selectedsheer?.curtainfabric
+                                            ?.width
+                                        }
+                                        repeatHorizontal={
+                                          room?.selectedsheer?.curtainfabric
+                                            ?.repeat_horizontal
+                                        }
+                                        repeatVertical={
+                                          room?.selectedsheer?.curtainfabric
+                                            ?.repeat_vertical
+                                        }
+                                        book={
+                                          room?.selectedsheer?.curtainfabric
+                                            ?.book_name
+                                        }
+                                        brandName={
+                                          room?.selectedsheer?.curtainfabric
+                                            ?.brand_name
+                                        }
+                                        handHammering={
+                                          room?.selectedsheer?.handHammering
+                                        }
+                                        leadChain={
+                                          room?.selectedsheer?.leadChain
+                                        }
+                                        gathering={
+                                          room?.selectedsheer?.GatheredSheer
+                                            ?.type
+                                        }
+                                        material1={
+                                          room?.material_images[3]?.image
+                                        }
+                                        material2={
+                                          room?.material_images[12]?.image
+                                        }
+                                      />
                                     </div>
                                   </>
                                 )}
@@ -919,83 +679,74 @@ function EnquiryDetials() {
                                   <>
                                     <h5>Belt Description</h5>
                                     <div className="border border-1 p-3 rounded-2 mb-3">
-                                      <div className="row">
-                                        <div className="col-lg-3">
-                                          <img
-                                            src={
-                                              room?.selectedcurtain?.belt_type
-                                                ?.image === null
-                                                ? ""
-                                                : room?.selectedcurtain
-                                                    ?.belt_type?.image
-                                            }
-                                            alt="Belt Fabric"
-                                            className="newimg"
-                                          />
-                                        </div>
-                                        <div className="col-lg-9">
-                                          <ul className="list-group list-group-flush">
-                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                              <span className="mb-0">
-                                                Belt Type:
-                                              </span>
-                                              <strong>
-                                                {
-                                                  room?.selectedcurtain
-                                                    ?.belt_type?.type
-                                                }
-                                              </strong>
-                                            </li>
-                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                              <span className="mb-0">
-                                                Belt Fabric Name :
-                                              </span>
-                                              <strong>
-                                                {
-                                                  room?.selectedcurtain?.belt
-                                                    ?.fabric
-                                                }
-                                              </strong>
-                                            </li>
-                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                              <span className="mb-0">
-                                                Width. :
-                                              </span>
-                                              <strong>
-                                                {" "}
-                                                {
-                                                  room?.selectedcurtain?.belt
-                                                    ?.width
-                                                }
-                                              </strong>
-                                            </li>
-                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                              <span className="mb-0">
-                                                Repeat Horizontal :
-                                              </span>
-                                              <strong>
-                                                {" "}
-                                                {
-                                                  room?.selectedcurtain?.belt
-                                                    ?.repeat_horizontal
-                                                }{" "}
-                                              </strong>
-                                            </li>
-                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                              <span className="mb-0">
-                                                Repeat Vertical :
-                                              </span>
-                                              <strong>
-                                                {" "}
-                                                {
-                                                  room?.selectedcurtain?.belt
-                                                    ?.repeat_vertical
-                                                }{" "}
-                                              </strong>
-                                            </li>
-                                          </ul>
-                                        </div>
-                                      </div>
+                                      <EnquiryCustom
+                                        image={
+                                          room?.selectedcurtain?.belt_type
+                                            ?.image
+                                        }
+                                        customType={
+                                          room?.selectedcurtain?.belt_type?.type
+                                        }
+                                        fabricName={
+                                          room?.selectedcurtain?.belt?.fabric
+                                        }
+                                        width={
+                                          room?.selectedcurtain?.belt?.width
+                                        }
+                                        repeatHorizontal={
+                                          room?.selectedcurtain?.belt
+                                            ?.repeat_horizontal
+                                        }
+                                        repeatVertical={
+                                          room?.selectedcurtain?.belt
+                                            ?.repeat_vertical
+                                        }
+                                        book={
+                                          room?.selectedcurtain?.belt?.book_name
+                                        }
+                                        brandName={
+                                          room?.selectedcurtain?.belt
+                                            ?.brand_name
+                                        }
+                                        material1={
+                                          room?.material_images[4]?.image
+                                        }
+                                        material2={
+                                          room?.material_images[13]?.image
+                                        }
+                                      />
+                                    </div>
+                                    <h5>belt piping Fabric Description</h5>
+                                    <div className="border border-1 p-3 rounded-2 mb-3">
+                                      <EnquiryCustom
+                                        fabricName={
+                                          room?.selectedcurtain?.beltPiping
+                                            ?.fabric
+                                        }
+                                        width={
+                                          room?.selectedcurtain?.beltPiping
+                                            ?.width
+                                        }
+                                        repeatHorizontal={
+                                          room?.selectedcurtain?.beltPiping
+                                            ?.repeat_horizontal
+                                        }
+                                        repeatVertical={
+                                          room?.selectedcurtain?.beltPiping
+                                            ?.repeat_vertical
+                                        }
+                                        book={
+                                          room?.selectedcurtain?.beltPiping
+                                            ?.book_name
+                                        }
+                                        brandName={
+                                          room?.selectedcurtain?.beltPiping
+                                            ?.brand_name
+                                        }
+                                        material1={
+                                          room?.material_images[14]?.image
+                                        }
+                                      />
                                     </div>
                                   </>
                                 )}
@@ -1008,137 +759,44 @@ function EnquiryDetials() {
                                     {" "}
                                     <h5>Pelmet Description</h5>
                                     <div className="border border-1 p-3 rounded-2 mb-3">
-                                      <div className="row">
-                                        <div className="col-lg-3">
-                                          <img
-                                            src={
-                                              room?.selectedcurtain?.pelmet_type
-                                                ?.image === null
-                                                ? ""
-                                                : room?.selectedcurtain
-                                                    ?.pelmet_type?.image
-                                            }
-                                            alt="Belt Fabric"
-                                            className="newimg"
-                                          />
-                                        </div>
-
-                                        <div className="col-lg-9">
-                                          <ul className="list-group list-group-flush">
-                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                              <span className="mb-0">
-                                                Pelmet Type :
-                                              </span>
-                                              <strong>
-                                                {
-                                                  room?.selectedcurtain
-                                                    ?.pelmet_type?.type
-                                                }
-                                              </strong>
-                                            </li>
-                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                              <span className="mb-0">
-                                                Pelmet Fabric Name :
-                                              </span>
-                                              <strong>
-                                                {
-                                                  room?.selectedcurtain?.pelmet
-                                                    ?.fabric
-                                                }
-                                              </strong>
-                                            </li>
-                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                              <span className="mb-0">
-                                                Width. :
-                                              </span>
-                                              <strong>
-                                                {
-                                                  room?.selectedcurtain?.pelmet
-                                                    ?.width
-                                                }
-                                              </strong>
-                                            </li>
-                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                              <span className="mb-0">
-                                                Repeat Horizontal :
-                                              </span>
-                                              <strong>
-                                                {
-                                                  room?.selectedcurtain?.pelmet
-                                                    ?.repeat_horizontal
-                                                }
-                                              </strong>
-                                            </li>
-                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                              <span className="mb-0">
-                                                Repeat Vertical :
-                                              </span>
-                                              <strong>
-                                                {
-                                                  room?.selectedcurtain?.pelmet
-                                                    ?.repeat_vertical
-                                                }
-                                              </strong>
-                                            </li>
-                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                              <span className="mb-0">
-                                                Pelmet Width :
-                                              </span>
-                                              <strong>
-                                                {
-                                                  room?.selectedcurtain
-                                                    ?.pelmet_width
-                                                }
-                                              </strong>
-                                            </li>
-                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                              <span className="mb-0">
-                                                Pelmet drop/Height :
-                                              </span>
-                                              <strong>
-                                                {
-                                                  room?.selectedcurtain
-                                                    ?.pelmet_drop
-                                                }
-                                              </strong>
-                                            </li>
-                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                              <span className="mb-0">
-                                                Pelmet Turning :
-                                              </span>
-                                              <strong>
-                                                {" "}
-                                                {
-                                                  room?.selectedcurtain
-                                                    ?.pelmet_turning
-                                                }
-                                              </strong>
-                                            </li>
-                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                              <span className="mb-0">
-                                                L Brackets :
-                                              </span>
-                                              <strong>
-                                                {
-                                                  room?.selectedcurtain
-                                                    ?.pelmet_LBracket_required
-                                                }
-                                              </strong>
-                                            </li>
-                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                              <span className="mb-0">
-                                                Number of L Brackets :
-                                              </span>
-                                              <strong>
-                                                {
-                                                  room?.selectedcurtain
-                                                    ?.pelmet_LBracket_quantity
-                                                }
-                                              </strong>
-                                            </li>
-                                          </ul>
-                                        </div>
-                                      </div>
+                                      <EnquiryCustom
+                                        image={
+                                          room?.selectedcurtain?.pelmet_type
+                                            ?.image
+                                        }
+                                        type={
+                                          room?.selectedcurtain?.pelmet_type
+                                            ?.type
+                                        }
+                                        fabricName={
+                                          room?.selectedcurtain?.pelmet?.fabric
+                                        }
+                                        width={
+                                          room?.selectedcurtain?.pelmet?.width
+                                        }
+                                        repeatHorizontal={
+                                          room?.selectedcurtain?.pelmet
+                                            ?.repeat_horizontal
+                                        }
+                                        repeatVertical={
+                                          room?.selectedcurtain?.pelmet
+                                            ?.repeat_vertical
+                                        }
+                                        height={
+                                          room?.selectedcurtain?.pelmet_drop
+                                        }
+                                        turning={
+                                          room?.selectedcurtain?.pelmet_turning
+                                        }
+                                        lBracketsRequired={
+                                          room?.selectedcurtain
+                                            ?.pelmet_LBracket_required
+                                        }
+                                        lbracketsQuantity={
+                                          room?.selectedcurtain
+                                            ?.pelmet_LBracket_quantity
+                                        }
+                                      />
                                     </div>
                                   </>
                                 )}
@@ -1152,135 +810,132 @@ function EnquiryDetials() {
                                       <p class="text-white rounded-pill bg-primary px-3 py-1">
                                         Main Curtain track Description
                                       </p>
-                                      <div className="row">
-                                        <div className="col-lg-3">
-                                          <img
-                                            src={
-                                              room?.selectedTrack
-                                                ?.primaryTrackType?.image ===
-                                              null
-                                                ? ""
-                                                : room?.selectedTrack
-                                                    ?.primaryTrackType?.image
-                                            }
-                                            alt="Belt Fabric"
-                                            className="newimg"
-                                          />
-                                        </div>
-                                        <div className="col-lg-9">
-                                          <ul className="list-group list-group-flush">
-                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                              <strong className="mb-0">
-                                                Main Curtain track type :
-                                              </strong>
-                                              <span>
-                                                {
-                                                  room?.selectedTrack
-                                                    ?.primaryTrackType?.type
-                                                }
-                                              </span>
-                                            </li>
-                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                              <strong className="mb-0">
-                                                Curtain track length. :
-                                              </strong>
-                                              <span>
-                                                {
-                                                  room?.selectedTrack
-                                                    ?.primary_track_length
-                                                }
-                                              </span>
-                                            </li>
-                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                              <strong className="mb-0">
-                                                Main Curtain Track Moter
-                                                operation :
-                                              </strong>
-                                              <span>
-                                                {
-                                                  room?.selectedTrack
-                                                    ?.primary_motor_operation
-                                                }
-                                              </span>
-                                            </li>
-                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                              <strong className="mb-0">
-                                                Main Curtain track extra bracket
-                                                Required :
-                                              </strong>
-                                              <span>
-                                                {" "}
-                                                {
-                                                  room?.selectedTrack
-                                                    ?.primary_extra_track_bracket_required
-                                                }
-                                              </span>
-                                            </li>
-                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                              <strong className="mb-0">
-                                                Main Curtain track extra bracket
-                                                Quantity :
-                                              </strong>
-                                              <span>
-                                                {" "}
-                                                {
-                                                  room?.selectedTrack
-                                                    ?.primary_extra_track_bracket_quantity
-                                                }
-                                              </span>
-                                            </li>
-                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                              <strong className="mb-0">
-                                                Main Curtain track over lapper
-                                                required :
-                                              </strong>
-                                              <span>
-                                                {
-                                                  room?.selectedTrack
-                                                    ?.primary_overlappper_required
-                                                }
-                                              </span>
-                                            </li>
-                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                              <strong className="mb-0">
-                                                Main curtain track over lapper :
-                                              </strong>
-                                              <span>
-                                                {
-                                                  room?.selectedTrack
-                                                    ?.primary_number_of_overlappper_pair
-                                                }
-                                              </span>
-                                            </li>
-                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                              <strong className="mb-0">
-                                                Main curatin Track Stick
-                                                Required :
-                                              </strong>
-                                              <span>
-                                                {room?.selectedTrack
-                                                  ?.primary_track_curatin_stick_required ===
-                                                null
-                                                  ? "No"
-                                                  : "Yes"}
-                                              </span>
-                                            </li>
-                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                              <strong className="mb-0">
-                                                Main curatin tie Knobs Required
-                                                :
-                                              </strong>
-                                              <span>
-                                                {room?.selectedTrack
-                                                  ?.primary_tie_knobs_required ===
-                                                null
-                                                  ? "No"
-                                                  : "Yes"}
-                                              </span>
-                                            </li>
-                                          </ul>
-                                        </div>
-                                      </div>
+                                      <EnquiryCustom
+                                        image={
+                                          room?.selectedMaterial[2]?.material
+                                            ?.image
+                                        }
+                                        required={
+                                          room?.selectedTrack?.track_required
+                                        }
+                                        type={
+                                          room?.selectedTrack?.primaryTrackType
+                                            ?.type
+                                        }
+                                        note={
+                                          room?.selectedTrack?.primaryTrackType
+                                            ?.notes
+                                        }
+                                        length={
+                                          room?.selectedTrack
+                                            ?.primary_track_length
+                                        }
+                                        screwSizeRequired={
+                                          room?.selectedTrack
+                                            ?.screw_size_required === null
+                                            ? "no"
+                                            : "yes"
+                                        }
+                                        material1={
+                                          room?.selectedTrack
+                                            ?.primary_track_image
+                                        }
+                                        track={
+                                          room?.selectedTrack
+                                            ?.primary_track_data?.fabric
+                                        }
+                                        motorOperation={
+                                          room?.selectedTrack
+                                            ?.primaryMotorOperation.type
+                                        }
+                                        extraBracketRequired={
+                                          room?.selectedTrack
+                                            ?.primary_extra_track_bracket_required ===
+                                          null
+                                            ? "no"
+                                            : "yes"
+                                        }
+                                        motorType={
+                                          room?.selectedTrack?.primaryTrack
+                                            .moter
+                                        }
+                                        extraBracketQuantity={
+                                          room?.selectedTrack
+                                            ?.primary_extra_track_bracket_quantity
+                                        }
+                                        overlapperRequired={
+                                          room?.selectedTrack
+                                            ?.primary_overlappper_required ===
+                                          null
+                                            ? "no"
+                                            : "yes"
+                                        }
+                                        overlapperQuantity={
+                                          room?.selectedTrack
+                                            ?.primary_number_of_overlappper_pair ===
+                                          null
+                                            ? "No"
+                                            : room?.selectedTrack
+                                                ?.primary_number_of_overlappper_pair
+                                        }
+                                        trackStickRequired={
+                                          room?.selectedTrack
+                                            ?.primary_track_curatin_stick_required ===
+                                          null
+                                            ? "No"
+                                            : "Yes"
+                                        }
+                                        tieKnobRequired={
+                                          room?.selectedTrack
+                                            ?.primary_tie_knobs_required ===
+                                          null
+                                            ? "No"
+                                            : "Yes"
+                                        }
+                                        lBracketsRequired={
+                                          room?.selectedTrack
+                                            ?.l_bracket_required === null
+                                            ? "No"
+                                            : "Yes"
+                                        }
+                                      />
+                                      <p class="text-white rounded-pill bg-primary px-3 py-1">
+                                        Mock Curtain track Description
+                                      </p>
+                                      <EnquiryCustom
+                                        type={
+                                          room?.selectedTrack?.mockTrackType
+                                            .type
+                                        }
+                                        note={
+                                          room?.selectedTrack?.mockTrackType
+                                            .notes
+                                        }
+                                        track={
+                                          room?.selectedTrack?.mock_track_data
+                                            .fabric
+                                        }
+                                        extraBracketRequired={
+                                          room?.selectedTrack
+                                            ?.mock_extra_track_bracket_required ===
+                                          null
+                                            ? "No"
+                                            : "Yes"
+                                        }
+                                        trackStickRequired={
+                                          room?.selectedTrack
+                                            ?.mock_track_curatin_stick_required ===
+                                          null
+                                            ? "No"
+                                            : "Yes"
+                                        }
+                                        tieKnobRequired={
+                                          room?.selectedTrack
+                                            ?.mock_tie_knobs_required === null
+                                            ? "No"
+                                            : "Yes"
+                                        }
+                                      />
                                     </div>
                                   </>
                                 )}
@@ -1289,237 +944,117 @@ function EnquiryDetials() {
                                 ) : (
                                   <>
                                     {" "}
-                                    <h5>Roads Information</h5>
+                                    <h5>Rods Information</h5>
                                     <div className="border border-1 p-3 rounded-2 mb-3">
+                                      <EnquiryCustom
+                                        image={
+                                          room?.selectedRod?.primaryRod?.image
+                                        }
+                                        channelType={
+                                          room?.selectedRod?.rod_selection
+                                        }
+                                        type={
+                                          room?.selectedRod?.primary_rod_data
+                                            ?.fabric
+                                        }
+                                        curtainRoadType={
+                                          room?.selectedRod?.primaryRod?.type
+                                        }
+                                        length={
+                                          room?.selectedRod?.primary_rod_length
+                                        }
+                                        extraBracketRequired={
+                                          room?.selectedRod
+                                            ?.extra_bracket_required === null
+                                            ? "no"
+                                            : "yes"
+                                        }
+                                        extraBracketQuantity={
+                                          room?.selectedRod
+                                            ?.extra_bracket_quantity
+                                        }
+                                        extraBracketSupportRequired={
+                                          room?.selectedRod
+                                            ?.extra_bracket_support_required
+                                        }
+                                        extraBracketSupportQuantity={
+                                          room?.selectedRod
+                                            ?.extra_bracket_support_quantity
+                                        }
+                                        rodRingRequired={
+                                          room?.selectedRod
+                                            ?.extra_ring_required === null
+                                            ? "no"
+                                            : "yes"
+                                        }
+                                        rodRingQuantity={
+                                          room?.selectedRod?.extra_ring_quantity
+                                        }
+                                        tieKnobRequired={
+                                          room?.selectedRod
+                                            ?.rod_tie_knobs_required === null
+                                            ? "No"
+                                            : "Yes"
+                                        }
+                                        tieKnobQuantity={
+                                          room?.selectedRod
+                                            ?.rod_number_of_tie_knobs_pair
+                                        }
+                                        finalQuantity={
+                                          room?.selectedRod?.finial_quantity ===
+                                          null
+                                            ? "N/A"
+                                            : room?.selectedRod?.finial_quantity
+                                        }
+                                        endCapRequired={
+                                          room?.selectedRod
+                                            ?.end_cap_required === null
+                                            ? "No"
+                                            : "Yes"
+                                        }
+                                        endCapQuantity={
+                                          room?.selectedRod
+                                            ?.end_cap_quantity === null
+                                            ? "N/A"
+                                            : room?.selectedRod
+                                                ?.end_cap_quantity
+                                        }
+                                        endCapWallSupportRequired={
+                                          room?.selectedRod
+                                            ?.end_cap_wall_support_required ===
+                                          null
+                                            ? "No"
+                                            : "Yes"
+                                        }
+                                        endCapWallSupportQuantity={
+                                          room?.selectedRod
+                                            ?.end_cap_wall_support_quantity ===
+                                          null
+                                            ? "NIL"
+                                            : room?.selectedRod
+                                                ?.end_cap_wall_support_quantity
+                                        }
+                                        trackStickRequired={
+                                          room?.selectedRod
+                                            ?.curatin_stick_required === null
+                                            ? "No"
+                                            : "Yes"
+                                        }
+                                        stickQuantity={
+                                          room?.selectedRod
+                                            ?.number_of_curatin_stick_pair ===
+                                          null
+                                            ? "No"
+                                            : room?.selectedRod
+                                                ?.number_of_curatin_stick_pair
+                                        }
+                                        material1={
+                                          room?.selectedRod?.primary_rod_image
+                                        }
+                                      />
                                       <div className="row">
-                                        <div className="col-lg-3">
-                                          <img
-                                            src={
-                                              room?.selectedRod?.primaryRod
-                                                ?.image === null
-                                                ? ""
-                                                : room?.selectedRod?.primaryRod
-                                                    ?.image
-                                            }
-                                            alt="Belt Fabric"
-                                            className="newimg"
-                                          />
-                                        </div>
                                         <div className="col-lg-9">
                                           <ul className="list-group list-group-flush">
-                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                              <span className="mb-0">
-                                                Rod channel type :
-                                              </span>
-                                              <strong>
-                                                {
-                                                  room?.selectedRod
-                                                    ?.rod_selection
-                                                }
-                                              </strong>
-                                            </li>
-                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                              <span className="mb-0">
-                                                Curtain rod Type :
-                                              </span>
-                                              <strong>
-                                                {
-                                                  room?.selectedRod?.primaryRod
-                                                    ?.type
-                                                }
-                                              </strong>
-                                            </li>
-                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                              <span className="mb-0">
-                                                Curtain rod length. :
-                                              </span>
-                                              <strong>
-                                                {
-                                                  room?.selectedRod
-                                                    ?.primary_rod_length
-                                                }
-                                              </strong>
-                                            </li>
-                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                              <span className="mb-0">
-                                                Curtain rod extra bracket
-                                                required :
-                                              </span>
-                                              <strong>
-                                                {
-                                                  room?.selectedRod
-                                                    ?.extra_bracket_required
-                                                }
-                                              </strong>
-                                            </li>
-                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                              <span className="mb-0">
-                                                No of curtain rod extra bracket
-                                                :
-                                              </span>
-                                              <strong>
-                                                {
-                                                  room?.selectedRod
-                                                    ?.extra_bracket_quantity
-                                                }
-                                              </strong>
-                                            </li>
-                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                              <span className="mb-0">
-                                                extra bracket support required :
-                                              </span>
-                                              <strong>
-                                                {
-                                                  room?.selectedRod
-                                                    ?.extra_bracket_support_required
-                                                }
-                                              </strong>
-                                            </li>
-                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                              <span className="mb-0">
-                                                extra bracket support quantity :
-                                              </span>
-                                              <strong>
-                                                {
-                                                  room?.selectedRod
-                                                    ?.extra_bracket_support_required
-                                                }
-                                              </strong>
-                                            </li>
-                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                              <span className="mb-0">
-                                                Curtain rod ring required :
-                                              </span>
-                                              <strong>
-                                                {
-                                                  room?.selectedRod
-                                                    ?.extra_ring_required
-                                                }
-                                              </strong>
-                                            </li>
-                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                              <span className="mb-0">
-                                                no of curtain rod ring :
-                                              </span>
-                                              <strong>
-                                                {
-                                                  room?.selectedRod
-                                                    ?.extra_ring_quantity
-                                                }
-                                              </strong>
-                                            </li>
-                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                              <span className="mb-0">
-                                                Curtain rod tie knob required :
-                                              </span>
-                                              <strong>
-                                                {room?.selectedRod
-                                                  ?.rod_tie_knobs_required ===
-                                                null
-                                                  ? "No"
-                                                  : "Yes"}
-                                              </strong>
-                                            </li>
-                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                              <span className="mb-0">
-                                                Curtain rod tie knobs pair :
-                                              </span>
-                                              <strong>
-                                                {room?.selectedRod
-                                                  ?.rod_number_of_tie_knobs_pair ===
-                                                null
-                                                  ? "No"
-                                                  : "Yes"}
-                                              </strong>
-                                            </li>
-                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                              <span className="mb-0">
-                                                Curtain rod finial quantity :
-                                              </span>
-                                              <strong>
-                                                {room?.selectedRod
-                                                  ?.finial_quantity === null
-                                                  ? "N/A"
-                                                  : room?.selectedRod
-                                                      ?.finial_quantity}
-                                              </strong>
-                                            </li>
-                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                              <span className="mb-0">
-                                                Curtain rod end cap required :
-                                              </span>
-                                              <strong>
-                                                {room?.selectedRod
-                                                  ?.end_cap_required === null
-                                                  ? "No"
-                                                  : "Yes"}
-                                              </strong>
-                                            </li>
-                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                              <span className="mb-0">
-                                                No of curtain rod end cap :
-                                              </span>
-                                              <strong>
-                                                {room?.selectedRod
-                                                  ?.end_cap_quantity === null
-                                                  ? "N/A"
-                                                  : room?.selectedRod
-                                                      ?.end_cap_quantity}
-                                              </strong>
-                                            </li>
-                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                              <span className="mb-0">
-                                                Curtain rod end cap wall support
-                                                required :
-                                              </span>
-                                              <strong>
-                                                {room?.selectedRod
-                                                  ?.end_cap_wall_support_required ===
-                                                null
-                                                  ? "No"
-                                                  : "Yes"}
-                                              </strong>
-                                            </li>
-                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                              <span className="mb-0">
-                                                No of curtain rod end cap wall
-                                                support :
-                                              </span>
-                                              <strong>
-                                                {room?.selectedRod
-                                                  ?.end_cap_wall_support_required ===
-                                                null
-                                                  ? "No"
-                                                  : room?.selectedRod
-                                                      ?.end_cap_wall_support_required}
-                                              </strong>
-                                            </li>
-                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                              <span className="mb-0">
-                                                Curtain rod stick required :
-                                              </span>
-                                              <strong>
-                                                {room?.selectedRod
-                                                  ?.curatin_stick_required ===
-                                                null
-                                                  ? "No"
-                                                  : "Yes"}
-                                              </strong>
-                                            </li>
-                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                              <span className="mb-0">
-                                                No of curtain rod stick Pair :
-                                              </span>
-                                              <strong>
-                                                {" "}
-                                                {room?.selectedRod
-                                                  ?.number_of_curatin_stick_pair ===
-                                                null
-                                                  ? "No"
-                                                  : room?.selectedRod
-                                                      ?.number_of_curatin_stick_pair}
-                                              </strong>
-                                            </li>
                                             <li className="list-group-item d-flex justify-content-between border-0 py-1">
                                               <span className="mb-0">
                                                 Secondary Rod Length :
@@ -1529,9 +1064,399 @@ function EnquiryDetials() {
                                                 {room?.selectedRod
                                                   ?.secondary_rod_length ===
                                                 null
-                                                  ? "No"
+                                                  ? "NIL"
                                                   : room?.selectedRod
                                                       ?.secondary_rod_length}
+                                              </strong>
+                                            </li>
+                                          </ul>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </>
+                                )}
+                                {room?.numberOfWindow > 0 && (
+                                  <>
+                                    <h5>Blind Description</h5>
+                                    <div className="border border-1 p-3 rounded-2 mb-3">
+                                      {room?.room_assets.map((arr, index) => {
+                                        return (
+                                          <button
+                                            type="button"
+                                            className="btn-success btn-secondary btn-warning btn-primary btn-danger btn-info"
+                                            onClick={() => {
+                                              setBtnIndex(index);
+                                              console.log(btnIndex);
+                                            }}
+                                          >
+                                            window {index + 1}
+                                          </button>
+                                        );
+                                      })}
+                                      <div className="row">
+                                        <div className="col-lg-9">
+                                          <ul className="list-group list-group-flush">
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                blind style :
+                                              </span>
+                                              <strong>
+                                                {console.log(btnIndex)}
+                                                {
+                                                  room?.room_assets[btnIndex]
+                                                    ?.selectedBlind?.blindStyle
+                                                    ?.style
+                                                }
+                                              </strong>
+                                              <img
+                                                src={
+                                                  room?.room_assets[btnIndex]
+                                                    ?.selectedBlind?.blindStyle
+                                                    ?.image
+                                                }
+                                                alt="Belt Fabric"
+                                                className="newimg"
+                                              />
+                                            </li>
+
+                                            {room?.room_assets[btnIndex]
+                                              ?.selectedBlind?.blind_subtype !==
+                                              null && (
+                                              <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                                <span className="mb-0">
+                                                  blind type:
+                                                </span>
+                                                <strong>
+                                                  {
+                                                    room?.room_assets[btnIndex]
+                                                      ?.selectedBlind
+                                                      ?.blind_subtype?.type
+                                                  }
+                                                </strong>
+                                                <div className="col-lg-3">
+                                                  <img
+                                                    src={
+                                                      room?.room_assets[
+                                                        btnIndex
+                                                      ]?.selectedBlind
+                                                        ?.blind_subtype?.image
+                                                    }
+                                                    alt="Belt Fabric"
+                                                    className="newimg"
+                                                  />
+                                                </div>
+                                              </li>
+                                            )}
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                Blind window Type :
+                                              </span>
+                                              <strong>
+                                                {
+                                                  room?.room_assets[btnIndex]
+                                                    ?.selectedBlind
+                                                    ?.blindWindow_type?.type
+                                                }
+                                              </strong>
+                                              <div className="col-lg-3">
+                                                <img
+                                                  src={
+                                                    room?.room_assets[btnIndex]
+                                                      ?.selectedBlind
+                                                      ?.blindWindow_type?.image
+                                                  }
+                                                  alt="Belt Fabric"
+                                                  className="newimg"
+                                                />
+                                              </div>
+                                            </li>
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                blind fitting type :
+                                              </span>
+                                              <strong>
+                                                {
+                                                  room?.room_assets[btnIndex]
+                                                    ?.selectedBlind
+                                                    ?.blindFitting_type.type
+                                                }
+                                              </strong>
+                                              <div className="col-lg-3">
+                                                <img
+                                                  src={
+                                                    room?.room_assets[btnIndex]
+                                                      ?.selectedBlind
+                                                      ?.blindFitting_type?.image
+                                                  }
+                                                  alt="Belt Fabric"
+                                                  className="newimg"
+                                                />
+                                              </div>
+                                            </li>
+                                          </ul>
+                                        </div>
+                                      </div>
+                                      {room?.room_assets[btnIndex]
+                                        ?.selectedBlind?.blindFabric !==
+                                        null && (
+                                        <div>
+                                          <h5>Blind fabric Description</h5>
+                                          <div className="border border-1 p-3 rounded-2 mb-3">
+                                            <EnquiryCustom
+                                              fabricName={
+                                                room?.room_assets[btnIndex]
+                                                  ?.selectedBlind?.blindFabric
+                                                  ?.fabric
+                                              }
+                                              width={
+                                                room?.room_assets[btnIndex]
+                                                  ?.selectedBlind?.blindFabric
+                                                  ?.width
+                                              }
+                                              repeatHorizontal={
+                                                room?.room_assets[btnIndex]
+                                                  ?.selectedBlind?.blindFabric
+                                                  ?.repeat_horizontal
+                                              }
+                                              repeatVertical={
+                                                room?.room_assets[btnIndex]
+                                                  ?.selectedBlind?.blindFabric
+                                                  ?.repeat_vertical
+                                              }
+                                              book={
+                                                room?.room_assets[btnIndex]
+                                                  ?.selectedBlind?.blindFabric
+                                                  .book_name
+                                              }
+                                              brandName={
+                                                room?.room_assets[btnIndex]
+                                                  ?.selectedBlind?.blindFabric
+                                                  .brand_name
+                                              }
+                                              panel={
+                                                room?.room_assets[btnIndex]
+                                                  ?.number_of_panel_blind_fabric
+                                              }
+                                              totalFabric={
+                                                room?.room_assets[btnIndex]
+                                                  ?.total_blind_fabric_required
+                                              }
+                                              material1={
+                                                room?.room_assets[btnIndex]
+                                                  ?.media[0]?.file
+                                              }
+                                            />
+                                          </div>
+                                        </div>
+                                      )}
+                                      {room?.room_assets[btnIndex]
+                                        ?.selectedBlind?.blind_lining !==
+                                        null && (
+                                        <div>
+                                          <h5>Blind lining Description</h5>
+                                          <div className="border border-1 p-3 rounded-2 mb-3">
+                                            <EnquiryCustom
+                                              image={
+                                                room?.room_assets[btnIndex]
+                                                  ?.selectedBlind?.blind_lining
+                                                  ?.image
+                                              }
+                                              style={
+                                                room?.room_assets[btnIndex]
+                                                  ?.selectedBlind?.blind_lining
+                                                  ?.type
+                                              }
+                                              note={
+                                                room?.room_assets[btnIndex]
+                                                  ?.selectedBlind?.blind_lining
+                                                  ?.note
+                                              }
+                                              width={
+                                                room?.room_assets[btnIndex]
+                                                  ?.selectedBlind
+                                                  ?.blind_lining_width
+                                              }
+                                              fabricName={
+                                                room?.room_assets[btnIndex]
+                                                  ?.selectedBlind?.BLINDLINING
+                                                  ?.fabric
+                                              }
+                                              panel={
+                                                room?.room_assets[btnIndex]
+                                                  ?.number_of_panel_blind_lining_fabric
+                                              }
+                                              totalFabric={
+                                                room?.room_assets[btnIndex]
+                                                  ?.total_blind_lining_fabric_required
+                                              }
+                                            />
+                                          </div>
+                                        </div>
+                                      )}
+                                      {room?.room_assets[btnIndex]
+                                        ?.selectedBlind?.blindBorder_type !==
+                                        null && (
+                                        <div>
+                                          <h5>Blind border Description</h5>
+                                          <div className="border border-1 p-3 rounded-2 mb-3">
+                                            <EnquiryCustom
+                                              image={
+                                                room?.room_assets[btnIndex]
+                                                  ?.selectedBlind
+                                                  ?.blindBorder_type?.image
+                                              }
+                                              borderType={
+                                                room?.room_assets[btnIndex]
+                                                  ?.selectedBlind
+                                                  ?.blindBorder_type?.type
+                                              }
+                                            />
+                                          </div>
+                                        </div>
+                                      )}
+
+                                      {room?.room_assets[btnIndex]
+                                        ?.selectedBlind?.blindBorderFabric !==
+                                        null && (
+                                        <div>
+                                          <h5>ready made border</h5>
+                                          <div className="border border-1 p-3 rounded-2 mb-3">
+                                            <EnquiryCustom
+                                              fabricName={
+                                                room?.room_assets[btnIndex]
+                                                  ?.selectedBlind
+                                                  ?.blindBorderFabric?.fabric
+                                              }
+                                              width={
+                                                room?.room_assets[btnIndex]
+                                                  ?.selectedBlind
+                                                  ?.blindBorderFabric?.width
+                                              }
+                                              repeatHorizontal={
+                                                room?.room_assets[btnIndex]
+                                                  ?.selectedBlind
+                                                  ?.blindBorderFabric
+                                                  ?.repeat_horizontal
+                                              }
+                                              repeatVertical={
+                                                room?.room_assets[btnIndex]
+                                                  ?.selectedBlind
+                                                  ?.blindBorderFabric
+                                                  ?.repeat_vertical
+                                              }
+                                              book={
+                                                room?.room_assets[btnIndex]
+                                                  ?.selectedBlind
+                                                  ?.blindBorderFabric.book_name
+                                              }
+                                              brandName={
+                                                room?.room_assets[btnIndex]
+                                                  ?.selectedBlind
+                                                  ?.blindBorderFabric.brand_name
+                                              }
+                                              totalFabric={
+                                                room?.room_assets[btnIndex]
+                                                  ?.total_blind_border_fabric_required
+                                              }
+                                              material1={
+                                                room?.room_assets[btnIndex]
+                                                  ?.media[1]?.file
+                                              }
+                                            />
+                                          </div>
+                                        </div>
+                                      )}
+
+                                      <h5>Blind hardware Description</h5>
+                                      <div className="border border-1 p-3 rounded-2 mb-3">
+                                        <div className="col-lg-9">
+                                          <ul className="list-group list-group-flush">
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <div>
+                                                <img
+                                                  src={
+                                                    room?.room_assets[btnIndex]
+                                                      ?.selectedBlind
+                                                      ?.blindTrack_type?.image
+                                                  }
+                                                  alt="fabric"
+                                                  className="newimg"
+                                                />
+                                              </div>
+                                              <div>
+                                                <img
+                                                  src={
+                                                    room?.room_assets[btnIndex]
+                                                      ?.selectedBlind
+                                                      ?.blindMotor_track_type
+                                                      ?.image
+                                                  }
+                                                  alt="fabric"
+                                                  className="newimg"
+                                                />
+                                              </div>
+                                            </li>
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                blind track type:
+                                              </span>
+                                              <strong>
+                                                {
+                                                  room?.room_assets[btnIndex]
+                                                    ?.selectedBlind
+                                                    ?.blindTrack_type?.type
+                                                }
+                                              </strong>
+                                            </li>
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                Blind Motor Track type :
+                                              </span>
+                                              <strong>
+                                                {
+                                                  room?.room_assets[btnIndex]
+                                                    ?.selectedBlind
+                                                    ?.blindMotor_track_type
+                                                    ?.type
+                                                }
+                                              </strong>
+                                            </li>
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                blind track :
+                                              </span>
+                                              <strong>
+                                                {
+                                                  room?.room_assets[btnIndex]
+                                                    ?.selectedBlind?.blindTrack
+                                                    ?.fabric
+                                                }
+                                              </strong>
+                                            </li>
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                blind screw required
+                                              </span>
+                                              <strong>
+                                                {
+                                                  room?.room_assets[btnIndex]
+                                                    ?.selectedBlind
+                                                    ?.blind_screw_required
+                                                }
+                                              </strong>
+                                            </li>
+
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                blind extra bracket support
+                                                required :
+                                              </span>
+                                              <strong>
+                                                {
+                                                  room?.room_assets[btnIndex]
+                                                    ?.selectedBlind
+                                                    ?.blind_extra_bracket_support_required
+                                                }
                                               </strong>
                                             </li>
                                           </ul>
