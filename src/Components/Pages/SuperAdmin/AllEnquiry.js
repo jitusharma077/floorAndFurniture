@@ -3,18 +3,41 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { GetDataWithToken } from "../../ApiHelper/ApiHelper";
 import Loader from "../../Common/Loader";
+import PaginationComponent from "../../Common/PaginationComponent";
 import useFetch from "../../Hooks/CallBack";
 import SuperAdminHeader from "./Common/SuperAdminHeader";
 import SuperAdminSidebar from "./Common/SuperAdminSidebar";
 
 function AllEnquiry() {
   const navigate = useNavigate();
-  const [AllEnquiry, setAllEnquiry] = useState([]);
-  const { data, Error, isLoading } = useFetch("superadmin/get/enquiries");
+  const [callApi, setCallApi] = useState(true);
+  // const { data, Error, isLoading } = useFetch("superadmin/get/enquiries");
+  const [totalPage, settotalPage] = useState(0);
+  const [data, setdata] = useState([]);
+  const [isLoading, setisLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const handlePageClick = (e, index) => {
+    e.preventDefault();
+    setCurrentPage(index + 1);
+    setCallApi(true);
+  };
+
+  useEffect(() => {
+    setisLoading(true);
+    GetDataWithToken(`superadmin/get/enquiries?page=${currentPage}`).then(
+      (response) => {
+        if (response.status === true) {
+          setdata(response.data);
+          setisLoading(false);
+          settotalPage(response.pages);
+        }
+      }
+    );
+  }, [currentPage]);
 
   return (
     <>
-      {console.log("allenquiry", AllEnquiry)}
       <div
         data-typography="poppins"
         data-theme-version="light"
@@ -55,20 +78,19 @@ function AllEnquiry() {
                       >
                         <thead>
                           <tr>
-                            <th>Enquiry number</th>
+                            <th>Enq. No.</th>
                             <th>Customer Name</th>
                             <th>Mobile No.</th>
-
                             <th>Status</th>
+                            <th>IC </th>
                             <th>Date</th>
                             <th>Action</th>
                           </tr>
                         </thead>
                         <tbody>
                           {/* {console.log("length", AllEnquiry.length)} */}
-                          {Error && <div>Error</div>}
-                          {isLoading && <Loader />}
 
+                          {isLoading && <Loader />}
                           {data && data.length === 0 ? (
                             <h3
                               style={{
@@ -83,17 +105,16 @@ function AllEnquiry() {
                             data.map((data, index) => (
                               <tr>
                                 <>
-                                  {" "}
                                   <th>{data.id}</th>
                                   <th>
-                                    {data?.customer?.firstName}{" "}
+                                    {data?.customer?.firstName}
                                     {data?.customer?.lastName}
                                   </th>
                                   <th>{data?.customer?.primary_phone}</th>
                                   <td>
                                     <span
                                       className={
-                                        data?.status === "inprogress"
+                                        data?.status === "inprogess"
                                           ? "badge  badge-primary"
                                           : "badge badge-dark"
                                       }
@@ -102,7 +123,10 @@ function AllEnquiry() {
                                     </span>
                                   </td>
                                   <td>
-                                    {" "}
+                                    {data?.user?.firstName}
+                                    {data?.user?.lastName}
+                                  </td>
+                                  <td>
                                     {moment(data?.createdAt).format("ll")}
                                   </td>
                                   <td>
@@ -130,6 +154,13 @@ function AllEnquiry() {
                         </tbody>
                       </table>
                     </div>
+                    <PaginationComponent
+                      totalPage={totalPage}
+                      currentPage={currentPage}
+                      setCallApi={(val) => setCallApi(val)}
+                      setCurrentPage={(val) => setCurrentPage(val)}
+                      handlePageClick={handlePageClick}
+                    />
                   </div>
                 </div>
               </div>
