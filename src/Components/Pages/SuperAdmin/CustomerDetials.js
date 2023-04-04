@@ -54,7 +54,7 @@ function CustomerDetials() {
                             <img src="./images/user.png" alt="" />
                             <div>
                               <h2 className="font-w600 ">
-                                {CustomerDetials?.firstName}{" "}
+                                {CustomerDetials?.firstName}
                                 {CustomerDetials?.lastName}
                               </h2>
                               <span className="text-secondary">

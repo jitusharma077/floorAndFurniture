@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Modal, ModalBody, ModalHeader } from "reactstrap";
 import { PostDataWithToken } from "../ApiHelper/ApiHelper";
+import { setLoggedInUserDetails } from "../Store/Actions/userAction";
 
 function EditOutletModal({ modal, toggle, OutletData }) {
   const {
@@ -18,6 +19,7 @@ function EditOutletModal({ modal, toggle, OutletData }) {
     let formData = new FormData();
     formData.append("type", "outlet");
     formData.append("firstName", data.outlet_name);
+    formData.append("id", data.outlet_id);
     formData.append("email", data.outlet_email);
     formData.append("password", data.outlet_password);
     formData.append("phone", data.outlet_mobile_no);
@@ -39,6 +41,7 @@ function EditOutletModal({ modal, toggle, OutletData }) {
           password: "",
           outlet_mobile_no: "",
           outlet_address: "",
+          outlet_id: "",
         });
         toggle();
         setCallApi(true);
@@ -71,6 +74,25 @@ function EditOutletModal({ modal, toggle, OutletData }) {
               />
               <span className="text-danger">
                 {errors.outlet_name && errors.outlet_name.message}
+              </span>
+            </div>
+          </div>
+          <div className="mb-3 row align-items-center">
+            <label className="col-sm-3 col-form-label" htmlFor="id">
+              id:
+            </label>
+            <div className="col-sm-9">
+              <input
+                {...register("outlet_id", {
+                  required: "please enter outlet id",
+                })}
+                type="text"
+                className="form-control"
+                id="id"
+                placeholder="outlet id"
+              />
+              <span className="text-danger">
+                {errors.outlet_id && errors.outlet_id.message}
               </span>
             </div>
           </div>
