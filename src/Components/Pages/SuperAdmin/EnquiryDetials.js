@@ -130,7 +130,7 @@ function EnquiryDetials() {
 
                         {EnquiryDetials?.data?.status ===
                           "measurement-complete" &&
-                          EnquiryDetials?.data?.orders.length === 0 && (
+                          EnquiryDetials?.data?.orders?.length === 0 && (
                             <button
                               onClick={() => {
                                 navigate("/CreateOrder", {
@@ -306,20 +306,23 @@ function EnquiryDetials() {
                             href={`#list-home-${index}`}
                             role="tab"
                           >
-                            <div>Room Name: {rooms.roomName}</div>
-                            <div> Room Description:{rooms.roomDescription}</div>
+                            <div>Room Name: {rooms?.roomName}</div>
+                            <div>
+                              {" "}
+                              Room Description:{rooms?.roomDescription}
+                            </div>
                             <hr />
-                            enquiry Id : {rooms.enquiryId},Floor : {rooms.floor}
-                            , No. of windows : {rooms.numberOfWindow} ,extra
-                            Hardware : {rooms.extra_hardware} ,extra hardware
-                            required :
-                            {rooms.extra_hardware_required === null
+                            enquiry Id : {rooms?.enquiryId},Floor :{" "}
+                            {rooms?.floor}, No. of windows :{" "}
+                            {rooms?.numberOfWindow} ,extra Hardware :{" "}
+                            {rooms?.extra_hardware} ,extra hardware required :
+                            {rooms?.extra_hardware_required === null
                               ? "no"
                               : "yes"}
                             , curtain Fabric:
-                            {rooms.curtainFabric === null
+                            {rooms?.curtainFabric === null
                               ? "nil"
-                              : rooms.curtainFabric}
+                              : rooms?.curtainFabric}
                           </a>
                         ))}
                     </div>
@@ -846,7 +849,7 @@ function EnquiryDetials() {
                                         }
                                         motorOperation={
                                           room?.selectedTrack
-                                            ?.primaryMotorOperation.type
+                                            ?.primaryMotorOperation?.type
                                         }
                                         extraBracketRequired={
                                           room?.selectedTrack
@@ -857,7 +860,7 @@ function EnquiryDetials() {
                                         }
                                         motorType={
                                           room?.selectedTrack?.primaryTrack
-                                            .moter
+                                            ?.moter
                                         }
                                         extraBracketQuantity={
                                           room?.selectedTrack
@@ -905,15 +908,15 @@ function EnquiryDetials() {
                                       <EnquiryCustom
                                         type={
                                           room?.selectedTrack?.mockTrackType
-                                            .type
+                                            ?.type
                                         }
                                         note={
                                           room?.selectedTrack?.mockTrackType
-                                            .notes
+                                            ?.notes
                                         }
                                         track={
                                           room?.selectedTrack?.mock_track_data
-                                            .fabric
+                                            ?.fabric
                                         }
                                         extraBracketRequired={
                                           room?.selectedTrack
@@ -1178,7 +1181,7 @@ function EnquiryDetials() {
                                                 {
                                                   room?.room_assets[btnIndex]
                                                     ?.selectedBlind
-                                                    ?.blindFitting_type.type
+                                                    ?.blindFitting_type?.type
                                                 }
                                               </strong>
                                               <div className="col-lg-3">
@@ -1226,12 +1229,12 @@ function EnquiryDetials() {
                                               book={
                                                 room?.room_assets[btnIndex]
                                                   ?.selectedBlind?.blindFabric
-                                                  .book_name
+                                                  ?.book_name
                                               }
                                               brandName={
                                                 room?.room_assets[btnIndex]
                                                   ?.selectedBlind?.blindFabric
-                                                  .brand_name
+                                                  ?.brand_name
                                               }
                                               panel={
                                                 room?.room_assets[btnIndex]
