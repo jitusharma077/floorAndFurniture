@@ -145,6 +145,22 @@ function EnquiryDetials() {
                               Create Order
                             </button>
                           )}
+                        {EnquiryDetials?.data?.status ===
+                          "measurement-complete" &&
+                          EnquiryDetials?.data?.orders?.length === 0 && (
+                            <button
+                              onClick={() => {
+                                navigate("/ViewEstimate", {
+                                  state: {
+                                    EnquiryDetials: EnquiryDetials.data,
+                                  },
+                                });
+                              }}
+                              className="btn btn-mybutton"
+                            >
+                              View Estimate
+                            </button>
+                          )}
                       </>
                     ) : null}
                   </div>
@@ -187,7 +203,10 @@ function EnquiryDetials() {
                               Secondary Contact No. :
                             </span>
                             <strong>
-                              {EnquiryDetials?.data?.customer?.secondary_phone}
+                              {EnquiryDetials?.data?.customer?.secondary_phone
+                                ? EnquiryDetials?.data?.customer
+                                    ?.secondary_phone
+                                : `${EnquiryDetials?.data?.contactNumber} (Delivery)`}
                             </strong>
                           </li>
                           <li className="list-group-item d-flex justify-content-between">

@@ -55,6 +55,41 @@
     <link href="%PUBLIC_URL%/css/style.css" rel="stylesheet" />
     <title>Floor And Furniture Web Admin</title>
   </head>
+  <style>
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+    .Estimate tr,
+    .Estimate td,
+    .Estimate th {
+      border-width: 1px !important;
+      border-color: black !important;
+      text-align: center;
+    }
+
+    .desktop_hide,
+    .desktop_hide table {
+      mso-hide: all;
+      display: none;
+      max-height: 0px;
+      overflow: hidden;
+    }
+
+    @media (max-width: 720px) {
+      .desktop_hide table.icons-inner {
+        display: inline-block !important;
+      }
+
+      .icons-inner {
+        text-align: center;
+      }
+
+      .icons-inner td {
+        margin: 0 auto;
+      }
+    }
+  </style>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
