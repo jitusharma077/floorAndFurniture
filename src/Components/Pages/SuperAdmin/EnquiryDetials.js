@@ -18,6 +18,8 @@ function EnquiryDetials() {
   const [enquiryId, setEnquiryId] = useState(null);
   const [EnquiryDetials, setEnquiryDetials] = useState({});
   const [btnIndex, setBtnIndex] = useState(0);
+  const [sofaBtnIndex, setSofaBtnIndex] = useState(0);
+  const [wallBtnIndex, setWallBtnIndex] = useState(0);
   const [Category, setCategory] = useState([]);
   const [IcName, setIcName] = useState("");
 
@@ -503,7 +505,6 @@ function EnquiryDetials() {
                                     </div>
                                   </>
                                 )}
-
                                 {room?.selectedcurtain?.mock_fabric_required ===
                                 "No" ? (
                                   ""
@@ -683,7 +684,6 @@ function EnquiryDetials() {
                                     </div>
                                   </>
                                 )}
-
                                 {room?.selectedsheer === null ? (
                                   ""
                                 ) : (
@@ -743,7 +743,6 @@ function EnquiryDetials() {
                                     </div>
                                   </>
                                 )}
-
                                 {room?.selectedcurtain?.beltType === null ? (
                                   ""
                                 ) : (
@@ -821,7 +820,6 @@ function EnquiryDetials() {
                                     </div>
                                   </>
                                 )}
-
                                 {room?.selectedcurtain?.pelmetTypeId ===
                                 null ? (
                                   ""
@@ -871,7 +869,6 @@ function EnquiryDetials() {
                                     </div>
                                   </>
                                 )}
-
                                 {room?.selectedTrack === null ? (
                                   ""
                                 ) : (
@@ -1267,6 +1264,7 @@ function EnquiryDetials() {
                                           </ul>
                                         </div>
                                       </div>
+
                                       {room?.room_assets[btnIndex]
                                         ?.selectedBlind?.blindFabric !==
                                         null && (
@@ -1527,6 +1525,251 @@ function EnquiryDetials() {
                                                   room?.room_assets[btnIndex]
                                                     ?.selectedBlind
                                                     ?.blind_extra_bracket_support_required
+                                                }
+                                              </strong>
+                                            </li>
+                                          </ul>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </>
+                                )}
+                                {console.log("sofa", room.selectedsofa)}
+                                {room?.selectedsofa.length > 0 && (
+                                  <>
+                                    <h5>Sofa Description</h5>
+                                    <div className="border border-1 p-3 rounded-2 mb-3">
+                                      {room?.selectedsofa.map((arr, index) => {
+                                        return (
+                                          <button
+                                            type="button"
+                                            className="btn-success btn-secondary btn-warning btn-primary btn-danger btn-info mx-1"
+                                            onClick={() => {
+                                              setSofaBtnIndex(index);
+                                              // console.log(btnIndex);
+                                            }}
+                                          >
+                                            Sofa {index + 1}
+                                          </button>
+                                        );
+                                      })}
+                                      <div className="row">
+                                        <div className="col-lg-9">
+                                          <ul className="list-group list-group-flush">
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                Sofa type:
+                                              </span>
+                                              <strong>
+                                                {
+                                                  room?.selectedsofa[
+                                                    sofaBtnIndex
+                                                  ]?.type
+                                                }
+                                              </strong>
+                                            </li>
+
+                                            {room?.selectedsofa[sofaBtnIndex]
+                                              ?.sofa_type && (
+                                              <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                                <span className="mb-0">
+                                                  sofa sub type:
+                                                </span>
+                                                <strong>
+                                                  {
+                                                    room?.selectedsofa[
+                                                      sofaBtnIndex
+                                                    ]?.sofa_type?.type
+                                                  }
+                                                </strong>
+                                              </li>
+                                            )}
+
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                bed back :
+                                              </span>
+                                              <strong>
+                                                {
+                                                  room?.selectedsofa[
+                                                    sofaBtnIndex
+                                                  ]?.bedback_required
+                                                }
+                                              </strong>
+                                            </li>
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                Quilted :
+                                              </span>
+                                              <strong>
+                                                {
+                                                  room?.selectedsofa[
+                                                    sofaBtnIndex
+                                                  ]?.is_quillted
+                                                }
+                                              </strong>
+                                            </li>
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                Sofa wall panel :
+                                              </span>
+                                              <strong>
+                                                {
+                                                  room?.selectedsofa[
+                                                    sofaBtnIndex
+                                                  ]?.is_quillted
+                                                }
+                                              </strong>
+                                            </li>
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                Sofa pouffe :
+                                              </span>
+                                              <strong>
+                                                {
+                                                  room?.selectedsofa[
+                                                    sofaBtnIndex
+                                                  ]?.pouffee_required
+                                                }
+                                              </strong>
+                                            </li>
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                Seating capacity :
+                                              </span>
+                                              <strong>
+                                                {
+                                                  room?.selectedsofa[
+                                                    sofaBtnIndex
+                                                  ]?.seating_capacity
+                                                }
+                                              </strong>
+                                            </li>
+                                          </ul>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </>
+                                )}{" "}
+                                {room?.selectedWallpaper.length > 0 && (
+                                  <>
+                                    <h5>Wallpaper Description</h5>
+                                    <div className="border border-1 p-3 rounded-2 mb-3">
+                                      {room?.selectedWallpaper.map(
+                                        (arr, index) => {
+                                          return (
+                                            <button
+                                              type="button"
+                                              className="btn-success btn-secondary btn-warning btn-primary btn-danger btn-info mx-1"
+                                              onClick={() => {
+                                                setWallBtnIndex(index);
+                                                console.log(btnIndex);
+                                              }}
+                                            >
+                                              Wall {index + 1}
+                                            </button>
+                                          );
+                                        }
+                                      )}
+                                      <div className="row">
+                                        <div className="col-lg-9">
+                                          <ul className="list-group list-group-flush">
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                Wallpaper type:
+                                              </span>
+                                              <strong>
+                                                {
+                                                  room?.selectedWallpaper[
+                                                    wallBtnIndex
+                                                  ]?.type
+                                                }
+                                              </strong>
+                                            </li>
+
+                                            {room?.selectedWallpaper[
+                                              wallBtnIndex
+                                            ]?.curtainfabric.fabric && (
+                                              <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                                <span className="mb-0">
+                                                  Wallpaper:
+                                                </span>
+                                                <strong>
+                                                  {
+                                                    room?.selectedWallpaper[
+                                                      wallBtnIndex
+                                                    ]?.curtainfabric.fabric
+                                                  }
+                                                </strong>
+                                              </li>
+                                            )}
+
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                Primer required :
+                                              </span>
+                                              <strong>
+                                                {room?.selectedWallpaper[
+                                                  wallBtnIndex
+                                                ]?.premier_required === null
+                                                  ? "no"
+                                                  : "yes"}
+                                              </strong>
+                                            </li>
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                Wallpaper discount :
+                                              </span>
+                                              <strong>
+                                                {
+                                                  room?.selectedWallpaper[
+                                                    wallBtnIndex
+                                                  ]?.wallpaper_discount
+                                                }
+                                              </strong>
+                                            </li>
+                                          </ul>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </>
+                                )}
+                                {room?.selectedFlooring && (
+                                  <>
+                                    <h5>Flooring Description</h5>
+                                    <div className="border border-1 p-3 rounded-2 mb-3">
+                                      <div className="row">
+                                        <div className="col-lg-9">
+                                          <ul className="list-group list-group-flush">
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                Flooring type:
+                                              </span>
+                                              <strong>
+                                                {room?.selectedFlooring?.type}
+                                              </strong>
+                                            </li>
+
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                Flooring:
+                                              </span>
+                                              <strong>
+                                                {
+                                                  room?.selectedFlooring
+                                                    ?.flooring?.fabric
+                                                }
+                                              </strong>
+                                            </li>
+
+                                            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                              <span className="mb-0">
+                                                Flooring discount :
+                                              </span>
+                                              <strong>
+                                                {
+                                                  room?.selectedFlooring
+                                                    ?.discount
                                                 }
                                               </strong>
                                             </li>

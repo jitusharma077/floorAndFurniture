@@ -1,6 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-
 import { Modal, ModalBody, ModalFooter } from "reactstrap";
 import { confirmable, createConfirmation } from "react-confirm";
 
