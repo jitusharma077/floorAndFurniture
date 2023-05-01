@@ -3,7 +3,12 @@ import React from "react";
 function Loader() {
   return (
     <>
-      <main style={{ position: "absolute", width: "100%" }}>
+      <main
+        style={{
+          position: "absolute",
+          width: "100%",
+        }}
+      >
         <ul className="o-vertical-spacing o-vertical-spacing--l">
           <li className="blog-post o-media">
             <div className="o-media__body">

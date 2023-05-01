@@ -2,7 +2,10 @@ import axios from "axios";
 import Cookies from "js-cookie";
 
 // Api Url's for the API's
-export const serverUrl = "http://203.115.102.6:696/api/v1/";
+export const serverUrl = "http://203.115.102.6:6696/api/v1/";
+
+// main url :"https://a6a2-2401-4900-1c7b-b773-3400-1b5f-6411-9d4a.ngrok.io"
+
 // Api's Function
 export function PostData(url, data) {
   // body..

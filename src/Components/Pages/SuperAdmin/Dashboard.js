@@ -1,4 +1,6 @@
-import React, { useEffect } from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { GetDataWithToken, serverUrl } from "../../ApiHelper/ApiHelper";
 import SuperAdminHeader from "./Common/SuperAdminHeader";
 import SuperAdminSidebar from "./Common/SuperAdminSidebar";
 
@@ -7,6 +9,25 @@ function Dashboard() {
   //   let resp = (123456).toString();
   //   console.log("resp", resp);
   // }, [""]);
+
+  const [LoadingData, setLoadingData] = useState(false);
+
+  const DownloadReportHandler = () => {
+    setLoadingData(true);
+    axios({
+      url: `${serverUrl}superadmin/storewise-measurement-aging/22`,
+      method: "GET",
+      responseType: "blob", // important
+    }).then((response) => {
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", "file.xls"); //or any other extension
+      document.body.appendChild(link);
+      link.click();
+      setLoadingData(false);
+    });
+  };
 
   return (
     <>
@@ -108,7 +129,7 @@ function Dashboard() {
                       </div>
                       <div className="col-xl-3 col-sm-6">
                         <div className="card booking">
-                          <div className="card-body">
+                          <div className="card-body text-align-center">
                             <div className="booking-status d-flex align-items-center">
                               <span>
                                 <img alt="" src="./images/measurement.svg" />
@@ -118,6 +139,12 @@ function Dashboard() {
                                 <p className="mb-0">MEASUREMENT</p>
                               </div>
                             </div>
+                            <button
+                              onClick={() => DownloadReportHandler()}
+                              className="btn btn-primary"
+                            >
+                              Download Report
+                            </button>
                           </div>
                         </div>
                       </div>

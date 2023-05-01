@@ -18,15 +18,18 @@ function EnquiryDetials() {
   const [enquiryId, setEnquiryId] = useState(null);
   const [EnquiryDetials, setEnquiryDetials] = useState({});
   const [btnIndex, setBtnIndex] = useState(0);
+  const [Category, setCategory] = useState([]);
+  const [IcName, setIcName] = useState("");
 
   useEffect(() => {
     console.log("location", location);
     setEnquiryId(location.state.data);
+    setCategory(location.state.category);
+    setIcName(location.state.icPerson);
 
     GetDataWithToken(`sales/get-enquiry/${location.state.data}`).then(
       (response) => {
         if (response.status === true) {
-          console.log("response", response.data);
           setEnquiryDetials(response);
           setCustomerId(response?.data?.customer?.id);
           if (response.data.rooms.length > 0) {
@@ -80,7 +83,7 @@ function EnquiryDetials() {
             <div className="row">
               <div className="col-xl-11">
                 <div className="Buttons">
-                  <div className="d-flex flex-column">
+                  <div className="d-flex">
                     <button
                       data-bs-toggle="modal"
                       data-bs-target="#exampleModalCenter"
@@ -170,26 +173,34 @@ function EnquiryDetials() {
                     <h4 className="card-title">
                       Enquiry No: {EnquiryDetials?.data?.id}
                     </h4>
-
-                    <a
-                      href="edit_enquiry.html"
-                      className="btn btn-primary btn-xs sharp me-1"
-                    >
-                      <i className="fas fa-pencil-alt" />
-                    </a>
+                    <div style={{ display: "flex" }}>
+                      <p>Selected Category: </p>
+                      {Category?.map((i, index) => {
+                        return (
+                          <p
+                            style={{
+                              padding: 0,
+                              marginBottom: 2,
+                            }}
+                          >{`${i},`}</p>
+                        );
+                      })}
+                    </div>
+                    <p>{`IC Name: ${IcName}`}</p>
+                    {/* <p>{`Measurer Name: ${EnquiryDetials?.enquiryschedules[0]?.ScheduleId}`}</p> */}
                   </div>
                   <div className="card-body">
                     <div className="row">
-                      <div className="col-lg-6">
+                      <div className="col-lg-4">
                         <div className="heading">
-                          <h3 className="">Customer Detials</h3>
+                          <h3 className="">Customer Details</h3>
                         </div>
                         <ul className="list-group list-group-flush">
                           <li className="list-group-item d-flex justify-content-between ">
                             <span className="mb-0">Customer Name :</span>
                             <strong>
-                              {EnquiryDetials?.data?.customer?.firstName}{" "}
-                              {EnquiryDetials?.data?.customer?.lastName}{" "}
+                              {EnquiryDetials?.data?.customer?.firstName}
+                              {EnquiryDetials?.data?.customer?.lastName}
                             </strong>
                           </li>
                           <li className="list-group-item d-flex justify-content-between">
@@ -223,7 +234,7 @@ function EnquiryDetials() {
                           </li>
                         </ul>
                       </div>
-                      <div className="col-lg-6">
+                      <div className="col-lg-4">
                         <div className="heading">
                           <h3 className="">Billing Address</h3>
                         </div>
@@ -307,11 +318,49 @@ function EnquiryDetials() {
                           </li>
                         </ul>
                       </div>
+                      <div className="col-lg-4">
+                        <div className="heading">
+                          <h3 className="">Delivery Address</h3>
+                        </div>
+                        <ul className="list-group list-group-flush">
+                          <li className="list-group-item d-flex justify-content-between ">
+                            <span className="mb-0">contact Person Name :</span>
+                            <strong>
+                              {EnquiryDetials?.data?.contactPerson}
+                            </strong>
+                          </li>
+                          <li className="list-group-item d-flex justify-content-between ">
+                            <span className="mb-0">Contact No. :</span>
+                            <strong>
+                              {EnquiryDetials?.data?.contactNumber === null
+                                ? "nil"
+                                : EnquiryDetials?.data?.contactNumber}
+                            </strong>
+                          </li>
+                          <li className="list-group-item d-flex justify-content-between ">
+                            <span className="mb-0">city :</span>
+                            <strong> {EnquiryDetials?.data?.city}</strong>
+                          </li>
+                          <li className="list-group-item d-flex justify-content-between ">
+                            <span className="mb-0">State :</span>
+                            <strong> {EnquiryDetials?.data?.state}</strong>
+                          </li>
+
+                          <li className="list-group-item d-flex justify-content-between ">
+                            <span className="mb-0">Pincode :</span>
+                            <strong> {EnquiryDetials?.data?.pincode}</strong>
+                          </li>
+                          <li className="list-group-item d-flex justify-content-between ">
+                            <span className="mb-0">Address :</span>
+                            <strong> {EnquiryDetials?.data?.address}</strong>
+                          </li>
+                        </ul>
+                      </div>
                     </div>
 
                     {/*---- Tabs -----*/}
                     <div
-                      className="list-group roomtab mb-4 mt-5 flex-row"
+                      className="list-group roomtab mb-4 mt-5 flex-row overflow-auto"
                       id="list-tab"
                       role="tablist"
                     >

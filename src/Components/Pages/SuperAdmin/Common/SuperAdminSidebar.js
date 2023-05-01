@@ -32,15 +32,15 @@ function SuperAdminSidebar() {
             <li>
               <Link to={"/allOutlet"} className aria-expanded="false">
                 <i className="fa fa-ship fw-bold" aria-hidden="true" />
-                <span className="nav-text">Outlet</span>
+                <span className="nav-text">Warehouse</span>
               </Link>
             </li>
-            <li>
+            {/* <li>
               <Link to={"/allWarehouse"} className aria-expanded="false">
                 <i className="fa fa-ship fw-bold" aria-hidden="true" />
                 <span className="nav-text">Warehouse</span>
               </Link>
-            </li>
+            </li> */}
             <li>
               <Link to={"/all-customer"} className aria-expanded="false">
                 <i className="icon-people icons" />

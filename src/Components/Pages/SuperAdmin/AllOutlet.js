@@ -12,7 +12,7 @@ import SuperAdminSidebar from "./Common/SuperAdminSidebar";
 
 function AllOutlet(props) {
   const navigate = useNavigate();
-  const [modal, setModal] = useState(false);
+  const [modal, setModal] = useState(true);
   const toggle = () => setModal(!modal);
   const [allOutlets, setAllOutlets] = useState([]);
   const [CallApi, setCallApi] = useState(true);
@@ -62,12 +62,12 @@ function AllOutlet(props) {
               <div className="col-12">
                 <div className="card">
                   <div className="card-header">
-                    <h4 className="card-title">All Outlets</h4>
+                    <h4 className="card-title">All Warehouse</h4>
                     <button
                       className="btn btn-primary"
                       onClick={() => setModal(!modal)}
                     >
-                      Add more outlet
+                      Add more Warehouse
                     </button>
                   </div>
                   <div className="card-body">
@@ -79,10 +79,10 @@ function AllOutlet(props) {
                       >
                         <thead>
                           <tr>
-                            <th>Outlet id</th>
-                            <th>Outlet Name</th>
-                            <th>Outlet Address</th>
-                            <th>Outlet Mobile No.</th>
+                            <th>Warehouse id</th>
+                            <th>Warehouse Name</th>
+                            <th>Warehouse Address</th>
+                            <th>Warehouse Mobile No.</th>
                             <th>Email</th>
                             <th>Action</th>
                           </tr>
@@ -95,7 +95,7 @@ function AllOutlet(props) {
                           {data.map((outlet, index) => {
                             return (
                               <tr key={index}>
-                                <td>{outlet.id}</td>
+                                <td>{outlet.userId}</td>
                                 <td>{outlet.firstName}</td>
                                 <td>
                                   {outlet.outletAddress?.street}{" "}

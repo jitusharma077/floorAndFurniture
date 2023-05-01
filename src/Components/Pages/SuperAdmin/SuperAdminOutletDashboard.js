@@ -200,6 +200,7 @@ function SuperAdminOutletDashboard() {
                               <div className="ms-4">
                                 <h2 className="mb-0 font-w600">516</h2>
                                 <p className="mb-0">MEASUREMENT</p>
+                                <button>Download Report</button>
                               </div>
                             </div>
                           </div>

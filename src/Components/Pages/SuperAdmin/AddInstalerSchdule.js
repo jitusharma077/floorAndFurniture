@@ -24,7 +24,7 @@ function AddInstalerSchdule() {
     console.log("Idddddd====>>>>>", location.state);
     setEnquiryId(location.state.enquiryId);
     setCoustomerId(location.state.customerId);
-    GetDataWithToken("superadmin/warehouses").then((response) => {
+    GetDataWithToken("superadmin/get-outlet").then((response) => {
       if (response.status === true) {
         setAllWhareHouse(response.data);
       }
@@ -66,7 +66,6 @@ function AddInstalerSchdule() {
     console.log("enquiryid", EnquiryId);
     event.preventDefault();
     let data = {
-      
       scheduleId: customerTimeSlot,
       enquiryId: EnquiryId,
       installerId: AssignedPerson,
@@ -140,7 +139,9 @@ function AddInstalerSchdule() {
                               {AllWhareHouse &&
                                 AllWhareHouse.map((item, index) => {
                                   return (
-                                    <option value={item.id}>{item.name}</option>
+                                    <option value={item.id}>
+                                      {item.firstName}
+                                    </option>
                                   );
                                 })}
                             </select>

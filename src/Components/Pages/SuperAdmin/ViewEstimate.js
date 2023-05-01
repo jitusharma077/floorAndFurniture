@@ -6,8 +6,8 @@ import Loader from "../../Common/Loader";
 
 function ViewEstimate() {
   const location = useLocation();
-  const type = location.state.EnquiryDetials;
-  console.log("typeee", type);
+  const type = location.state.EnquiryDetials?.id;
+  // console.log("typeee", location.state.EnquiryDetials);
   const [getAllEstimateData, setAllEstimateData] = useState([]);
   const [Loading, setLoading] = useState(false);
   const [EnquiryDetials, getEnquiryDetials] = useState([]);
@@ -15,12 +15,12 @@ function ViewEstimate() {
 
   useEffect(() => {
     setLoading(true);
-    GetDataWithToken("sales/get-estimate/117").then((response) => {
+    GetDataWithToken(`sales/get-estimate/${type}`).then((response) => {
       if (response.status === true) {
         console.log("rtessssss", response.data);
         setAllEstimateData(response.data);
         setLoading(false);
-        getEnquiryDetials(type);
+        getEnquiryDetials(location.state.EnquiryDetials);
         // console.log("resssss", response.data);
         setRooms(response.data);
       }
@@ -431,7 +431,6 @@ function ViewEstimate() {
                 <td>{fabric?.noOfPanel}</td>
                 <td>{fabric?.totalFabricInM}</td>
                 <td>{fabric?.mrp}</td>
-
                 <td>{fabric?.totalPrice}</td>
                 <td>{fabric?.totalDiscount}</td>
                 <td>{fabric?.grandTotal}</td>

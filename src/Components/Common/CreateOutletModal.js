@@ -26,6 +26,7 @@ function CreateOutletModal({ modal, toggle }) {
     formData.append("state", data.State);
     formData.append("pincode", data.Pincode);
     formData.append("city", data.city);
+    formData.append("userId", data.outlet_id);
 
     PostDataWithToken("superadmin/create-user", formData).then((response) => {
       if (response.status === true) {
@@ -40,6 +41,7 @@ function CreateOutletModal({ modal, toggle }) {
           password: "",
           outlet_mobile_no: "",
           outlet_address: "",
+          outlet_id: "",
         });
         toggle();
         setCallApi(true);
@@ -69,6 +71,25 @@ function CreateOutletModal({ modal, toggle }) {
                 className="form-control"
                 id="fnf"
                 placeholder="outlet name"
+              />
+              <span className="text-danger">
+                {errors.outlet_name && errors.outlet_name.message}
+              </span>
+            </div>
+          </div>
+          <div className="mb-3 row align-items-center">
+            <label className="col-sm-3 col-form-label" htmlFor="idfn">
+              ID
+            </label>
+            <div className="col-sm-9">
+              <input
+                {...register("outlet_id", {
+                  required: "please enter outlet ID",
+                })}
+                type="text"
+                className="form-control"
+                id="idfn"
+                placeholder="outlet ID"
               />
               <span className="text-danger">
                 {errors.outlet_name && errors.outlet_name.message}

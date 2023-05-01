@@ -11,7 +11,7 @@ import SuperAdminSidebar from "./Common/SuperAdminSidebar";
 
 function AllEnquiry() {
   const navigate = useNavigate();
-  const [callApi, setCallApi] = useState(true);
+  const [callApi, setCallApi] = useState(false);
   // const { data, Error, isLoading } = useFetch("superadmin/get/enquiries");
   const [totalPage, settotalPage] = useState(0);
   const [data, setdata] = useState([]);
@@ -47,7 +47,9 @@ function AllEnquiry() {
         setdata(response.data);
         setisLoading(false);
         settotalPage(response.pages);
+        setisLoading(false);
       }
+      setisLoading(false);
     });
   };
 
@@ -113,6 +115,7 @@ function AllEnquiry() {
                             <th>Customer Name</th>
                             <th>Mobile No.</th>
                             <th>Status</th>
+                            <th>Category</th>
                             <th>IC </th>
                             <th>Date</th>
                             <th>Action</th>
@@ -154,6 +157,19 @@ function AllEnquiry() {
                                     </span>
                                   </td>
                                   <td>
+                                    {data?.products.map((i, index) => {
+                                      return (
+                                        <p
+                                          style={{
+                                            padding: 0,
+                                            lineHeight: 1,
+                                            marginBottom: 2,
+                                          }}
+                                        >{`${i},`}</p>
+                                      );
+                                    })}
+                                  </td>
+                                  <td>
                                     {data?.user?.firstName}
                                     {data?.user?.lastName}
                                   </td>
@@ -164,7 +180,11 @@ function AllEnquiry() {
                                     <button
                                       onClick={() => {
                                         navigate("/EnquiryDetials", {
-                                          state: { data: data.id },
+                                          state: {
+                                            data: data.id,
+                                            category: data?.products,
+                                            icPerson: `${data?.user?.firstName} ${data?.user?.lastName}`,
+                                          },
                                         });
                                       }}
                                       className="btn btn-primary btn-sm"
