@@ -1862,6 +1862,7 @@ function EnquiryDetials() {
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title">Room Detials</h5>
+              <span>{EnquiryDetials?.data?.contactPerson}</span>
               <button
                 type="button"
                 class="btn-close"
@@ -1895,6 +1896,19 @@ function EnquiryDetials() {
                         className={`tab-pane  ${index === 0 ? "active" : ""}`}
                       >
                         <div className="row">
+                          <div className="col-lg-6">
+                            <div className="text-center">
+                              <span>{rooms?.room_assets[0]?.width}</span>
+                            </div>
+                            <img
+                              src="./images/images.png"
+                              className="col-lg-6 mx-4"
+                            />
+                            {rooms?.room_assets[0]?.height}
+                            {/* <div>
+                              <span></span>
+                            </div> */}
+                          </div>
                           <div className="col-lg-12">
                             <ul className="nav nav-pills justify-content-start mb-4">
                               {rooms?.room_assets &&
@@ -1972,17 +1986,16 @@ function EnquiryDetials() {
                                           {" "}
                                           {
                                             rooms?.selectedcurtain?.fabric1
-                                              ?.book?.book
+                                              ?.brand_name
                                           }
                                         </strong>
                                       </li>
                                       <li className="list-group-item d-flex justify-content-between border-0 py-1">
                                         <span className="mb-0">Book :</span>
                                         <strong>
-                                          {" "}
                                           {
                                             rooms?.selectedcurtain?.fabric1
-                                              ?.book?.brand?.brand
+                                              ?.book_name
                                           }
                                         </strong>
                                       </li>
@@ -1991,7 +2004,10 @@ function EnquiryDetials() {
                                           No of Panel :
                                         </span>
                                         <strong>
-                                          {window?.number_of_panel}
+                                          {
+                                            rooms?.room_assets[0]
+                                              ?.number_of_panel_fabric1
+                                          }
                                         </strong>
                                       </li>
                                       <li className="list-group-item d-flex justify-content-between border-0 py-1">
@@ -1999,16 +2015,88 @@ function EnquiryDetials() {
                                           Total Fabric :
                                         </span>
                                         <strong>
-                                          {window?.total_fabric_required}
+                                          {
+                                            rooms?.room_assets[0]
+                                              ?.total_fabric1_required
+                                          }
                                         </strong>
                                       </li>
+                                      <div className="col-lg-4">
+                                        {rooms?.room_assets[0]?.media.map(
+                                          (data) => (
+                                            <img
+                                              src={data?.file}
+                                              alt="imageof"
+                                            />
+                                          )
+                                        )}
+                                      </div>
                                     </ul>
                                   </div>
                                 ))}
                             </div>
                           </div>
-                          <div className="col-lg-4">
-                            <img src={""} alt="imageof" />
+
+                          <h5>Window measurement Information</h5>
+                          <div className="border border-1 p-3 rounded-2 mb-3">
+                            {" "}
+                            <ul className="list-group list-group-flush">
+                              <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                <span className="mb-0">Window width:</span>
+                                <strong>{rooms?.room_assets[0]?.width}</strong>
+                              </li>
+                              <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                <span className="mb-0">window height :</span>
+                                <strong>
+                                  {" "}
+                                  {rooms?.room_assets[0]?.height}
+                                </strong>
+                              </li>
+                              <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                <span className="mb-0">Mount type:</span>
+                                <strong>
+                                  {" "}
+                                  {rooms?.room_assets[0]?.mount_type}
+                                </strong>
+                              </li>
+                              <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                <span className="mb-0">Wall type:</span>
+                                <strong>
+                                  {rooms?.room_assets[0]?.ceiling_type?.type}
+                                </strong>
+                              </li>
+                              <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                <span className="mb-0"></span>
+                                <strong>
+                                  note:-{" "}
+                                  {rooms?.room_assets[0]?.ceiling_type?.note}
+                                </strong>
+                              </li>
+                              <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                <span className="mb-0">Ladder type :</span>
+                                <strong>
+                                  {" "}
+                                  {rooms?.room_assets[0]?.ladder?.ladder}
+                                </strong>
+                              </li>
+                              <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                <span className="mb-0">Width of cove :</span>
+                                <strong>
+                                  {rooms?.room_assets[0]?.widhtOfCove}
+                                </strong>
+                              </li>
+                              <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                <span className="mb-0">
+                                  Curtain operation :
+                                </span>
+                                <strong>
+                                  {
+                                    rooms?.room_assets[0]?.curtain_operation
+                                      ?.operationType
+                                  }
+                                </strong>
+                              </li>
+                            </ul>
                           </div>
                         </div>
                       </div>
