@@ -1689,7 +1689,7 @@ function EnquiryDetials() {
 
                                             {room?.selectedWallpaper[
                                               wallBtnIndex
-                                            ]?.curtainfabric.fabric && (
+                                            ]?.curtainfabric?.fabric && (
                                               <li className="list-group-item d-flex justify-content-between border-0 py-1">
                                                 <span className="mb-0">
                                                   Wallpaper:
@@ -1862,7 +1862,7 @@ function EnquiryDetials() {
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title">Room Detials</h5>
-              <span>{EnquiryDetials?.data?.contactPerson}</span>
+
               <button
                 type="button"
                 class="btn-close"
@@ -1870,6 +1870,7 @@ function EnquiryDetials() {
               ></button>
             </div>
             <div class="modal-body">
+              <span>Measurer Name: {EnquiryDetials?.data?.contactPerson}</span>
               <ul className="nav nav-pills justify-content-start mb-4">
                 {EnquiryDetials?.data &&
                   EnquiryDetials?.data?.rooms.map((rooms, index) => (
