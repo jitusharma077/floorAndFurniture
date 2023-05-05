@@ -152,7 +152,7 @@ function AddInstalerSchdule() {
                             </label>
                             <input
                               type={"date"}
-                              min={moment().add(1, "days").format("YYYY-MM-DD")}
+                              min={moment().add(0, "days").format("YYYY-MM-DD")}
                               className="form-control"
                               onChange={getSelectedDate}
                             />

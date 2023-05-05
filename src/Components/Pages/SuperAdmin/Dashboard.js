@@ -29,6 +29,23 @@ function Dashboard() {
     });
   };
 
+  const DownloadReportHandler2 = () => {
+    setLoadingData(true);
+    axios({
+      url: `${serverUrl}superadmin/installer-installation-aging/22`,
+      method: "GET",
+      responseType: "blob", // important
+    }).then((response) => {
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", "file.xls"); //or any other extension
+      document.body.appendChild(link);
+      link.click();
+      setLoadingData(false);
+    });
+  };
+
   return (
     <>
       <div
@@ -173,6 +190,12 @@ function Dashboard() {
                               <div className="ms-4">
                                 <h2 className="mb-0 font-w600">516</h2>
                                 <p className="mb-0">Installation</p>
+                                <button
+                                  onClick={() => DownloadReportHandler2()}
+                                  className="btn btn-primary"
+                                >
+                                  Download Report
+                                </button>
                               </div>
                             </div>
                           </div>
