@@ -14,19 +14,100 @@ const EnquiryCustom = (props) => {
               <strong>{props.type}</strong>
             </li>
           )}
+          {props.subType && (
+            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+              <span className="mb-0">Sub type :</span>
+              <strong>{props.subType}</strong>
+            </li>
+          )}
+          {props.floorType && (
+            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+              <span className="mb-0">Flooring type :</span>
+              <strong>{props.floorType}</strong>
+            </li>
+          )}
+          {props.boxQuantity && (
+            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+              <span className="mb-0">Room flooring box quantity :</span>
+              <strong>{props.boxQuantity}</strong>
+            </li>
+          )}
+          {props.price && (
+            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+              <span className="mb-0">Price :</span>
+              <strong>{props.price}</strong>
+            </li>
+          )}
+          {props.sqm && (
+            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+              <span className="mb-0">Room flooring square meter :</span>
+              <strong>{props.sqm}</strong>
+            </li>
+          )}
+          {props.foamCost && (
+            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+              <span className="mb-0">total foam cost :</span>
+              <strong>{props.foamCost}</strong>
+            </li>
+          )}
+          {props.polytheneCost && (
+            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+              <span className="mb-0">total polythene cost :</span>
+              <strong>{props.polytheneCost}</strong>
+            </li>
+          )}
 
-          {props.required && (
+          {props.bedBack && props.bedBack.toLowerCase() === "yes" && (
+            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+              <span className="mb-0">Bed back :</span>
+              <strong>{props.bedBack}</strong>
+            </li>
+          )}
+          {props.pouffe && props.pouffe.toLowerCase() === "yes" && (
+            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+              <span className="mb-0">Sofa pouffe :</span>
+              <strong>{props.pouffe}</strong>
+            </li>
+          )}
+          {props.quilted && props.quilted.toLowerCase() === "yes" && (
+            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+              <span className="mb-0">quilted:</span>
+              <strong>{props.quilted}</strong>
+            </li>
+          )}
+          {props.wallPanel && props.wallPanel.toLowerCase() === "yes" && (
+            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+              <span className="mb-0">wall panel:</span>
+              <strong>{props.wallPanel}</strong>
+            </li>
+          )}
+
+          {props.walls && (
+            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+              <span className="mb-0">Number of walls:</span>
+              <strong>{props.walls}</strong>
+            </li>
+          )}
+          {props.capacity && (
+            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+              <span className="mb-0">Seating capacity:</span>
+              <strong>{props.capacity}</strong>
+            </li>
+          )}
+
+          {props.required && props.required.toLowerCase() === "yes" && (
             <li className="list-group-item d-flex justify-content-between border-0 py-1">
               <strong className="mb-0">required :</strong>
               <span>{props.required}</span>
             </li>
           )}
-          {props.rodRingRequired && (
-            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-              <span className="mb-0">Curtain rod ring required :</span>
-              <strong>{props.rodRingRequired}</strong>
-            </li>
-          )}
+          {props.rodRingRequired &&
+            props.rodRingRequired.toLowerCase() === "yes" && (
+              <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                <span className="mb-0">Curtain rod ring required :</span>
+                <strong>{props.rodRingRequired}</strong>
+              </li>
+            )}
           {props.rodRingQuantity && (
             <li className="list-group-item d-flex justify-content-between border-0 py-1">
               <span className="mb-0">no of curtain rod ring :</span>
@@ -75,7 +156,19 @@ const EnquiryCustom = (props) => {
               <strong>{props.tieKnobQuantity}</strong>
             </li>
           )}
-          {props.screwSizeRequired && (
+          {props.primer && props.primer.toLowerCase() === "yes" && (
+            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+              <span className="mb-0">Primer required:</span>
+              <strong>{props.primer}</strong>
+            </li>
+          )}
+          {props.discount && (
+            <li className="list-group-item d-flex justify-content-between border-0 py-1">
+              <span className="mb-0">Discount:</span>
+              <strong>{props.discount}</strong>
+            </li>
+          )}
+          {props.screwSizeRequired && props.screwSizeRequired === "yes" && (
             <li className="list-group-item d-flex justify-content-between border-0 py-1">
               <strong className="mb-0">screw size required :</strong>
               <span>{props.screwSizeRequired}</span>
@@ -88,12 +181,13 @@ const EnquiryCustom = (props) => {
             </li>
           )}
 
-          {props.lBracketsRequired && (
-            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-              <span className="mb-0">L Brackets required :</span>
-              <strong>{props.lBracketsRequired}</strong>
-            </li>
-          )}
+          {props.lBracketsRequired &&
+            props.lBracketsRequired.toLowerCase() === "yes" && (
+              <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                <span className="mb-0">L Brackets required :</span>
+                <strong>{props.lBracketsRequired}</strong>
+              </li>
+            )}
           {props.totalFabric && (
             <li className="list-group-item d-flex justify-content-between border-0 py-1">
               <span className="mb-0">total fabric required :</span>
@@ -125,12 +219,13 @@ const EnquiryCustom = (props) => {
               <strong> {props.repeatVertical}</strong>
             </li>
           )}
-          {props.extraBracketSupportRequired && (
-            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-              <span className="mb-0">extra bracket support required :</span>
-              <strong>{props.extraBracketSupportRequired}</strong>
-            </li>
-          )}
+          {props.extraBracketSupportRequired &&
+            props.extraBracketSupportRequired.toLowerCase() === "yes" && (
+              <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                <span className="mb-0">extra bracket support required :</span>
+                <strong>{props.extraBracketSupportRequired}</strong>
+              </li>
+            )}
           {props.extraBracketSupportQuantity && (
             <li className="list-group-item d-flex justify-content-between border-0 py-1">
               <span className="mb-0">extra bracket support quantity :</span>
@@ -170,25 +265,27 @@ const EnquiryCustom = (props) => {
           ) : (
             ""
           )}
-          {props.extraBracketRequired && (
-            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-              <strong className="mb-0">extra bracket Required :</strong>
-              <span>{props.extraBracketRequired}</span>
-            </li>
-          )}
+          {props.extraBracketRequired &&
+            props.extraBracketRequired.toLowerCase() === "yes" && (
+              <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                <strong className="mb-0">extra bracket Required :</strong>
+                <span>{props.extraBracketRequired}</span>
+              </li>
+            )}
           {props.gathering && (
             <li className="list-group-item d-flex justify-content-between border-0 py-1">
               <span className="mb-0">gathering:</span>
               <strong>{props.gathering}</strong>
             </li>
           )}
-          {props.handHammering && (
-            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-              <span className="mb-0">hand hammering :</span>
-              <strong>{props.handHammering}</strong>
-            </li>
-          )}
-          {props.leadChain && (
+          {props.handHammering &&
+            props.handHammering.toLowerCase() === "yes" && (
+              <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                <span className="mb-0">hand hammering :</span>
+                <strong>{props.handHammering}</strong>
+              </li>
+            )}
+          {props.leadChain && props.leadChain.toLowerCase() === "yes" && (
             <li className="list-group-item d-flex justify-content-between border-0 py-1">
               <span className="mb-0">Lead Chain :</span>
               <strong>{props.leadChain}</strong>
@@ -200,60 +297,66 @@ const EnquiryCustom = (props) => {
               <span>{props.motorType}</span>
             </li>
           )}
+
           {props.extraBracketQuantity && (
             <li className="list-group-item d-flex justify-content-between border-0 py-1">
               <strong className="mb-0">extra bracket Quantity :</strong>
               <span>{props.extraBracketQuantity}</span>
             </li>
           )}
-          {props.overlapperRequired && (
-            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-              <strong className="mb-0">over lapper required :</strong>
-              <span>{props.overlapperRequired}</span>
-            </li>
-          )}
+          {props.overlapperRequired &&
+            props.overlapperRequired.toLowerCase() === "yes" && (
+              <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                <strong className="mb-0">over lapper required :</strong>
+                <span>{props.overlapperRequired}</span>
+              </li>
+            )}
           {props.overlapperQuantity && (
             <li className="list-group-item d-flex justify-content-between border-0 py-1">
               <strong className="mb-0">track over lapper :</strong>
               <span>{props.overlapperQuantity}</span>
             </li>
           )}
-          {props.tieKnobRequired && (
-            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-              <strong className="mb-0">tie Knobs Required :</strong>
-              <span>{props.tieKnobRequired}</span>
-            </li>
-          )}
-          {props.trackStickRequired && (
-            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-              <strong className="mb-0"> Stick Required :</strong>
-              <span>{props.trackStickRequired}</span>
-            </li>
-          )}
+          {props.tieKnobRequired &&
+            props.tieKnobRequired.toLowerCase() === "yes" && (
+              <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                <strong className="mb-0">tie Knobs Required :</strong>
+                <span>{props.tieKnobRequired}</span>
+              </li>
+            )}
+          {props.trackStickRequired &&
+            props.trackStickRequired.toLowerCase() === "yes" && (
+              <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                <strong className="mb-0"> Stick Required :</strong>
+                <span>{props.trackStickRequired}</span>
+              </li>
+            )}
           {props.stickQuantity && (
             <li className="list-group-item d-flex justify-content-between border-0 py-1">
               <span className="mb-0">No of stick Pair :</span>
               <strong>{props.stickQuantity}</strong>
             </li>
           )}
-          {props.endCapRequired && (
-            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-              <span className="mb-0">end cap required :</span>
-              <strong>{props.endCapRequired}</strong>
-            </li>
-          )}
+          {props.endCapRequired &&
+            props.endCapRequired.toLowerCase() === "yes" && (
+              <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                <span className="mb-0">end cap required :</span>
+                <strong>{props.endCapRequired}</strong>
+              </li>
+            )}
           {props.endCapQuantity && (
             <li className="list-group-item d-flex justify-content-between border-0 py-1">
               <span className="mb-0">end cap Quantity:</span>
               <strong>{props.endCapQuantity}</strong>
             </li>
           )}
-          {props.endCapWallSupportRequired && (
-            <li className="list-group-item d-flex justify-content-between border-0 py-1">
-              <span className="mb-0">end cap wall support required :</span>
-              <strong>{props.endCapWallSupportRequired}</strong>
-            </li>
-          )}
+          {props.endCapWallSupportRequired &&
+            props.endCapWallSupportRequired.toLowerCase() === "yes" && (
+              <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                <span className="mb-0">end cap wall support required :</span>
+                <strong>{props.endCapWallSupportRequired}</strong>
+              </li>
+            )}
           {props.endCapWallSupportQuantity && (
             <li className="list-group-item d-flex justify-content-between border-0 py-1">
               <span className="mb-0">end cap wall support quantity :</span>

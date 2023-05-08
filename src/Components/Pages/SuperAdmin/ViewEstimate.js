@@ -442,6 +442,55 @@ function ViewEstimate() {
       </>
     );
   };
+  const renderSofa = (sofa = [], colspan = 16) => {
+    const fabrics = sofa?.sofaList ?? [];
+
+    const totalAmount = fabrics?.reduce((sum, fabric) => {
+      return (sum = +sum + +fabric?.grandTotal);
+    }, 0);
+
+    //Helper.log("sofa", fabrics);
+
+    if (fabrics?.length == 0) {
+      return "";
+    }
+
+    return `
+      <tr>
+        <th colspan="16">Sofa details</th>
+      </tr>
+      <tr>
+        <th>Sno</th>
+        <th colspan="4">Item</th>
+        <th colspan="1">Item Name</th>
+        <th colspan="1">Type</th>
+        
+        <th colspan="1">Total fabric</th>
+        <th colspan="1">Fabric MRP per mts</th>
+        <th colspan="2">Gross Amount</th>	
+        <th colspan="2">Dis</th>
+        <th colspan="3">Net amount including taxes</th>
+      </tr>
+      ${fabrics?.map((item, index) => {
+        return `
+        <tr>
+          <td>${index + 1}</td>
+          <td colspan="4">${item?.title}</td>
+          <td colspan="1">${item?.fabric}</td>
+          <td colspan="1">${item?.type}</td>
+          
+          <td colspan="1">${item?.qty}</td>
+          <td colspan="1">${item?.price}</td>
+        <td colspan="2">${item?.totalPrice}</td>	
+        <td colspan="2">${item?.discount}%</td>
+        <td colspan="3">${item?.grandTotal}</td>
+        </tr>
+        `;
+      })}
+  
+      ${renderTotalRoomAmount(totalAmount, 16)}
+    `;
+  };
 
   const getTotalWindowPrice = (room) => {
     //Helper.log("Room=====>>>>>>>", room);
@@ -1755,7 +1804,13 @@ function ViewEstimate() {
                                     roomStyle,
                                     styleIndex
                                   )}
-                                  {renderBlindHardware(roomStyle, styleIndex)}
+                                  {renderBlindHardware(roomStyle, styleIndex)}$
+                                  {renderSofa(roomStyle, styleIndex)}
+                                  {/* ${renderSofaStitching(roomStyle, styleIndex)}
+																			${renderFlooring(roomStyle, styleIndex)}
+																			${renderFlooringInstalltion(roomStyle, styleIndex)}
+																			${renderWallpaper(roomStyle, styleIndex)}
+																			${renderWallpaperInstallation(roomStyle, styleIndex)} */}
                                 </table>
                               );
                             })}
