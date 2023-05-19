@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { GetDataWithToken } from "../../ApiHelper/ApiHelper";
 import Loader from "../../Common/Loader";
+import { Helper } from "../../Utility/helper";
 
 function ViewEstimate() {
   const location = useLocation();
@@ -12,6 +13,8 @@ function ViewEstimate() {
   const [Loading, setLoading] = useState(false);
   const [EnquiryDetials, getEnquiryDetials] = useState([]);
   const [rooms, setRooms] = React.useState([]);
+  const [discount, setDiscount] = React.useState(0);
+  const [tax, setTax] = React.useState(0);
 
   useEffect(() => {
     setLoading(true);
@@ -26,6 +29,14 @@ function ViewEstimate() {
       }
     });
   }, [""]);
+  const customer = EnquiryDetials?.customer ?? "";
+  const id = EnquiryDetials?.id;
+  const cartageAmount = EnquiryDetials?.cartage ? EnquiryDetials?.cartage : 0;
+  const contactNumber = customer?.primary_phone ?? "";
+  const email = customer?.primary_email ?? "";
+  const Gst = customer?.GST ?? "Not found";
+  const icUser = EnquiryDetials?.user ?? "";
+
   const renderTotalRoomAmount = (amount, colspan = 14) => {
     if (!amount) {
       return ``;
@@ -219,18 +230,18 @@ function ViewEstimate() {
     return (
       <>
         <tr>
-          <th colspan={colspan}>Blind details</th>
+          <th colSpan={colspan}>Blind details</th>
         </tr>
         <tr>
-          <th colspan={colspan / 2}>Width - ${blind?.width} cm</th>
+          <th colSpan={colspan / 2}>Width - {blind?.width} cm</th>
           <th colspan={Math.round(colspan / 2)}>
             height / Drop - {blind?.height} cm
           </th>
         </tr>
         <tr>
           <th>Sno</th>
-          <th colspan="1">Item</th>
-          <th colspan="4">Item name</th>
+          <th colSpan="1">Item</th>
+          <th colSpan="4">Item name</th>
           <th>Qty</th>
 
           <th>No of panel</th>
@@ -337,9 +348,9 @@ function ViewEstimate() {
           <th colSpan={16}>Blind Hardware details</th>
         </tr>
         <tr>
-          <th colSpan={Math.round(16 / 2)}>Width - ${blind?.width} cm</th>
+          <th colSpan={Math.round(16 / 2)}>Width - {blind?.width} cm</th>
           <th colSpan={Math.round(16 / 2)}>
-            height / Drop - ${blind?.height} cm
+            height / Drop - {blind?.height} cm
           </th>
         </tr>
         <tr>
@@ -377,6 +388,107 @@ function ViewEstimate() {
       </>
     );
   };
+  const renderWallpaper = (wallpaper = [], colspan = 16) => {
+    const fabrics = wallpaper?.wallpaperList ?? [];
+    const totalAmount = fabrics?.reduce((sum, fabric) => {
+      return (sum = +sum + +fabric?.grandTotal);
+    }, 0);
+
+    //Helper.log("sofa", fabrics);
+    console.log("first", wallpaper);
+
+    if (fabrics?.length == 0) {
+      return "";
+    }
+
+    return (
+      <>
+        <tr>
+          <th colSpan={colspan}>Wallpaper details</th>
+        </tr>
+
+        <tr>
+          <th>Sno</th>
+          <th colSpan="1">Item</th>
+          <th colSpan="4">Item name</th>
+          <th>Qty</th>
+
+          <th>No of panel</th>
+          <th>Total Quantity</th>
+          <th>Fabric MRP per SQMT</th>
+          <th>Fitting charge</th>
+          <th>Hardware Per RFT including taxes</th>
+
+          <th>Gross amount</th>
+          <th>Dis </th>
+          <th>Net amount including taxes</th>
+        </tr>
+        {fabrics?.map((item, index) => {
+          return (
+            <tr>
+              <td>{index + 1}</td>
+              <td colSpan="3">{item?.title}</td>
+              <td colSpan="1">{item?.fabric}</td>
+              <td colSpan="1">{item?.type}</td>
+              <td colSpan="1">{item?.width}</td>
+              <td colSpan="1">{item?.qty}</td>
+
+              <td colSpan="1">{item?.price}</td>
+              <td colSpan="2">{item?.totalPrice}</td>
+              <td colSpan="2">{item?.discount}%</td>
+              <td colSpan="3">{item?.grandTotal}</td>
+            </tr>
+          );
+        })}
+        {renderTotalRoomAmount(totalAmount, colspan)}
+      </>
+    );
+  };
+  const renderWallpaperInstallation = (wallpaper = [], colspan = 16) => {
+    const fabrics = wallpaper?.wallpaperInstallation ?? [];
+
+    const totalAmount = fabrics?.reduce((sum, fabric) => {
+      return (sum = +sum + +fabric?.grandTotal);
+    }, 0);
+
+    //Helper.log("sofa", fabrics);
+
+    if (fabrics?.length == 0) {
+      return "";
+    }
+
+    return (
+      <>
+        <tr>
+          <th colspan="16">Wallpaper installation</th>
+        </tr>
+        <tr>
+          <th>Sno</th>
+
+          <th colSpan="3">Item Name</th>
+          <th colSpan="1">Type</th>
+          <th colSpan="3">Area in SQMT</th>
+          <th colSpan="1">Total roll</th>
+          <th colSpan="4">MRP per SQMT</th>
+          <th colSpan="4">Gross Amount</th>
+        </tr>
+        {fabrics?.map((item, index) => {
+          return (
+            <tr>
+              <td>{index + 1}</td>
+              <td colSpan="3">{item?.title}</td>
+              <td colSpan="1">{item?.type}</td>
+              <td colSpan="3">{item?.width}</td>
+              <td colSpan="1">{item?.qty}</td>
+              <td colSpan="4">{item?.price}</td>
+              <td colSpan="4">{item?.grandTotal}</td>
+            </tr>
+          );
+        })}
+        {renderTotalRoomAmount(totalAmount, 16)}
+      </>
+    );
+  };
 
   const renderRoomCurtain = (
     window = {},
@@ -389,8 +501,6 @@ function ViewEstimate() {
     const totalAmount = fabrics?.reduce((sum, fabric) => {
       return (sum = +sum + +fabric?.grandTotal);
     }, 0);
-
-    console.log("fabriccc length", fabrics.length);
 
     if (fabrics.length === 0) return "";
     return (
@@ -411,11 +521,9 @@ function ViewEstimate() {
                   <th>Item</th>
                   <th colSpan="4">Item name</th>
                   <th colSpan="3">Curtain style</th>
-
                   <th>No of panel</th>
                   <th>Total Quantity</th>
                   <th>MRP per meter including taxes</th>
-
                   <th>Gross amount</th>
                   <th>Dis</th>
                   <th>Net amount including taxes</th>
@@ -455,41 +563,186 @@ function ViewEstimate() {
       return "";
     }
 
-    return `
-      <tr>
-        <th colspan="16">Sofa details</th>
-      </tr>
-      <tr>
-        <th>Sno</th>
-        <th colspan="4">Item</th>
-        <th colspan="1">Item Name</th>
-        <th colspan="1">Type</th>
-        
-        <th colspan="1">Total fabric</th>
-        <th colspan="1">Fabric MRP per mts</th>
-        <th colspan="2">Gross Amount</th>	
-        <th colspan="2">Dis</th>
-        <th colspan="3">Net amount including taxes</th>
-      </tr>
-      ${fabrics?.map((item, index) => {
-        return `
+    return (
+      <>
+        <>
+          <tr>
+            <th colSpan="16">Sofa details</th>
+          </tr>
+          <tr>
+            <th>Sno</th>
+            <th colSpan="4">Item</th>
+            <th colSpan="1">Item Name</th>
+            <th colSpan="1">Type</th>
+
+            <th colSpan="1">Total fabric</th>
+            <th colSpan="1">Fabric MRP per mts</th>
+            <th colSpan="2">Gross Amount</th>
+            <th colSpan="2">Dis</th>
+            <th colSpan="3">Net amount including taxes</th>
+          </tr>
+        </>
+        )
+        {fabrics?.map((item, index) => (
+          <tr>
+            <td>{index + 1}</td>
+            <td colSpan="4">{item?.title}</td>
+            <td colSpan="1">{item?.fabric}</td>
+            <td colSpan="1">{item?.type}</td>
+            <td colSpan="1">{item?.qty}</td>
+            <td colSpan="1">{item?.price}</td>
+            <td colSpan="2">{item?.totalPrice}</td>
+            <td colSpan="2">{item?.discount}%</td>
+            <td colSpan="3">{item?.grandTotal}</td>
+          </tr>
+        ))}
+        {renderTotalRoomAmount(totalAmount, 16)}
+      </>
+    );
+  };
+
+  const renderSofaStitching = (sofa = [], colspan = 16) => {
+    const fabrics = sofa?.sofaStitchingList ?? [];
+
+    const totalAmount = fabrics?.reduce((sum, fabric) => {
+      return (sum = +sum + +fabric?.grandTotal);
+    }, 0);
+
+    if (fabrics?.length == 0) {
+      return "";
+    }
+
+    return (
+      <>
+        <>
+          <tr>
+            <th colspan="16">Sofa Stitching details</th>
+          </tr>
+          <tr>
+            <th>Sno</th>
+            <th colspan="4">Item</th>
+            <th colspan="2">Type</th>
+            <th colspan="1">No of seat</th>
+            <th colspan="1"> MRP per mts</th>
+            <th colspan="2">Gross Amount</th>
+            <th colspan="3">Net amount including taxes</th>
+          </tr>
+        </>
+        {fabrics?.map((item, index) => (
+          <tr>
+            <td>{index + 1}</td>
+            <td colspan="4">{item?.title}</td>
+            <td colspan="2">{item?.type}</td>
+
+            <td colspan="1">{item?.number_of_seat}</td>
+            <td colspan="1">{item?.price}</td>
+            <td colspan="2">{item?.totalPrice}</td>
+            <td colspan="3">{item?.grandTotal}</td>
+          </tr>
+        ))}
+        {renderTotalRoomAmount(totalAmount, 16)}
+      </>
+    );
+  };
+  const renderFlooring = (flooring = [], colspan = 16) => {
+    const fabrics = flooring?.flooringList ?? [];
+
+    const totalAmount = fabrics?.reduce((sum, fabric) => {
+      return (sum = +sum + +fabric?.grandTotal);
+    }, 0);
+
+    //Helper.log("sofa", fabrics);
+
+    if (fabrics?.length == 0) {
+      return "";
+    }
+
+    return (
+      <>
+        <>
+          <tr>
+            <th colspan="16">Flooring details</th>
+          </tr>
+          <tr>
+            <th>Sno</th>
+            <th colspan="3">Item</th>
+            <th colspan="1">Item Name</th>
+            <th colspan="1">Type</th>
+            <th colspan="1">Area in SQMT</th>
+            <th colspan="1">Quantity</th>
+
+            <th colspan="1">Flooring MRP per SQMT</th>
+            <th colspan="2">Gross Amount</th>
+            <th colspan="2">Dis</th>
+            <th colspan="3">Net amount including taxes</th>
+          </tr>
+        </>
+        {fabrics?.map((item, index) => {
+          return (
+            <tr>
+              <td>{index + 1}</td>
+              <td colspan="3">{item?.title}</td>
+              <td colspan="1">{item?.fabric}</td>
+              <td colspan="1">{item?.type}</td>
+              <td colspan="1">{item?.width}</td>
+              <td colspan="1">{item?.qty}</td>
+
+              <td colspan="1">{item?.price}</td>
+              <td colspan="2">{item?.totalPrice}</td>
+              <td colspan="2">{item?.discount}%</td>
+              <td colspan="3">{item?.grandTotal}</td>
+            </tr>
+          );
+        })}
+        {renderTotalRoomAmount(totalAmount, 16)}
+      </>
+    );
+  };
+
+  const renderFlooringInstalltion = (flooring = [], colspan = 16) => {
+    const fabrics = flooring?.flooringInstallation ?? [];
+
+    const totalAmount = fabrics?.reduce((sum, fabric) => {
+      return (sum = +sum + +fabric?.grandTotal);
+    }, 0);
+
+    //Helper.log("sofa", fabrics);
+
+    if (fabrics?.length == 0) {
+      return "";
+    }
+
+    return (
+      <>
         <tr>
-          <td>${index + 1}</td>
-          <td colspan="4">${item?.title}</td>
-          <td colspan="1">${item?.fabric}</td>
-          <td colspan="1">${item?.type}</td>
-          
-          <td colspan="1">${item?.qty}</td>
-          <td colspan="1">${item?.price}</td>
-        <td colspan="2">${item?.totalPrice}</td>	
-        <td colspan="2">${item?.discount}%</td>
-        <td colspan="3">${item?.grandTotal}</td>
+          <th colspan="16">Flooring installation</th>
         </tr>
-        `;
-      })}
-  
-      ${renderTotalRoomAmount(totalAmount, 16)}
-    `;
+        <tr>
+          <th>Sno</th>
+
+          <th colspan="3">Item Name</th>
+          <th colspan="1">Type</th>
+          <th colspan="4">Area in SQMT</th>
+          <th colspan="4">MRP per SQMT</th>
+          <th colspan="4">Gross Amount</th>
+        </tr>
+        <>
+          {fabrics?.map((item, index) => {
+            return (
+              <tr>
+                <td>{index + 1}</td>
+                <td colspan="3">{item?.title}</td>
+                <td colspan="1">{item?.type}</td>
+                <td colspan="4">{item?.width}</td>
+                <td colspan="4">{item?.price}</td>
+                <td colspan="4">{item?.grandTotal}</td>
+              </tr>
+            );
+          })}
+        </>
+        {renderTotalRoomAmount(totalAmount, 16)}
+      </>
+    );
   };
 
   const getTotalWindowPrice = (room) => {
@@ -500,6 +753,12 @@ function ViewEstimate() {
     const blindHardwareList = room?.blind?.blindHardwareList ?? [];
     const blindStitchingList = room?.blind?.blindStitchingList ?? [];
     const stitchingList = room?.stitchingList ?? [];
+    const sofaList = room?.sofaList ?? [];
+    const flooringList = room?.flooringList ?? [];
+    const flooringInstallation = room?.flooringInstallation ?? [];
+    const sofaStitchingList = room?.sofaStitchingList ?? [];
+    const wallpaperList = room?.wallpaperList ?? [];
+    const wallpaperInstallation = room?.wallpaperInstallation ?? [];
 
     let fabricPrice = 0;
     let hardwarePrice = 0;
@@ -507,6 +766,12 @@ function ViewEstimate() {
     let blindHardwarePrice = 0;
     let blindStitchingPrice = 0;
     let curtainStitchingPrice = 0;
+    let sofaPrice = 0;
+    let flooringPrice = 0;
+    let flooringInstallationPrice = 0;
+    let sofaStitchingPrice = 0;
+    let wallpaperPrice = 0;
+    let wallpaperInstallationPrice = 0;
 
     fabrics?.map((item) => {
       if (item?.grandTotal && item?.grandTotal > 0) {
@@ -548,13 +813,59 @@ function ViewEstimate() {
       }
     });
 
+    sofaList?.map((item) => {
+      if (item?.grandTotal && item?.grandTotal > 0) {
+        sofaPrice = parseFloat(sofaPrice) + parseFloat(item?.grandTotal);
+      }
+    });
+
+    sofaStitchingList?.map((item) => {
+      if (item?.grandTotal && item?.grandTotal > 0) {
+        sofaStitchingPrice =
+          parseFloat(sofaStitchingPrice) + parseFloat(item?.grandTotal);
+      }
+    });
+
+    flooringList?.map((item) => {
+      if (item?.grandTotal && item?.grandTotal > 0) {
+        flooringPrice =
+          parseFloat(flooringPrice) + parseFloat(item?.grandTotal);
+      }
+    });
+
+    flooringInstallation?.map((item) => {
+      if (item?.grandTotal && item?.grandTotal > 0) {
+        flooringInstallationPrice =
+          parseFloat(flooringInstallationPrice) + parseFloat(item?.grandTotal);
+      }
+    });
+
+    wallpaperList?.map((item) => {
+      if (item?.grandTotal && item?.grandTotal > 0) {
+        wallpaperPrice =
+          parseFloat(wallpaperPrice) + parseFloat(item?.grandTotal);
+      }
+    });
+
+    wallpaperInstallation?.map((item) => {
+      if (item?.grandTotal && item?.grandTotal > 0) {
+        wallpaperInstallationPrice =
+          parseFloat(wallpaperInstallationPrice) + parseFloat(item?.grandTotal);
+      }
+    });
+
     return getPriceFormate(
       +fabricPrice +
         +hardwarePrice +
         +blindPrice +
         +blindHardwarePrice +
         +blindStitchingPrice +
-        +curtainStitchingPrice
+        +curtainStitchingPrice +
+        +sofaPrice +
+        +sofaStitchingPrice +
+        +flooringPrice +
+        +wallpaperPrice +
+        +wallpaperInstallationPrice
     );
   };
   const getLadder = () => {
@@ -640,14 +951,23 @@ function ViewEstimate() {
       widthInFeet,
       qty,
       totalFabricInM,
+      isTotalAmountIsGrossAmount,
     }) => {
+      const getGrandTotalAmount = () => {
+        if (isTotalAmountIsGrossAmount) {
+          if (fabric?.gross_amount) {
+            return getPriceFormate(fabric?.gross_amount);
+          }
+        }
+        return fabric?.netAmount ? getPriceFormate(fabric?.netAmount) : "";
+      };
       return getMaterialFormate({
         title: title,
         value: fabric[nameKey] ? fabric[nameKey] : "",
         type: fabric?.type,
         unit: fabric?.unit,
         mrp: isPriceSquareMeter ? "" : fabric?.mrp ? fabric?.mrp : "",
-        dis: fabric?.discount ? fabric?.discount : "",
+        dis: fabric?.discount ? fabric?.discount : 0,
         noOfPanel: fabric?.number_of_panel ? fabric?.number_of_panel : "",
         stitchingCost: fabric?.stitchingCost
           ? getPriceFormate(fabric?.stitchingCost)
@@ -657,7 +977,7 @@ function ViewEstimate() {
         totalFabricInM: totalFabricInM
           ? totalFabricInM
           : getTotalFabric(fabric?.totalFabricUse),
-        grandTotal: fabric?.netAmount ? getPriceFormate(fabric?.netAmount) : "",
+        grandTotal: getGrandTotalAmount(),
         curtainStyle: curtainStyle
           ? curtainStyle
           : fabric?.curtain_style
@@ -742,7 +1062,7 @@ function ViewEstimate() {
 
         const getNetAmount = () => {
           const totalPrice = getTotalAmount();
-          return getPriceFormate(totalPrice + totalDiscount);
+          return getPriceFormate(+totalPrice);
         };
 
         return getStitchingDataFormate({
@@ -771,10 +1091,70 @@ function ViewEstimate() {
       return undefined;
     };
 
+    const getDataForSofa = ({
+      fabric,
+      title,
+      discount,
+      totalDiscount,
+      totalPrice,
+      grandTotal,
+      price,
+      number_of_seat,
+      qty = "",
+      type,
+    }) => {
+      return {
+        fabric,
+        title,
+        discount,
+        totalDiscount: getPriceFormate(totalDiscount),
+        totalPrice: getPriceFormate(totalPrice),
+        grandTotal: getPriceFormate(grandTotal),
+        price: getPriceFormate(price),
+        number_of_seat,
+        qty,
+        type,
+      };
+    };
+
+    const getDataForFlooring = ({
+      fabric,
+      title,
+      discount,
+      totalDiscount,
+      totalPrice,
+      grandTotal,
+      price,
+      qty,
+      type = "",
+      width = "",
+      installationCharge = "",
+      primerPrice,
+    }) => {
+      const _totalPrice = qty * price;
+
+      return {
+        fabric,
+        title,
+        discount,
+        totalDiscount: getPriceFormate(totalDiscount),
+        totalPrice: totalPrice
+          ? getPriceFormate(totalPrice)
+          : getPriceFormate(_totalPrice),
+        grandTotal: getPriceFormate(grandTotal),
+        price: getPriceFormate(price),
+        qty: qty ?? "",
+        type,
+        width,
+        installationCharge,
+        primerPrice: getPriceFormate(primerPrice),
+      };
+    };
+
     const window = [];
 
     const getAssetDataByKey = (assets = [], index, key) => {
-      if (assets && assets?.length > 0 && assets[index] && assets[index][key]) {
+      if (assets && assets.length > 0 && assets[index] && assets[index][key]) {
         return assets[index][key];
       }
       return "";
@@ -823,6 +1203,17 @@ function ViewEstimate() {
         ? [...roomDetail?.room_assets]
         : [];
 
+      const roomCategory =
+        roomDetail?.selectedMaterial?.length > 0
+          ? [...roomDetail?.selectedMaterial]
+          : [];
+      const flooringStyle = roomDetail?.selectedFlooring;
+      const sofaStyleList = roomDetail?.selectedsofa;
+      let wallpaperStyle = "";
+      if (Helper.isHaveCategory(roomCategory, "Wallpaper")) {
+        wallpaperStyle = roomDetail?.selectedWallpaper;
+      }
+
       windowList.map((_, index) => {
         const assetId = _["assetId"] ? _["assetId"] : undefined;
         const window_width = getAssetDataByKey(room_assets, index, "width");
@@ -835,6 +1226,12 @@ function ViewEstimate() {
         const stitchingList = [];
         const blindHardwareList = [];
         const blindStitchingList = [];
+        const sofaList = [];
+        const sofaStitchingList = [];
+        const flooringList = [];
+        const flooringInstallation = [];
+        const wallpaperList = [];
+        const wallpaperInstallation = [];
 
         const blindData = {};
 
@@ -844,6 +1241,9 @@ function ViewEstimate() {
         const sheer = getDataFromRoomByKey("sheer");
         const blind = getDataFromRoomByKey("blind");
         const extraHardware = getDataFromRoomByKey("extra_hardware");
+        const sofa = getDataFromRoomByKey("sofa");
+        const flooring = getDataFromRoomByKey("flooring");
+        const wallpaper = getDataFromRoomByKey("Wallpaper");
 
         if (curtain) {
           if (curtain?.fabric1 && curtain?.fabric1[index]) {
@@ -1358,6 +1758,7 @@ function ViewEstimate() {
                 getDataFromFabric({
                   fabric: fabric,
                   title: "Extra hardware",
+                  isTotalAmountIsGrossAmount: true,
                 })
               );
             }
@@ -1505,10 +1906,517 @@ function ViewEstimate() {
           blindData["blindStitchingList"] = blindStitchingList;
         }
 
+        if (sofa && sofa?.length > 0) {
+          sofa?.map((_item, key) => {
+            const sofaStyle = sofaStyleList.find(
+              (sofaItem) => sofaItem?.type == _item?.type
+            );
+
+            if (sofaStyle) {
+              if (_item?.type === "Sofa") {
+                if (
+                  sofaStyle &&
+                  Helper.getApiCheckboxSelectedValue(sofaStyle?.sofa_required)
+                ) {
+                  if (
+                    Helper.getApiCheckboxSelectedValue(
+                      sofaStyle?.primary_sofa_fabric_required
+                    )
+                  ) {
+                    sofaList?.push(
+                      getDataForSofa({
+                        title: "Primary fabric",
+                        fabric: _item?.primary_fabric,
+                        qty: _item?.primary_fabric_qty,
+                        price: _item?.primary_fabric_price,
+                        totalPrice: _item?.primary_fabric_cost,
+                        discount: _item?.primary_fabric_discount,
+                        grandTotal: _item?.net_primary_fabric_price,
+                        type: _item?.type,
+                      })
+                    );
+                    sofaStitchingList?.push(
+                      getDataForSofa({
+                        title: "Primary fabric stitching",
+                        number_of_seat: _item?.number_of_seats,
+                        price: _item?.cost_per_seat,
+                        grandTotal: _item?.total_making_cost,
+                        totalPrice: _item?.total_making_cost,
+                        type: _item?.type,
+                      })
+                    );
+                  }
+                  if (
+                    Helper.getApiCheckboxSelectedValue(
+                      sofaStyle?.secondary_sofa_fabric_required
+                    )
+                  ) {
+                    sofaList?.push(
+                      getDataForSofa({
+                        title: "Secondary fabric",
+                        fabric: _item?.secondary_fabric,
+                        qty: _item?.secondary_fabric_qty,
+                        price: _item?.secondary_fabric_price,
+                        totalPrice: _item?.secondary_fabric_cost,
+                        discount: _item?.secondary_fabric_discount,
+                        grandTotal: _item?.net_secondary_fabric_price,
+                        type: _item?.type,
+                      })
+                    );
+                    sofaStitchingList?.push(
+                      getDataForSofa({
+                        title: "Secondary fabric stitching",
+                        number_of_seat: _item?.number_of_seats,
+                        price: _item?.cost_per_seat,
+                        grandTotal: _item?.total_making_cost,
+                        totalPrice: _item?.total_making_cost,
+                        type: _item?.type,
+                      })
+                    );
+                  }
+                }
+              }
+
+              if (_item?.type === "Bedback") {
+                if (
+                  sofaStyle &&
+                  Helper.getApiCheckboxSelectedValue(
+                    sofaStyle?.bedback_required
+                  )
+                ) {
+                  if (
+                    Helper.getApiCheckboxSelectedValue(
+                      sofaStyle?.primary_bedback_fabric_required
+                    )
+                  ) {
+                    sofaList?.push(
+                      getDataForSofa({
+                        title: "Primary fabric",
+                        fabric: _item?.primary_fabric,
+                        qty: _item?.primary_fabric_qty,
+                        price: _item?.primary_fabric_price,
+                        totalPrice: _item?.primary_fabric_cost,
+                        discount: _item?.primary_fabric_discount,
+                        grandTotal: _item?.net_primary_fabric_price,
+                        type: _item?.type,
+                      })
+                    );
+                    sofaStitchingList?.push(
+                      getDataForSofa({
+                        title: "Primary fabric stitching",
+                        number_of_seat: " ",
+                        price: _item?.making_cost_sqmt,
+                        grandTotal: _item?.total_making_cost,
+                        totalPrice: _item?.total_making_cost,
+                        type: _item?.type,
+                      })
+                    );
+                  }
+                  if (
+                    Helper.getApiCheckboxSelectedValue(
+                      sofaStyle?.secondary_bedback_fabric_required
+                    )
+                  ) {
+                    sofaList?.push(
+                      getDataForSofa({
+                        title: "Secondary fabric",
+                        fabric: _item?.secondary_fabric,
+                        qty: _item?.secondary_fabric_qty,
+                        price: _item?.secondary_fabric_price,
+                        totalPrice: _item?.secondary_fabric_cost,
+                        discount: _item?.secondary_fabric_discount,
+                        grandTotal: _item?.net_secondary_fabric_price,
+                        type: _item?.type,
+                      })
+                    );
+                    sofaStitchingList?.push(
+                      getDataForSofa({
+                        title: "Secondary fabric stitching",
+                        number_of_seat: " ",
+                        price: _item?.making_cost_sqmt,
+                        grandTotal: _item?.total_making_cost,
+                        totalPrice: _item?.total_making_cost,
+                        type: _item?.type,
+                      })
+                    );
+                  }
+                }
+              }
+              if (_item?.type === "Wallpanel") {
+                if (
+                  sofaStyle &&
+                  Helper.getApiCheckboxSelectedValue(
+                    sofaStyle?.wallpanel_required
+                  )
+                ) {
+                  if (
+                    Helper.getApiCheckboxSelectedValue(
+                      sofaStyle?.primary_wallpanel_fabric_required
+                    )
+                  ) {
+                    sofaList?.push(
+                      getDataForSofa({
+                        title: "Primary fabric",
+                        fabric: _item?.primary_fabric,
+                        qty: _item?.primary_fabric_qty,
+                        price: _item?.primary_fabric_price,
+                        totalPrice: _item?.primary_fabric_cost,
+                        discount: _item?.primary_fabric_discount,
+                        grandTotal: _item?.net_primary_fabric_price,
+                        type: _item?.type,
+                      })
+                    );
+                    sofaStitchingList?.push(
+                      getDataForSofa({
+                        title: "Primary fabric stitching",
+                        number_of_seat: " ",
+                        price: _item?.making_cost_sqmt,
+                        grandTotal: _item?.total_making_cost,
+                        totalPrice: _item?.total_making_cost,
+                        type: _item?.type,
+                      })
+                    );
+                  }
+                  if (
+                    Helper.getApiCheckboxSelectedValue(
+                      sofaStyle?.secondary_wallpanel_fabric_required
+                    )
+                  ) {
+                    sofaList?.push(
+                      getDataForSofa({
+                        title: "Secondary fabric",
+                        fabric: _item?.secondary_fabric,
+                        qty: _item?.secondary_fabric_qty,
+                        price: _item?.secondary_fabric_price,
+                        totalPrice: _item?.secondary_fabric_cost,
+                        discount: _item?.secondary_fabric_discount,
+                        grandTotal: _item?.net_secondary_fabric_price,
+                        type: _item?.type,
+                      })
+                    );
+                    sofaStitchingList?.push(
+                      getDataForSofa({
+                        title: "Secondary fabric stitching",
+                        number_of_seat: " ",
+                        price: _item?.making_cost_sqmt,
+                        grandTotal: _item?.total_making_cost,
+                        totalPrice: _item?.total_making_cost,
+                        type: _item?.type,
+                      })
+                    );
+                  }
+                }
+              }
+              if (_item?.type === "Pouffee") {
+                if (
+                  sofaStyle &&
+                  Helper.getApiCheckboxSelectedValue(
+                    sofaStyle?.pouffee_required
+                  )
+                ) {
+                  if (
+                    Helper.getApiCheckboxSelectedValue(
+                      sofaStyle?.primary_pouffee_fabric_required
+                    )
+                  ) {
+                    sofaList?.push(
+                      getDataForSofa({
+                        title: "Primary fabric",
+                        fabric: _item?.primary_fabric,
+                        qty: _item?.primary_fabric_qty,
+                        price: _item?.primary_fabric_price,
+                        totalPrice: _item?.primary_fabric_cost,
+                        discount: _item?.primary_fabric_discount,
+                        grandTotal: _item?.net_primary_fabric_price,
+                        type: _item?.type,
+                      })
+                    );
+                    sofaStitchingList?.push(
+                      getDataForSofa({
+                        title: "Primary fabric stitching",
+                        number_of_seat: " ",
+                        price: _item?.cost_per_pouffee,
+                        grandTotal: _item?.total_making_cost,
+                        totalPrice: _item?.total_making_cost,
+                        type: _item?.type,
+                      })
+                    );
+                  }
+                  if (
+                    Helper.getApiCheckboxSelectedValue(
+                      sofaStyle?.secondary_pouffee_fabric_required
+                    )
+                  ) {
+                    sofaList?.push(
+                      getDataForSofa({
+                        title: "Secondary fabric",
+                        fabric: _item?.secondary_fabric,
+                        qty: _item?.secondary_fabric_qty,
+                        price: _item?.secondary_fabric_price,
+                        totalPrice: _item?.secondary_fabric_cost,
+                        discount: _item?.secondary_fabric_discount,
+                        grandTotal: _item?.net_secondary_fabric_price,
+                        type: _item?.type,
+                      })
+                    );
+                    sofaStitchingList?.push(
+                      getDataForSofa({
+                        title: "Secondary fabric stitching",
+                        number_of_seat: " ",
+                        price: _item?.cost_per_pouffee,
+                        grandTotal: _item?.total_making_cost,
+                        totalPrice: _item?.total_making_cost,
+                        type: _item?.type,
+                      })
+                    );
+                  }
+                  if (
+                    Helper.getApiCheckboxSelectedValue(
+                      sofaStyle?.piping_pouffee_fabric_required
+                    )
+                  ) {
+                    sofaList?.push(
+                      getDataForSofa({
+                        title: "Piping fabric",
+                        fabric: _item?.piping_fabric,
+                        qty: _item?.piping_fabric_qty,
+                        price: _item?.piping_fabric_price,
+                        totalPrice: _item?.piping_fabric_cost,
+                        discount: _item?.piping_fabric_discount,
+                        grandTotal: _item?.piping_fabric_cost,
+                        type: _item?.type,
+                      })
+                    );
+                    sofaStitchingList?.push(
+                      getDataForSofa({
+                        title: "Piping fabric stitching",
+                        number_of_seat: " ",
+                        price: _item?.cost_per_pouffee,
+                        grandTotal: _item?.total_making_cost,
+                        totalPrice: _item?.total_making_cost,
+                        type: _item?.type,
+                      })
+                    );
+                  }
+                }
+              }
+            }
+          });
+        }
+
+        if (
+          Helper.getApiCheckboxSelectedValue(
+            flooringStyle?.flooring_required
+          ) &&
+          flooring
+        ) {
+          const flooringItems = flooring?.flooringItems;
+
+          if (flooring?.fabric1_name) {
+            flooringList?.push(
+              getDataForFlooring({
+                title: "Flooring type",
+                fabric: flooring?.fabric1_name,
+                price: flooring?.mrp,
+                qty: flooring?.totalFabricUse,
+                totalPrice: flooring?.gross_amount,
+                discount: flooring?.discount,
+                totalDiscount: flooring?.discountedAmount,
+                grandTotal: flooring?.netAmount,
+                type: flooring?.type,
+                installationCharge: flooring?.installation_charge,
+                width: flooring?.width,
+              })
+            );
+
+            flooringInstallation.push(
+              getDataForFlooring({
+                title: "Flooring installation",
+                fabric: "",
+                price: flooring?.installation_charge,
+                grandTotal: flooring?.totalFlooringInstallationCost,
+                width: flooring?.width,
+                type: flooring?.flooring_type,
+              })
+            );
+          }
+
+          flooringList?.push(
+            getDataForFlooring({
+              title: "Foam",
+              fabric: "",
+              price: flooring?.FoamPrice,
+              grandTotal: flooring?.FoamPrice,
+              totalPrice: flooring?.FoamPrice,
+              discount: 0,
+              width: flooring?.width,
+            })
+          );
+          flooringList?.push(
+            getDataForFlooring({
+              title: "Polythene",
+              fabric: "",
+              price: flooring?.polythenePrice,
+              grandTotal: flooring?.polythenePrice,
+              totalPrice: flooring?.polythenePrice,
+              discount: 0,
+              width: flooring?.width,
+            })
+          );
+
+          if (flooringItems) {
+            flooringList?.push(
+              getDataForFlooring({
+                title: "Binding",
+                fabric: flooringItems?.binding,
+                qty: flooringItems?.binding_quantity,
+                price: flooringItems?.binding_mrp,
+                discount: flooringItems?.binding_discount,
+                totalPrice: flooringItems?.binding_cost,
+                grandTotal: flooringItems?.binding_cost,
+              })
+            );
+
+            flooringList?.push(
+              getDataForFlooring({
+                title: "Skirting",
+                fabric: flooringItems?.skirting,
+                qty: flooringItems?.skirting_quantity,
+                price: flooringItems?.skirting_mrp,
+                discount: flooringItems?.skirting_discount,
+                totalPrice: flooringItems?.skirting_cost,
+                grandTotal: flooringItems?.skirting_cost,
+              })
+            );
+
+            flooringList?.push(
+              getDataForFlooring({
+                title: "Reducer",
+                fabric: flooringItems?.reducer,
+                qty: flooringItems?.reducer_quantity,
+                price: flooringItems?.reducer_mrp,
+                discount: flooringItems?.reducer_discount,
+                totalPrice: flooringItems?.reducer_cost,
+                grandTotal: flooringItems?.reducer_cost,
+              })
+            );
+
+            flooringList?.push(
+              getDataForFlooring({
+                title: "T profile",
+                fabric: flooringItems?.t_profile,
+                qty: flooringItems?.t_profile_quantity,
+                price: flooringItems?.t_profile_mrp,
+                discount: flooringItems?.t_profile_discount,
+                totalPrice: flooringItems?.t_profile_cost,
+                grandTotal: flooringItems?.t_profile_cost,
+              })
+            );
+
+            flooringList?.push(
+              getDataForFlooring({
+                title: "Bedding",
+                fabric: flooringItems?.beeding,
+                qty: flooringItems?.beeding_quantity,
+                price: flooringItems?.beeding_mrp,
+                discount: flooringItems?.beeding_discount,
+                totalPrice: flooringItems?.beeding_cost,
+                grandTotal: flooringItems?.beeding_cost,
+              })
+            );
+
+            flooringList?.push(
+              getDataForFlooring({
+                title: "Margin",
+                fabric: flooringItems?.margin,
+                qty: flooringItems?.margin_quantity,
+                price: flooringItems?.margin_mrp,
+                discount: flooringItems?.margin_discount,
+                totalPrice: flooringItems?.margin_cost,
+                grandTotal: flooringItems?.margin_cost,
+              })
+            );
+          }
+        }
+
+        if (wallpaperStyle && wallpaper) {
+          const walls =
+            wallpaper?.wall_information?.length > 0
+              ? [...wallpaper?.wall_information]
+              : [];
+          walls?.map((_item) => {
+            if (Helper.isWallpaperTypeMural(_item?.type)) {
+              wallpaperList?.push(
+                getDataForFlooring({
+                  title: "Mural",
+                  fabric: _item?.wallpaper,
+                  type: _item?.type,
+                  price: _item?.price,
+                  qty: _item?.total_roll_required,
+                  width: getPriceFormate(_item?.total_area_sqft),
+                  totalDiscount: _item?.discountedAmount,
+                  discount: _item?.discount,
+                  grandTotal: _item?.netAmount,
+                  primerPrice: _item?.primer_price,
+                  totalPrice: _item?.mural_cost,
+                })
+              );
+
+              if (_item?.per_sqft_installation_cost) {
+                wallpaperInstallation?.push(
+                  getDataForFlooring({
+                    title: "Mural Installation",
+                    type: _item?.type,
+                    price: _item?.per_sqft_installation_cost,
+                    qty: "",
+                    grandTotal: _item?.total_installation_cost,
+                    width: getPriceFormate(_item?.total_area_sqft),
+                  })
+                );
+              }
+            } else {
+              wallpaperList?.push(
+                getDataForFlooring({
+                  title: "Wallpaper",
+                  fabric: _item?.wallpaper,
+                  type: _item?.type,
+                  price: _item?.roll_price,
+                  qty: _item?.total_roll_required,
+                  width: getPriceFormate(_item?.total_area_sqmt),
+                  totalDiscount: _item?.discountedAmount,
+                  discount: _item?.discount,
+                  grandTotal: _item?.netAmount,
+                  primerPrice: _item?.primer_price,
+                  totalPrice: _item?.total_roll_cost,
+                })
+              );
+
+              if (_item?.per_roll_installation_cost) {
+                wallpaperInstallation?.push(
+                  getDataForFlooring({
+                    title: "Wallpaper Installation",
+                    type: _item?.type,
+                    price: _item?.per_roll_installation_cost,
+                    qty: _item?.total_roll_required,
+                    grandTotal: _item?.total_installation_cost,
+                    width: getPriceFormate(_item?.total_area_sqmt),
+                  })
+                );
+              }
+            }
+          });
+        }
+
         obj["fabricList"] = fabricList;
         obj["hardwareList"] = hardwareList;
         obj["blind"] = blindData;
         obj["stitchingList"] = stitchingList;
+        obj["sofaList"] = sofaList;
+        obj["sofaStitchingList"] = sofaStitchingList;
+        obj["flooringList"] = flooringList;
+        obj["flooringInstallation"] = flooringInstallation;
+        obj["wallpaperList"] = wallpaperList;
+        obj["wallpaperInstallation"] = wallpaperInstallation;
 
         window.push(obj);
       });
@@ -1518,11 +2426,9 @@ function ViewEstimate() {
     return window;
   };
 
-  const depositAmount = EnquiryDetials?.amount ? EnquiryDetials?.amount : 0;
-
   const getTotalRoomAmount = (roomsList = []) => {
     return roomsList?.reduce((sum, room) => {
-      const roomStyles = getRoomStyles(room);
+      const roomStyles = getRoomStyles(room, discount, tax);
       sum =
         sum +
         roomStyles?.reduce((res, roomStyle) => {
@@ -1532,7 +2438,30 @@ function ViewEstimate() {
     }, 0);
   };
 
-  const totalEnquiryAmount = getTotalRoomAmount(rooms);
+  const renderHeaderDetails = (title = "", value = "") => {
+    return (
+      <div style={{ display: "flex" }}>
+        <p
+          style={{
+            marginRight: 30,
+            paddingLeft: 20,
+            paddingTop: 5,
+          }}
+        >
+          {title}
+        </p>
+        <p
+          style={{
+            marginRight: 30,
+            paddingLeft: 20,
+            paddingTop: 5,
+          }}
+        >
+          {value}
+        </p>
+      </div>
+    );
+  };
 
   const getCategoryNames = (room) => {
     if (room) {
@@ -1568,18 +2497,9 @@ function ViewEstimate() {
           <th colSpan={2}>Total Room amount</th>
           <th colSpan={1}>{getPriceFormate(amount)}</th>
         </tr>
-        {+deposit > 0 ? (
-          <tr>
-            <th colSpan={2}>Deposit amount</th>
-            <th colSpan={1}>{deposit}</th>
-          </tr>
-        ) : (
-          ``
-        )}
-
         {ladder?.name ? (
           <tr>
-            <th colSpan={1}>
+            <th colSpan={2}>
               <p>
                 Ladder charge ({ladder?.name})
                 <br />
@@ -1592,35 +2512,27 @@ function ViewEstimate() {
           ``
         )}
         <tr>
+          <th colspan="2">Cartage amount</th>
+          <th colspan="1">{cartageAmount}</th>
+        </tr>
+        <tr>
           <th colspan="2">Grand total</th>
           <th colspan="1">{getPriceFormate(getGrandTotal())}</th>
         </tr>
-      </>
-    );
-  };
+        {+deposit > 0 ? (
+          <tr>
+            <th colSpan={2}>Deposit amount</th>
+            <th colSpan={1}>{deposit}</th>
+          </tr>
+        ) : (
+          ``
+        )}
 
-  const renderHeaderDetails = (title = "", value = "") => {
-    return (
-      <div style={{ display: "flex" }}>
-        <p
-          style={{
-            marginRight: 30,
-            paddingLeft: 20,
-            paddingTop: 5,
-          }}
-        >
-          {title}
-        </p>
-        <p
-          style={{
-            marginRight: 30,
-            paddingLeft: 20,
-            paddingTop: 5,
-          }}
-        >
-          {value}
-        </p>
-      </div>
+        <tr>
+          <th colSpan="2">Grand total</th>
+          <th colSpan="1">{getPriceFormate(getGrandTotal())}</th>
+        </tr>
+      </>
     );
   };
 
@@ -1657,12 +2569,8 @@ function ViewEstimate() {
     return "Not found";
   };
 
-  const id = EnquiryDetials?.id;
-  const icUser = EnquiryDetials?.user ?? "";
-  const customer = EnquiryDetials?.customer ?? "";
-  const contactNumber = customer?.primary_phone ?? "";
-  const email = customer?.primary_email ?? "";
-  const Gst = customer?.GST ?? "Not found";
+  const depositAmount = EnquiryDetials?.amount ? EnquiryDetials?.amount : 0;
+  const totalEnquiryAmount = getTotalRoomAmount(rooms);
 
   return (
     <div>
@@ -1769,7 +2677,7 @@ function ViewEstimate() {
                 paddingBottom: "5%",
               }}
             >
-              {console.log("room length", rooms)}
+              {console.log("rooms", rooms)}
               {rooms?.length > 0
                 ? rooms?.map((room, roomIndex) => {
                     const styles = getRoomStyles(room);
@@ -1791,6 +2699,7 @@ function ViewEstimate() {
 
                           <td>{getCategoryNames(room)}</td>
                           <td>
+                            {console.log("styles", styles)}
                             {styles?.map((roomStyle, styleIndex) => {
                               const totalRoom = getTotalWindowPrice(roomStyle);
 
@@ -1804,19 +2713,28 @@ function ViewEstimate() {
                                     roomStyle,
                                     styleIndex
                                   )}
-                                  {renderBlindHardware(roomStyle, styleIndex)}$
+                                  {renderBlindHardware(roomStyle, styleIndex)}
                                   {renderSofa(roomStyle, styleIndex)}
-                                  {/* ${renderSofaStitching(roomStyle, styleIndex)}
-																			${renderFlooring(roomStyle, styleIndex)}
-																			${renderFlooringInstalltion(roomStyle, styleIndex)}
-																			${renderWallpaper(roomStyle, styleIndex)}
-																			${renderWallpaperInstallation(roomStyle, styleIndex)} */}
+                                  {renderSofaStitching(roomStyle, styleIndex)}
+                                  {renderFlooring(roomStyle, styleIndex)}
+                                  {renderFlooringInstalltion(
+                                    roomStyle,
+                                    styleIndex
+                                  )}
+                                  {renderWallpaper(roomStyle, styleIndex)}
+                                  {renderWallpaperInstallation(
+                                    roomStyle,
+                                    styleIndex
+                                  )}
                                 </table>
                               );
                             })}
                           </td>
                         </tr>
-
+                        {console.log(
+                          "roomdata",
+                          roomIndex === rooms.length - 1
+                        )}
                         {roomIndex === rooms.length - 1
                           ? renderTotalEnquiryAmount(
                               totalEnquiryAmount,
