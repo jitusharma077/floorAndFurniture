@@ -77,20 +77,27 @@ function OutletSearch() {
                           {AllResultData.length === 0 && <h4>No Data Find</h4>}
                           {AllResultData &&
                             AllResultData.map((customer, index) => {
+                              // console.log(
+                              //   "name",
+                              //   customer?.customer?.firstName
+                              // );
                               return (
                                 <tr key={index}>
                                   <td>
-                                    {customer.firstName} {customer.lastName}
+                                    {customer?.customer?.firstName}{" "}
+                                    {customer.lastName}
                                   </td>
-                                  <td>{customer.id}</td>
-                                  <td>{customer.primary_email}</td>
-                                  <td>{customer.primary_phone}</td>
+                                  <td>{customer?.customer?.id}</td>
+                                  <td>{customer?.customer?.primary_email}</td>
+                                  <td>{customer?.customer?.primary_phone}</td>
 
                                   <td>
                                     <button
                                       onClick={() => {
                                         navigate("/OutletCustomerDetials", {
-                                          state: { data: customer.id },
+                                          state: {
+                                            data: customer?.customer?.id,
+                                          },
                                         });
                                       }}
                                       className="btn btn-primary"

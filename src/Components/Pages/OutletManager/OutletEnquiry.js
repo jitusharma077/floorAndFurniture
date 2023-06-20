@@ -10,13 +10,13 @@ function OutletEnquiry() {
   const navigate = useNavigate();
   const [AllOutletEnquiry, setAllOutletEnquiry] = useState([]);
   useEffect(() => {
-    GetDataWithToken(
-      `superadmin/get-outlet-enquiry/${Cookies.get("userID")}`
-    ).then((response) => {
-      if (response.status === true) {
-        setAllOutletEnquiry(response.data);
+    GetDataWithToken(`outlet/get-enquiries/${Cookies.get("userID")}`).then(
+      (response) => {
+        if (response.status === true) {
+          setAllOutletEnquiry(response.data);
+        }
       }
-    });
+    );
   }, []);
   return (
     <>
@@ -72,17 +72,13 @@ function OutletEnquiry() {
                             AllOutletEnquiry.map((data, index) => (
                               <tr>
                                 <>
-                                  {" "}
                                   <td>{data.id}</td>
-                                  <td>
-                                    {data?.customer?.firstName}{" "}
-                                    {data?.customer?.lastName}
-                                  </td>
-                                  <td>{data?.customer?.primary_phone}</td>
+                                  <td>{data?.contactPerson}</td>
+                                  <td>{data?.contactNumber}</td>
                                   <td>
                                     <span
                                       className={
-                                        data?.status === "inprogress"
+                                        data?.status === "inprogess"
                                           ? "badge  badge-primary"
                                           : "badge badge-dark"
                                       }
@@ -91,7 +87,6 @@ function OutletEnquiry() {
                                     </span>
                                   </td>
                                   <td>
-                                    {" "}
                                     {moment(data?.createdAt).format("ll")}
                                   </td>
                                   <td>
@@ -105,12 +100,6 @@ function OutletEnquiry() {
                                     >
                                       View More
                                     </button>
-                                    {/* <a
-                                    href="Schedule.html"
-                                    className="btn btn-primary btn-sm"
-                                  >
-                                    Enquiry Assignment
-                                  </a> */}
                                   </td>
                                 </>
                               </tr>

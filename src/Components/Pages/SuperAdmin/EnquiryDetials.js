@@ -60,6 +60,21 @@ function EnquiryDetials() {
     }
   };
 
+  const cancelEnquiry = async () => {
+    if (await confirm("Are you sure you want to Cancel This Enquiry")) {
+      GetDataWithToken(`superadmin/cancel-enquiry/${enquiryId}`).then(
+        (response) => {
+          if (response.status === true) {
+            console.log("response", response);
+            toast.success("Enquiry Canceled Successfully", {
+              position: toast.POSITION.TOP_CENTER,
+            });
+          }
+        }
+      );
+    }
+  };
+
   return (
     <>
       {console.log("lenghtcustomerrrrrr", CustomerId)}
@@ -95,6 +110,13 @@ function EnquiryDetials() {
                     >
                       View Status
                     </button>
+                    <button
+                      onClick={() => cancelEnquiry()}
+                      className="btn btn-mybutton"
+                    >
+                      Cancel Enquiry
+                    </button>
+
                     {isRoomData === true ? (
                       <>
                         {EnquiryDetials?.data?.status !== "fresh" &&
@@ -124,21 +146,22 @@ function EnquiryDetials() {
                         >
                           Assign Measurer
                         </button>
-                        {EnquiryDetials?.data?.status === "qc-complete" && (
-                          <button
-                            onClick={() => {
-                              navigate("/AddInstalerSchdule", {
-                                state: {
-                                  enquiryId: enquiryId,
-                                  customerId: CustomerId,
-                                },
-                              });
-                            }}
-                            className="btn btn-mybutton"
-                          >
-                            Assign Installer
-                          </button>
-                        )}
+                        {EnquiryDetials?.data?.status !== "inprogess" &&
+                          EnquiryDetials?.data?.status !== "fresh" && (
+                            <button
+                              onClick={() => {
+                                navigate("/AddInstalerSchdule", {
+                                  state: {
+                                    enquiryId: enquiryId,
+                                    customerId: CustomerId,
+                                  },
+                                });
+                              }}
+                              className="btn btn-mybutton"
+                            >
+                              Assign Installer
+                            </button>
+                          )}
 
                         {EnquiryDetials?.data?.status !== "inprogess" &&
                           EnquiryDetials?.data?.status !== "fresh" &&
@@ -158,8 +181,7 @@ function EnquiryDetials() {
                             </button>
                           )}
                         {EnquiryDetials?.data?.status !== "inprogess" &&
-                          EnquiryDetials?.data?.status !== "fresh" &&
-                          EnquiryDetials?.data?.orders?.length === 0 && (
+                          EnquiryDetials?.data?.status !== "fresh" && (
                             <button
                               onClick={() => {
                                 navigate("/ViewEstimate", {
@@ -178,7 +200,13 @@ function EnquiryDetials() {
                   </div>
                 </div>
                 <div className="card">
-                  <div className="card-header">
+                  <div
+                    className={
+                      EnquiryDetials?.data?.status === "cancelled"
+                        ? "card-header bg-danger"
+                        : "card-header"
+                    }
+                  >
                     <h4 className="card-title">
                       Enquiry No: {EnquiryDetials?.data?.id}
                     </h4>

@@ -45415,7 +45415,7 @@ code {
 
 .pagination .page-item .page-link:hover i,
 .pagination .page-item .page-link span {
-  color: #fff;
+  color: #01c854;
 }
 
 .pagination .page-item .page-link:focus {
@@ -47523,8 +47523,16 @@ code {
 .table th,
 .table td {
   border-color: #f5f5f5;
-  padding: 0.9375rem 0.625rem;
+  padding: 10px;
   vertical-align: middle;
+}
+.Estimate td, .Estimate th{
+  font-size: 0.8rem;
+  padding: 5px;
+}
+
+.Estimate .td {
+  padding: 5px;
 }
 
 [data-theme-version="dark"] .table th,

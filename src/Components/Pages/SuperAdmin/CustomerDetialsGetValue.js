@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { GetDataWithToken } from "../../ApiHelper/ApiHelper";
-import OutletManagerHeader from "./OutletManagerHeader";
-import OutletManagerSidebar from "./OutletManagerSidebar";
+import SuperAdminHeader from "./Common/SuperAdminHeader";
+import SuperAdminSidebar from "./Common/SuperAdminSidebar";
 
-function OutletCustomerDetials() {
+function CustomerDetialsGetValue() {
   const location = useLocation();
   const navigate = useNavigate();
   const [CustomerDetials, setCustomerDetials] = useState({});
@@ -18,13 +18,14 @@ function OutletCustomerDetials() {
         }
       }
     );
-  }, []);
+  }, [""]);
   return (
     <>
+      {console.log("first", CustomerDetials)}
       <div
         data-typography="poppins"
         data-theme-version="light"
-        data-layout="horizontal"
+        data-layout="vertical"
         data-nav-headerbg="color_1"
         data-headerbg="color_1"
         data-sidebar-style="full"
@@ -34,11 +35,13 @@ function OutletCustomerDetials() {
         data-container="wide"
         direction="ltr"
         data-primary="color_1"
-        className="outlet_style"
+        id="main-wrapper"
+        className="show"
       >
-        <OutletManagerHeader />
-        <OutletManagerSidebar />
+        <SuperAdminHeader />
+        <SuperAdminSidebar />
         <div className="content-body">
+          {/* row */}
           <div className="container-fluid">
             <div className="row">
               <div className="col-xl-12">
@@ -51,13 +54,25 @@ function OutletCustomerDetials() {
                             <img src="./images/user.png" alt="" />
                             <div>
                               <h2 className="font-w600 ">
-                                {CustomerDetials?.firstName}{" "}
+                                {CustomerDetials?.firstName}
                                 {CustomerDetials?.lastName}
                               </h2>
                               <span className="text-secondary">
                                 ID #{CustomerDetials?.id}
                               </span>
                             </div>
+                          </div>
+                          <div>
+                            {/* <button
+                              className="btn btn-primary"
+                              onClick={() => {
+                                navigate("/addRooms", {
+                                  state: { data: CustomerDetials?.id },
+                                });
+                              }}
+                            >
+                              Add New Enquiry
+                            </button> */}
                           </div>
                           <div className="row">
                             <div className="col-lg-3">
@@ -125,12 +140,12 @@ function OutletCustomerDetials() {
                 <div className="card">
                   <div className="card-header border-0">
                     <h4 className="fs-20">Purchase History</h4>
-                    <div className="newest ms-3">
+                    {/* <div className="newest ms-3">
                       <select className="default-select">
                         <option>Newest</option>
                         <option>Oldest</option>
                       </select>
-                    </div>
+                    </div> */}
                   </div>
                   <div className="table-responsive">
                     <table
@@ -147,12 +162,15 @@ function OutletCustomerDetials() {
                         </tr>
                       </thead>
                       <tbody>
-                        {CustomerDetials?.enquiries &&
-                          CustomerDetials?.enquiries.map((item, index) => (
+                        {CustomerDetials.enquiries &&
+                          CustomerDetials.enquiries.map((item, index) => (
                             <tr key={index}>
                               <td>{item.id}</td>
                               <td>{item.createdAt}</td>
-                              <td>N/A</td>
+                              <td>
+                                N/A
+                                {/* {item?.enquirystatuses.map((res, item) => res.)} */}
+                              </td>
 
                               <td>
                                 <span className="badge badge-warning">
@@ -162,7 +180,7 @@ function OutletCustomerDetials() {
                               <td>
                                 <button
                                   onClick={() => {
-                                    navigate("/OutletEnquiryDetials", {
+                                    navigate("/EnquiryProductList", {
                                       state: { data: item.id },
                                     });
                                   }}
@@ -192,4 +210,4 @@ function OutletCustomerDetials() {
   );
 }
 
-export default OutletCustomerDetials;
+export default CustomerDetialsGetValue;

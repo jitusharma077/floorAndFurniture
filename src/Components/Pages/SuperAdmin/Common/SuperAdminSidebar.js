@@ -176,16 +176,13 @@ function SuperAdminSidebar() {
                 </li>
               </ul>
             </li>
-            {/* <li>
-              <a
-                href="Stitching_Manager_dashboard.html"
-                className
-                aria-expanded="false"
-              >
+
+            <li>
+              <Link to={"/ClamValue"} className aria-expanded="false">
                 <i className="icon-shuffle icons fw-bold" />
-                <span className="nav-text">Stiching Manager</span>
-              </a>
-            </li> */}
+                <span className="nav-text"> Clam Value </span>
+              </Link>
+            </li>
             {/* <li>
               <a
                 href="Dispatch_Department_dashboard.html"

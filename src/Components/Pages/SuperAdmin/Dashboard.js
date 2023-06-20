@@ -5,10 +5,14 @@ import SuperAdminHeader from "./Common/SuperAdminHeader";
 import SuperAdminSidebar from "./Common/SuperAdminSidebar";
 
 function Dashboard() {
-  // useEffect(() => {
-  //   let resp = (123456).toString();
-  //   console.log("resp", resp);
-  // }, [""]);
+  const [AllDashboardData, setAllDashboardData] = useState("");
+  useEffect(() => {
+    GetDataWithToken("superadmin/dashboard").then((response) => {
+      if (response.status === true) {
+        setAllDashboardData(response.data);
+      }
+    });
+  }, [""]);
 
   const [LoadingData, setLoadingData] = useState(false);
 
@@ -33,6 +37,105 @@ function Dashboard() {
     setLoadingData(true);
     axios({
       url: `${serverUrl}superadmin/installer-installation-aging/22`,
+      method: "GET",
+      responseType: "blob", // important
+    }).then((response) => {
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", "file.xls"); //or any other extension
+      document.body.appendChild(link);
+      link.click();
+      setLoadingData(false);
+    });
+  };
+
+  const DownloadReportHandler3 = () => {
+    setLoadingData(true);
+    axios({
+      url: `${serverUrl}superadmin/storewise-estimate-aging`,
+      method: "GET",
+      responseType: "blob", // important
+    }).then((response) => {
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", "file.xls"); //or any other extension
+      document.body.appendChild(link);
+      link.click();
+      setLoadingData(false);
+    });
+  };
+  const DownloadReportHandler4 = () => {
+    setLoadingData(true);
+    axios({
+      url: `${serverUrl}superadmin/storewise-order-created/22`,
+      method: "GET",
+      responseType: "blob", // important
+    }).then((response) => {
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", "file.xls"); //or any other extension
+      document.body.appendChild(link);
+      link.click();
+      setLoadingData(false);
+    });
+  };
+
+  const DownloadReportHandler5 = () => {
+    setLoadingData(true);
+    axios({
+      url: `${serverUrl}superadmin/storewise-qc-completed/22`,
+      method: "GET",
+      responseType: "blob", // important
+    }).then((response) => {
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", "file.xls"); //or any other extension
+      document.body.appendChild(link);
+      link.click();
+      setLoadingData(false);
+    });
+  };
+  const DownloadReportHandler6 = () => {
+    setLoadingData(true);
+    axios({
+      url: `${serverUrl}superadmin/installer-installation-aging/22`,
+      method: "GET",
+      responseType: "blob", // important
+    }).then((response) => {
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", "file.xls"); //or any other extension
+      document.body.appendChild(link);
+      link.click();
+      setLoadingData(false);
+    });
+  };
+
+  const DownloadReportHandler7 = () => {
+    setLoadingData(true);
+    axios({
+      url: `${serverUrl}superadmin/storewise-total`,
+      method: "GET",
+      responseType: "blob", // important
+    }).then((response) => {
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", "file.xls"); //or any other extension
+      document.body.appendChild(link);
+      link.click();
+      setLoadingData(false);
+    });
+  };
+  const DownloadReportHandler8 = () => {
+    setLoadingData(true);
+    axios({
+      url: `${serverUrl}superadmin/installer-installation-completed/:id`,
       method: "GET",
       responseType: "blob", // important
     }).then((response) => {
@@ -85,10 +188,18 @@ function Dashboard() {
                                 <img alt="" src="./images/share_astimate.svg" />
                               </span>
                               <div className="ms-4">
-                                <h2 className="mb-0 font-w600">8,461</h2>
+                                <h2 className="mb-0 font-w600">
+                                  {AllDashboardData.totalEnquiry?.enquiry}
+                                </h2>
                                 <p className="mb-0 text-nowrap">
-                                  Share Estimate
+                                  Total Enquiry
                                 </p>
+                                <button
+                                  onClick={() => DownloadReportHandler7()}
+                                  className="btn btn-primary"
+                                >
+                                  Download
+                                </button>
                               </div>
                             </div>
                           </div>
@@ -105,10 +216,18 @@ function Dashboard() {
                                 />
                               </span>
                               <div className="ms-4">
-                                <h2 className="mb-0 font-w600">8,461</h2>
+                                <h2 className="mb-0 font-w600">
+                                  {AllDashboardData.measurementPending?.enquiry}
+                                </h2>
                                 <p className="mb-0 text-nowrap">
-                                  Order Confirmation
+                                  Pending Measurements
                                 </p>
+                                <button
+                                  onClick={() => DownloadReportHandler()}
+                                  className="btn btn-primary"
+                                >
+                                  Download
+                                </button>
                               </div>
                             </div>
                           </div>
@@ -122,8 +241,16 @@ function Dashboard() {
                                 <img alt="" src="./images/delivery.svg" />
                               </span>
                               <div className="ms-4">
-                                <h2 className="mb-0 font-w600">753</h2>
-                                <p className="mb-0">Delivery</p>
+                                <h2 className="mb-0 font-w600">
+                                  {AllDashboardData?.estimateShared?.enquiry}
+                                </h2>
+                                <p className="mb-0">Pending Share Estimates</p>
+                                <button
+                                  onClick={() => DownloadReportHandler3()}
+                                  className="btn btn-primary"
+                                >
+                                  Download
+                                </button>
                               </div>
                             </div>
                           </div>
@@ -137,8 +264,18 @@ function Dashboard() {
                                 <img alt="" src="./images/purchase_order.svg" />
                               </span>
                               <div className="ms-4">
-                                <h2 className="mb-0 font-w600">516</h2>
-                                <p className="mb-0">Purchase Orders</p>
+                                <h2 className="mb-0 font-w600">
+                                  {AllDashboardData?.orderConfirmed?.enquiry}
+                                </h2>
+                                <p className="mb-0">
+                                  Pending Order Confirmations
+                                </p>
+                                <button
+                                  onClick={() => DownloadReportHandler4()}
+                                  className="btn btn-primary"
+                                >
+                                  Download
+                                </button>
                               </div>
                             </div>
                           </div>
@@ -152,20 +289,40 @@ function Dashboard() {
                                 <img alt="" src="./images/measurement.svg" />
                               </span>
                               <div className="ms-4">
-                                <h2 className="mb-0 font-w600">516</h2>
-                                <p className="mb-0">MEASUREMENT</p>
+                                <h2 className="mb-0 font-w600">
+                                  {AllDashboardData?.qcComplete?.enquiry}
+                                </h2>
+                                <p className="mb-0">Qc completed</p>
+                                <button
+                                  onClick={() => DownloadReportHandler5()}
+                                  className="btn btn-primary"
+                                >
+                                  Download
+                                </button>
                               </div>
                             </div>
-                            <button
-                              onClick={() => DownloadReportHandler()}
-                              className="btn btn-primary"
-                            >
-                              Download Report
-                            </button>
                           </div>
                         </div>
                       </div>
-                      <div className="col-xl-3 col-sm-6">
+
+                      {/* <div className="col-xl-3 col-sm-6">
+                        <div className="card booking">
+                          <div className="card-body text-align-center">
+                            <div className="booking-status d-flex align-items-center">
+                              <span>
+                                <img alt="" src="./images/measurement.svg" />
+                              </span>
+                              <div className="ms-4">
+                                <h2 className="mb-0 font-w600">
+                                  {AllDashboardData?.estimateShared?.enquiry}
+                                </h2>
+                                <p className="mb-0">Estimate Shared</p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div> */}
+                      {/* <div className="col-xl-3 col-sm-6">
                         <div className="card booking">
                           <div className="card-body">
                             <div className="booking-status d-flex align-items-center">
@@ -173,8 +330,33 @@ function Dashboard() {
                                 <img alt="" src="./images/grn_NOte.svg" />
                               </span>
                               <div className="ms-4">
-                                <h2 className="mb-0 font-w600">516</h2>
-                                <p className="mb-0">GRN</p>
+                                <h2 className="mb-0 font-w600">
+                                  {AllDashboardData?.orderConfirmed?.enquiry}
+                                </h2>
+                                <p className="mb-0">Order Confirmed</p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div> */}
+                      <div className="col-xl-3 col-sm-6">
+                        <div className="card booking">
+                          <div className="card-body">
+                            <div className="booking-status d-flex align-items-center">
+                              <span>
+                                <img alt="" src="./images/installation.svg" />
+                              </span>
+                              <div className="ms-4">
+                                <h2 className="mb-0 font-w600">
+                                  {AllDashboardData?.installerAssigned?.enquiry}
+                                </h2>
+                                <p className="mb-0">Work Done/Feedback’s</p>
+                                <button
+                                  onClick={() => DownloadReportHandler5()}
+                                  className="btn btn-primary"
+                                >
+                                  Download
+                                </button>
                               </div>
                             </div>
                           </div>
@@ -188,13 +370,15 @@ function Dashboard() {
                                 <img alt="" src="./images/installation.svg" />
                               </span>
                               <div className="ms-4">
-                                <h2 className="mb-0 font-w600">516</h2>
-                                <p className="mb-0">Installation</p>
+                                <h2 className="mb-0 font-w600">
+                                  {AllDashboardData?.installerAssigned?.enquiry}
+                                </h2>
+                                <p className="mb-0">Installer Assigned</p>
                                 <button
-                                  onClick={() => DownloadReportHandler2()}
+                                  onClick={() => DownloadReportHandler6()}
                                   className="btn btn-primary"
                                 >
-                                  Download Report
+                                  Download
                                 </button>
                               </div>
                             </div>
@@ -206,11 +390,16 @@ function Dashboard() {
                           <div className="card-body">
                             <div className="booking-status d-flex align-items-center">
                               <span>
-                                <img alt="" src="./images/followUP.svg" />
+                                <img alt="" src="./images/installation.svg" />
                               </span>
                               <div className="ms-4">
-                                <h2 className="mb-0 font-w600">516</h2>
-                                <p className="mb-0">Follow up Delivery</p>
+                                <h2 className="mb-0 font-w600">
+                                  {
+                                    AllDashboardData?.installationStarted
+                                      ?.enquiry
+                                  }
+                                </h2>
+                                <p className="mb-0">Installation Started</p>
                               </div>
                             </div>
                           </div>
@@ -224,9 +413,17 @@ function Dashboard() {
                                 <img alt="" src="./images/qFollowup.svg" />
                               </span>
                               <div className="ms-4">
-                                <h2 className="mb-0 font-w600">516</h2>
-                                <p className="mb-0">Follow up</p>
+                                <h2 className="mb-0 font-w600">
+                                  {AllDashboardData?.completedEnquiry?.enquiry}
+                                </h2>
+                                <p className="mb-0">Complete Enquiry</p>
                               </div>
+                              <button
+                                onClick={() => DownloadReportHandler8()}
+                                className="btn btn-primary"
+                              >
+                                Download
+                              </button>
                             </div>
                           </div>
                         </div>
@@ -236,11 +433,13 @@ function Dashboard() {
                           <div className="card-body">
                             <div className="booking-status d-flex align-items-center">
                               <span>
-                                <img alt="" src="./images/sta.svg" />
+                                <img alt="" src="./images/qFollowup.svg" />
                               </span>
                               <div className="ms-4">
-                                <h2 className="mb-0 font-w600">516</h2>
-                                <p className="mb-0">STA</p>
+                                <h2 className="mb-0 font-w600">
+                                  {AllDashboardData?.cancelledEnquiry?.enquiry}
+                                </h2>
+                                <p className="mb-0">Cancelled Enquiry</p>
                               </div>
                             </div>
                           </div>

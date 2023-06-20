@@ -65,6 +65,13 @@ function OutletStaffDetials() {
     );
   };
 
+  const getPendingEnquiry = (data) => {
+    const filterData = data?.filter(
+      (res) => res.status === "fresh" || "inprogess"
+    );
+    return filterData?.length;
+  };
+
   return (
     <>
       <div
@@ -186,13 +193,13 @@ function OutletStaffDetials() {
                             <div className="row">
                               <div className="col">
                                 <h3 className="m-b-0">
-                                  {StaffDetials?.totalEnquiry}
+                                  {StaffDetials?.Enquiry?.length}
                                 </h3>
                                 <span>Total Enquiry</span>
                               </div>
                               <div className="col">
                                 <h3 className="m-b-0">
-                                  {StaffDetials?.freshEnquiry}
+                                  {getPendingEnquiry(StaffDetials?.Enquiry)}
                                 </h3>
                                 <span>Pending Enquirys</span>
                               </div>
@@ -205,11 +212,10 @@ function OutletStaffDetials() {
                             </div>
                             <div className="mt-4">
                               <Link
-                                to={`/superadmin/enquiry-list`}
+                                to={""}
                                 className="btn
                               btn-primary mb-1 me-1"
                               >
-                                {" "}
                                 Schedule Enquiry
                               </Link>
                             </div>

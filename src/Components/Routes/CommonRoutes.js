@@ -63,6 +63,9 @@ import AddInstalerSchdule from "../Pages/SuperAdmin/AddInstalerSchdule";
 import InstallerDetials from "../Pages/SuperAdmin/InstallerDetials";
 import CreateOrder from "../Pages/SuperAdmin/CreateOrder";
 import ViewEstimate from "../Pages/SuperAdmin/ViewEstimate";
+import ClamValue from "../Pages/SuperAdmin/ClamValue";
+import CustomerDetialsGetValue from "../Pages/SuperAdmin/CustomerDetialsGetValue";
+import EnquiryProductList from "../Pages/SuperAdmin/EnquiryProductList";
 
 const CommonRoutes = () => {
   // const [type, setType] = useState({});
@@ -123,6 +126,12 @@ const CommonRoutes = () => {
             <Route path="InstallerDetials" element={<InstallerDetials />} />
             <Route path="CreateOrder" element={<CreateOrder />} />
             <Route path="ViewEstimate" element={<ViewEstimate />} />
+            <Route path="ClamValue" element={<ClamValue />} />
+            <Route
+              path="CustomerDetialsGetValues"
+              element={<CustomerDetialsGetValue />}
+            />
+            <Route path="EnquiryProductList" element={<EnquiryProductList />} />
           </>
         )}
 

@@ -4,19 +4,31 @@ import { GetDataWithToken } from "../../ApiHelper/ApiHelper";
 import OutletManagerHeader from "./OutletManagerHeader";
 import OutletManagerSidebar from "./OutletManagerSidebar";
 import { Link, useNavigate } from "react-router-dom";
+import PaginationComponent from "../../Common/PaginationComponent";
 
 function OutletCustomers() {
   const navigate = useNavigate();
   const [AllOutlerCustomers, setAllOutletCustomers] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPage, settotalPage] = useState(0);
+  const [callApi, setCallApi] = useState(false);
+  const handlePageClick = (e, index) => {
+    e.preventDefault();
+    setCurrentPage(index + 1);
+    setCallApi(true);
+  };
   useEffect(() => {
     GetDataWithToken(
-      `superadmin/get-outlet-customer/${Cookies.get("userID")}`
+      `superadmin/get-outlet-customer/${Cookies.get(
+        "userID"
+      )}?page=${currentPage}`
     ).then((response) => {
       if (response.status === true) {
         setAllOutletCustomers(response.data);
+        settotalPage(response.pages);
       }
     });
-  }, []);
+  }, [currentPage]);
   return (
     <>
       <div
@@ -93,6 +105,13 @@ function OutletCustomers() {
                       </table>
                     </div>
                   </div>
+                  <PaginationComponent
+                    totalPage={totalPage}
+                    currentPage={currentPage}
+                    setCallApi={(val) => setCallApi(val)}
+                    setCurrentPage={(val) => setCurrentPage(val)}
+                    handlePageClick={handlePageClick}
+                  />
                 </div>
               </div>
             </div>

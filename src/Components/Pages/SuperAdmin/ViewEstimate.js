@@ -15,14 +15,16 @@ function ViewEstimate() {
   const [rooms, setRooms] = React.useState([]);
   const [discount, setDiscount] = React.useState(0);
   const [tax, setTax] = React.useState(0);
+  const [LadderPrice, setLadderPrice] = useState("");
 
   useEffect(() => {
     setLoading(true);
     GetDataWithToken(`sales/get-estimate/${type}`).then((response) => {
       if (response.status === true) {
-        console.log("rtessssss", response.data);
+        // console.log("rtessssss", response.);
         setAllEstimateData(response.data);
         setLoading(false);
+        setLadderPrice(response?.ladderCharges);
         getEnquiryDetials(location.state.EnquiryDetials);
         // console.log("resssss", response.data);
         setRooms(response.data);
@@ -874,7 +876,7 @@ function ViewEstimate() {
       price: 0,
       message: "",
     };
-    const ladderCharge = 1000;
+    const ladderCharge = LadderPrice;
     if (rooms && rooms?.length > 0) {
       const roomDetails = rooms[0]?.roomInfo;
       const asset =
@@ -2578,7 +2580,7 @@ function ViewEstimate() {
         <Loader />
       ) : (
         <div className="Estimate">
-          <div style={{ position: "fixed", bottom: 30, right: 30 }}>
+          <div style={{ position: "fixed", top: 30, right: 10 }}>
             <button className="btn btn-primary" onClick={() => window.print()}>
               Print Estimate
             </button>
