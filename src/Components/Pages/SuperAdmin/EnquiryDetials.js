@@ -3,17 +3,22 @@ import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button, Offcanvas, OffcanvasBody, OffcanvasHeader } from "reactstrap";
-import { GetDataWithToken } from "../../ApiHelper/ApiHelper";
+import { GetDataWithToken, PostDataWithToken } from "../../ApiHelper/ApiHelper";
 import { confirm } from "../../Common/ConfirmModal";
 import SuperAdminHeader from "./Common/SuperAdminHeader";
 import SuperAdminSidebar from "./Common/SuperAdminSidebar";
 import EnquiryCustom from "./Common/EnquiryCustom";
+import ReAssignmesurer from "../../Common/ReAssignmesurer";
 
 function EnquiryDetials() {
   const location = useLocation();
   const navigate = useNavigate();
   const [isRoomData, setIsRoomData] = useState(false);
   const [CustomerId, setCustomerId] = useState("");
+  const [modal, setModal] = useState(false);
+  const toggle = () => setModal(!modal);
+  const [modal1, setModal1] = useState(false);
+  const toggle1 = () => setModal1(!modal1);
 
   const [enquiryId, setEnquiryId] = useState(null);
   const [EnquiryDetials, setEnquiryDetials] = useState({});
@@ -24,6 +29,7 @@ function EnquiryDetials() {
   const [blindBtnIndex, setBlindBtnIndex] = useState(4);
   const [Category, setCategory] = useState([]);
   const [IcName, setIcName] = useState("");
+  const [SelectedValue, setSelectedValue] = useState("");
 
   useEffect(() => {
     console.log("location", location);
@@ -61,18 +67,36 @@ function EnquiryDetials() {
   };
 
   const cancelEnquiry = async () => {
-    if (await confirm("Are you sure you want to Cancel This Enquiry")) {
-      GetDataWithToken(`superadmin/cancel-enquiry/${enquiryId}`).then(
-        (response) => {
-          if (response.status === true) {
-            console.log("response", response);
-            toast.success("Enquiry Canceled Successfully", {
-              position: toast.POSITION.TOP_CENTER,
-            });
-          }
-        }
-      );
-    }
+    GetDataWithToken(
+      `superadmin/cancel-enquiry/${EnquiryDetials?.data?.id}?remark=${SelectedValue}`
+    ).then((response) => {
+      if (response.status === true) {
+        console.log("response", response);
+        toast.success("Enquiry Canceled Successfully", {
+          position: toast.POSITION.TOP_CENTER,
+        });
+        window.location.reload(true);
+      }
+    });
+  };
+
+  const PostponeInstaller = async () => {
+    const data = {
+      id: EnquiryDetials?.data?.installer_tasks[
+        EnquiryDetials?.data?.installer_tasks.length - 1
+      ]?.id,
+      status: "postponed",
+      remark: SelectedValue,
+    };
+    PostDataWithToken(`installer/update-schedule/`, data).then((response) => {
+      if (response.status === true) {
+        console.log("response", response);
+        toast.success("Installer Postpone Successfully", {
+          position: toast.POSITION.TOP_CENTER,
+        });
+        window.location.reload(true);
+      }
+    });
   };
 
   return (
@@ -111,8 +135,10 @@ function EnquiryDetials() {
                       View Status
                     </button>
                     <button
-                      onClick={() => cancelEnquiry()}
+                      // onClick={() => setModal1(!modal1)}
                       className="btn btn-mybutton"
+                      data-bs-toggle="modal"
+                      data-bs-target=".bd-example-modal-lg-2"
                     >
                       Cancel Enquiry
                     </button>
@@ -136,6 +162,20 @@ function EnquiryDetials() {
                         >
                           Send Email
                         </button>
+
+                        {EnquiryDetials?.data?.enquiryschedules[0]?.status &&
+                          EnquiryDetials?.data?.enquiryschedules[
+                            EnquiryDetials?.data?.enquiryschedules.length - 1
+                          ]?.status === "pending" && (
+                            <>
+                              <button
+                                className="btn btn-mybutton"
+                                onClick={() => setModal(!modal)}
+                              >
+                                Postpone Measurement
+                              </button>
+                            </>
+                          )}
                         <button
                           onClick={() => {
                             navigate("/add-schedule", {
@@ -146,7 +186,23 @@ function EnquiryDetials() {
                         >
                           Assign Measurer
                         </button>
-                        {EnquiryDetials?.data?.status !== "inprogess" &&
+
+                        {EnquiryDetials?.data?.installer_tasks[0]?.status &&
+                        EnquiryDetials?.data?.installer_tasks[
+                          EnquiryDetials?.data?.installer_tasks.length - 1
+                        ]?.status === "pending" ? (
+                          <>
+                            <button
+                              className="btn btn-mybutton"
+                              // onClick={() => setModal(!modal)}
+                              data-bs-toggle="modal"
+                              data-bs-target=".bd-example-modal-lg-3"
+                            >
+                              Postpone Installer
+                            </button>
+                          </>
+                        ) : (
+                          EnquiryDetials?.data?.status !== "inprogess" &&
                           EnquiryDetials?.data?.status !== "fresh" && (
                             <button
                               onClick={() => {
@@ -161,7 +217,8 @@ function EnquiryDetials() {
                             >
                               Assign Installer
                             </button>
-                          )}
+                          )
+                        )}
 
                         {EnquiryDetials?.data?.status !== "inprogess" &&
                           EnquiryDetials?.data?.status !== "fresh" &&
@@ -180,21 +237,21 @@ function EnquiryDetials() {
                               Create Order
                             </button>
                           )}
-                        {EnquiryDetials?.data?.status !== "inprogess" &&
-                          EnquiryDetials?.data?.status !== "fresh" && (
-                            <button
-                              onClick={() => {
-                                navigate("/ViewEstimate", {
-                                  state: {
-                                    EnquiryDetials: EnquiryDetials.data,
-                                  },
-                                });
-                              }}
-                              className="btn btn-mybutton"
-                            >
-                              View Estimate
-                            </button>
-                          )}
+
+                        {EnquiryDetials?.data?.status !== "fresh" && (
+                          <button
+                            onClick={() => {
+                              navigate("/ViewEstimate", {
+                                state: {
+                                  EnquiryDetials: EnquiryDetials.data,
+                                },
+                              });
+                            }}
+                            className="btn btn-mybutton"
+                          >
+                            View Estimate
+                          </button>
+                        )}
                       </>
                     ) : null}
                   </div>
@@ -210,6 +267,7 @@ function EnquiryDetials() {
                     <h4 className="card-title">
                       Enquiry No: {EnquiryDetials?.data?.id}
                     </h4>
+                    <h3>Remark: {EnquiryDetials?.data?.remark}</h3>
                     <div style={{ display: "flex" }}>
                       <p>Selected Category: </p>
                       {Category?.map((i, index) => {
@@ -223,9 +281,7 @@ function EnquiryDetials() {
                         );
                       })}
                     </div>
-                    <p></p>
                     {/* {let measurerName=`${EnquiryDetials?.data?.enquiryschedules[EnquiryDetials?.data.enquiryschedules.length - 1]?EnquiryDetials?.data?.enquiryschedules[EnquiryDetials?.data.enquiryschedules.length - 1].user.firstName:'' EnquiryDetials?.data?.enquiryschedules[EnquiryDetials?.data.enquiryschedules.length - 1]?.user.lastName?EnquiryDetials?.data?.enquiryschedules[EnquiryDetials?.data.enquiryschedules.length - 1]?.user.lastName:''}` */}
-                    <p></p>
                   </div>
                   <div className="card-body">
                     <div className="row">
@@ -429,7 +485,7 @@ function EnquiryDetials() {
                       role="tablist"
                     >
                       {EnquiryDetials?.data &&
-                        EnquiryDetials?.data?.rooms.map((rooms, index) => (
+                        EnquiryDetials?.data?.rooms?.map((rooms, index) => (
                           <a
                             className={`list-group-item list-group-item-action text-white ${
                               index === 0 ? "active" : ""
@@ -460,7 +516,7 @@ function EnquiryDetials() {
                     </div>
                     <div className="tab-content" id="nav-tabContent1">
                       {EnquiryDetials?.data &&
-                        EnquiryDetials?.data?.rooms.map((room, index) => {
+                        EnquiryDetials?.data?.rooms?.map((room, index) => {
                           console.log("fabric", room?.selectedcurtain);
                           return (
                             <>
@@ -1179,7 +1235,7 @@ function EnquiryDetials() {
                                     <h5>Blind Description</h5>
                                     <div className="border border-1 p-3 rounded-2 mb-3">
                                       {room?.room_assets.length > 0 &&
-                                        room?.room_assets.map((arr, index) => {
+                                        room?.room_assets?.map((arr, index) => {
                                           return (
                                             <button
                                               class="rounded-pill  px-4 py-2 me-2 border active bg-primary text-white"
@@ -1731,7 +1787,7 @@ function EnquiryDetials() {
                                   <>
                                     <h5>Wallpaper Description</h5>
                                     <div className="border border-1 p-3 rounded-2 mb-3">
-                                      {room?.selectedWallpaper.map(
+                                      {room?.selectedWallpaper?.map(
                                         (arr, index) => {
                                           return (
                                             <button
@@ -1908,7 +1964,7 @@ function EnquiryDetials() {
                   >
                     <ul className="timeline">
                       {EnquiryDetials?.data?.enquirystatuses &&
-                        EnquiryDetials?.data?.enquirystatuses.map(
+                        EnquiryDetials?.data?.enquirystatuses?.map(
                           (item, index) => {
                             return (
                               <li>
@@ -1968,7 +2024,7 @@ function EnquiryDetials() {
               <span>Measurer Name: {EnquiryDetials?.data?.contactPerson}</span>
               <ul className="nav nav-pills justify-content-start mb-4">
                 {EnquiryDetials?.data &&
-                  EnquiryDetials?.data?.rooms.map((rooms, index) => (
+                  EnquiryDetials?.data?.rooms?.map((rooms, index) => (
                     <li className=" nav-item">
                       <a
                         className={`"nav-link list-group-item ${
@@ -1985,7 +2041,7 @@ function EnquiryDetials() {
               </ul>
               <div className="tab-content">
                 {EnquiryDetials?.data &&
-                  EnquiryDetials?.data?.rooms.map((rooms, index) => (
+                  EnquiryDetials?.data?.rooms?.map((rooms, index) => (
                     <>
                       <div
                         id={`navpills${index}`}
@@ -2010,7 +2066,7 @@ function EnquiryDetials() {
                           <div className="col-lg-12">
                             <ul className="nav nav-pills justify-content-start mb-4">
                               {rooms?.room_assets &&
-                                rooms?.room_assets.map((window, index) => (
+                                rooms?.room_assets?.map((window, index) => (
                                   <li className=" nav-item">
                                     <a
                                       className={` "nav-link rounded-pill  px-4 py-2 me-2 border ${
@@ -2031,7 +2087,7 @@ function EnquiryDetials() {
                                   </li>
                                 ))}
                               {rooms?.room_assets &&
-                                rooms?.room_assets.map((window, index) => (
+                                rooms?.room_assets?.map((window, index) => (
                                   <li className=" nav-item">
                                     <a
                                       className={` "nav-link rounded-pill  px-4 py-2 me-2 border ${
@@ -2171,7 +2227,7 @@ function EnquiryDetials() {
                                       <div className="col-lg-4">
                                         {rooms?.room_assets[
                                           windowBtnIndex
-                                        ]?.media.map((data) => (
+                                        ]?.media?.map((data) => (
                                           <img src={data?.file} alt="imageof" />
                                         ))}
                                       </div>
@@ -2583,11 +2639,11 @@ function EnquiryDetials() {
                                   }
                                   book={
                                     rooms?.room_assets[btnIndex]?.selectedBlind
-                                      ?.blindBorderFabric.book_name
+                                      ?.blindBorderFabric?.book_name
                                   }
                                   brandName={
                                     rooms?.room_assets[btnIndex]?.selectedBlind
-                                      ?.blindBorderFabric.brand_name
+                                      ?.blindBorderFabric?.brand_name
                                   }
                                   totalFabric={
                                     rooms?.room_assets[btnIndex]
@@ -2876,6 +2932,177 @@ function EnquiryDetials() {
           </div>
         </div>
       </div>
+
+      <div
+        class="modal fade bd-example-modal-lg-2"
+        tabindex="-1"
+        role="dialog"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Why you want to cancel inquiry</h5>
+
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <div className="mb-3 row align-items-center">
+                <div className="col-lg-12 my-1">
+                  <label className="me-sm-2">
+                    Select Reason for cancel Enquiry
+                  </label>
+                  <select
+                    className="me-sm-2 form-control"
+                    onChange={(e) => setSelectedValue(e.target.value)}
+                  >
+                    <option selected>Choose...</option>
+
+                    <option value={"Testing Enquiry"}>Testing Enquiry</option>
+                    <option value={"Cancel from client End"}>
+                      Cancel from client End
+                    </option>
+                    <option value={"Duplicate Enquiry"}>
+                      Duplicate Enquiry
+                    </option>
+                    <option value={" Incomplete Details"}>
+                      Incomplete Details
+                    </option>
+                  </select>
+                </div>
+                <div className="mb-3 row align-items-center">
+                  <label className="col-sm-12 col-form-label" htmlFor="fnf2">
+                    ID
+                  </label>
+                  <div className="col-sm-12">
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="fnf2"
+                      placeholder="outlet Password"
+                      readOnly="true"
+                      value={EnquiryDetials?.data?.id}
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="form-buttons text-end">
+                <button
+                  onClick={() => toggle1()}
+                  className="btn btn-secondary me-3"
+                  data-bs-dismiss="modal"
+                >
+                  Cancel
+                </button>
+
+                <button
+                  className="btn btn-primary"
+                  onClick={() => cancelEnquiry()}
+                >
+                  Submit
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="modal fade bd-example-modal-lg-3"
+        tabindex="-1"
+        role="dialog"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Why you want to postpone Installation</h5>
+
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <div className="mb-3 row align-items-center">
+                <div className="col-lg-12 my-1">
+                  <label className="me-sm-2">
+                    Select Reason for cancel Enquiry
+                  </label>
+                  <select
+                    className="me-sm-2 form-control"
+                    onChange={(e) => setSelectedValue(e.target.value)}
+                  >
+                    <option selected>Choose...</option>
+
+                    <option value={"Manpower Shortage"}>
+                      Manpower Shortage
+                    </option>
+                    <option value={" Material not ready"}>
+                      Material not ready
+                    </option>
+                    <option value={"Material delay from warehouse"}>
+                      Material delay from warehouse
+                    </option>
+                    <option value={"Site not ready"}>Site not ready</option>
+                    <option value={"Client not available "}>
+                      Client not available
+                    </option>
+                    <option value={"Payment outstanding "}>
+                      Payment outstanding
+                    </option>
+                    <option value={"Wooden plank not installed"}>
+                      Wooden plank not installed
+                    </option>
+                  </select>
+                </div>
+                <div className="mb-3 row align-items-center">
+                  <label className="col-sm-12 col-form-label" htmlFor="fnf2">
+                    ID
+                  </label>
+                  <div className="col-sm-12">
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="fnf2"
+                      placeholder="outlet Password"
+                      readOnly="true"
+                      value={EnquiryDetials?.data?.id}
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="form-buttons text-end">
+                <button
+                  // onClick={() => toggle1()}
+                  className="btn btn-secondary me-3"
+                  data-bs-dismiss="modal"
+                >
+                  Cancel
+                </button>
+
+                <button
+                  className="btn btn-primary"
+                  onClick={() => PostponeInstaller()}
+                >
+                  Submit
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <ReAssignmesurer
+        modal={modal}
+        toggle={(val) => toggle(val)}
+        id={EnquiryDetials?.data?.enquiryschedules}
+      />
     </>
   );
 }

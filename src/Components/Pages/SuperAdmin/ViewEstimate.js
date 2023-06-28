@@ -125,7 +125,7 @@ function ViewEstimate() {
         </tr>
         <tr>
           <th>Sno</th>
-          <th colSpan="3">Item</th>
+          <th colSpan="4">Item</th>
           <th colSpan="3">Curtain style</th>
           <th>No of panel / Width in ft</th>
           <th>Stitching price including taxes</th>
@@ -133,14 +133,14 @@ function ViewEstimate() {
           <th>Hand hamming price including taxes</th>
           <th>Lead chain price including taxes</th>
           <th>Gross amount</th>
-          <th>Dis</th>
+          {/* <th>Dis</th> */}
           <th>Net amount including taxes</th>
         </tr>
         {stitching?.map((item, index) => {
           return (
             <tr>
               <td>{index + 1}</td>
-              <td colSpan="3">{item?.title}</td>
+              <td colSpan="4">{item?.title}</td>
               <td colSpan="3">{item?.curtainStyle}</td>
               <td>{item?.noOfPanel}</td>
               <td>{item?.stitchingPrice}</td>
@@ -148,7 +148,7 @@ function ViewEstimate() {
               <td>{item?.handHammingPrice}</td>
               <td>{item?.leadChainPrice}</td>
               <td>{item?.totalPrice}</td>
-              <td>{item?.totalDiscount}</td>
+              {/* <td>{item?.totalDiscount}</td> */}
               <td>{item?.grandTotal}</td>
             </tr>
           );
@@ -205,7 +205,7 @@ function ViewEstimate() {
                 <td>{item?.mrp ? item?.mrp : item?.hardwareSqmt}</td>
                 <td>{item?.fittingCharge}</td>
                 <td>{item?.totalPrice}</td>
-                <td>{item?.dis}%</td>
+                <td>{`${item?.dis}%`}</td>
                 <td>{item?.grandTotal}</td>
               </tr>
             </>
@@ -269,7 +269,8 @@ function ViewEstimate() {
               <td>{fabric?.fittingCharge}</td>
               <td>{fabric?.hardwareSqmt}</td>
               <td>{fabric?.totalPrice}</td>
-              <td>{fabric?.totalDiscount}</td>
+              {/* <td>{fabric?.dis}</td> */}
+              <td>{`${fabric?.dis}%`}</td>
               <td>{fabric?.grandTotal}</td>
             </tr>
           );
@@ -305,8 +306,8 @@ function ViewEstimate() {
           <th colSpan={4}>Item</th>
           <th colSpan={3}>No of panel</th>
           <th colSpan={2}>Stitching price Per SQMT including taxes</th>
-          <th colSpan={2}>Gross amount</th>
-          <th>Dis</th>
+          <th colSpan={3}>Gross amount</th>
+          {/* <th>Dis</th> */}
           <th colSpan={2}>Net amount including taxes</th>
         </tr>
         {stitching?.map((item, index) => {
@@ -316,8 +317,8 @@ function ViewEstimate() {
               <td colSpan={4}>{item?.title}</td>
               <td colSpan={3}>{item?.noOfPanel}</td>
               <td colSpan={2}>{item?.stitchingPrice}</td>
-              <td colSpan={2}>{item?.totalPrice}</td>
-              <td>{item?.totalDiscount}</td>
+              <td colSpan={3}>{item?.totalPrice}</td>
+              {/* <td>{item?.totalDiscount}</td> */}
               <td colSpan={2}>{item?.grandTotal}</td>
             </tr>
           );
@@ -381,7 +382,7 @@ function ViewEstimate() {
               <td>{fabric?.fittingCharge}</td>
               <td>{fabric?.hardwareSqmt}</td>
               <td>{fabric?.totalPrice}</td>
-              <td>{fabric?.totalDiscount}</td>
+              <td>{`${fabric?.dis} %`}</td>
               <td>{fabric?.grandTotal}</td>
             </tr>
           );
@@ -397,7 +398,6 @@ function ViewEstimate() {
     }, 0);
 
     //Helper.log("sofa", fabrics);
-    console.log("first", wallpaper);
 
     if (fabrics?.length == 0) {
       return "";
@@ -437,7 +437,7 @@ function ViewEstimate() {
 
               <td colSpan="1">{item?.price}</td>
               <td colSpan="2">{item?.totalPrice}</td>
-              <td colSpan="2">{item?.discount}%</td>
+              <td colSpan="2">{`${item?.discount}%`}</td>
               <td colSpan="3">{item?.grandTotal}</td>
             </tr>
           );
@@ -542,7 +542,7 @@ function ViewEstimate() {
                 <td>{fabric?.totalFabricInM}</td>
                 <td>{fabric?.mrp}</td>
                 <td>{fabric?.totalPrice}</td>
-                <td>{fabric?.totalDiscount}</td>
+                <td>{`${fabric?.dis} %`}</td>
                 <td>{fabric?.grandTotal}</td>
               </tr>
             </>
@@ -554,6 +554,7 @@ function ViewEstimate() {
   };
   const renderSofa = (sofa = [], colspan = 16) => {
     const fabrics = sofa?.sofaList ?? [];
+    console.log("ress", sofa);
 
     const totalAmount = fabrics?.reduce((sum, fabric) => {
       return (sum = +sum + +fabric?.grandTotal);
@@ -587,6 +588,7 @@ function ViewEstimate() {
         )
         {fabrics?.map((item, index) => (
           <tr>
+            {console.log("iteemmmm=======+++>>>>>", item?.totalDiscount)}
             <td>{index + 1}</td>
             <td colSpan="4">{item?.title}</td>
             <td colSpan="1">{item?.fabric}</td>
@@ -594,7 +596,7 @@ function ViewEstimate() {
             <td colSpan="1">{item?.qty}</td>
             <td colSpan="1">{item?.price}</td>
             <td colSpan="2">{item?.totalPrice}</td>
-            <td colSpan="2">{item?.discount}%</td>
+            <td colSpan="2">{`${item?.totalDiscount}%`}</td>
             <td colSpan="3">{item?.grandTotal}</td>
           </tr>
         ))}
@@ -691,7 +693,7 @@ function ViewEstimate() {
 
               <td colspan="1">{item?.price}</td>
               <td colspan="2">{item?.totalPrice}</td>
-              <td colspan="2">{item?.discount}%</td>
+              <td colspan="2">{`${item?.dis}%`}</td>
               <td colspan="3">{item?.grandTotal}</td>
             </tr>
           );
@@ -936,6 +938,7 @@ function ViewEstimate() {
   };
 
   const getRoomStyles = (room) => {
+    console.log("ress roommm", room?.roomInfo);
     const roomDetail = room?.roomInfo;
 
     const getDataFromRoomByKey = (key) => {
@@ -1200,7 +1203,11 @@ function ViewEstimate() {
     };
 
     if (roomDetail) {
-      const windowList = Array(roomDetail?.numberOfWindow).fill(1);
+      let windowList = Array(roomDetail?.numberOfWindow).fill(1);
+      if (windowList.length === 0) {
+        windowList.push(0);
+      }
+
       const room_assets = roomDetail?.room_assets
         ? [...roomDetail?.room_assets]
         : [];
@@ -1215,7 +1222,10 @@ function ViewEstimate() {
       if (Helper.isHaveCategory(roomCategory, "Wallpaper")) {
         wallpaperStyle = roomDetail?.selectedWallpaper;
       }
-
+      console.log("windo listtt", windowList);
+      // {
+      //   windowList.length === 0 && windowList.length === 1;
+      // }
       windowList.map((_, index) => {
         const assetId = _["assetId"] ? _["assetId"] : undefined;
         const window_width = getAssetDataByKey(room_assets, index, "width");
@@ -2481,14 +2491,18 @@ function ViewEstimate() {
     return "";
   };
 
-  const renderTotalEnquiryAmount = (amount, deposit = 0, ladder) => {
+  const renderTotalEnquiryAmount = (
+    amount,
+    deposit = 0,
+    ladder,
+    cartageAmount
+  ) => {
     const ladderCharge = ladder?.price;
-    console.log("labberrrr", ladder);
     const getGrandTotal = () => {
       if (deposit && +deposit > 0) {
-        return +ladderCharge + amount - +deposit;
+        return +ladderCharge + +cartageAmount + amount - +deposit;
       }
-      return +ladderCharge + amount;
+      return +ladderCharge + amount + +cartageAmount;
     };
     if (amount < 0) {
       return ``;
@@ -2499,28 +2513,7 @@ function ViewEstimate() {
           <th colSpan={2}>Total Room amount</th>
           <th colSpan={1}>{getPriceFormate(amount)}</th>
         </tr>
-        {ladder?.name ? (
-          <tr>
-            <th colSpan={2}>
-              <p>
-                Ladder charge ({ladder?.name})
-                <br />
-                <span style={{ color: "red" }}>{ladder?.message}</span>
-              </p>
-            </th>
-            <th colSpan={1}>{getPriceFormate(ladder?.price)}</th>
-          </tr>
-        ) : (
-          ``
-        )}
-        <tr>
-          <th colspan="2">Cartage amount</th>
-          <th colspan="1">{cartageAmount}</th>
-        </tr>
-        <tr>
-          <th colspan="2">Grand total</th>
-          <th colspan="1">{getPriceFormate(getGrandTotal())}</th>
-        </tr>
+
         {+deposit > 0 ? (
           <tr>
             <th colSpan={2}>Deposit amount</th>
@@ -2530,9 +2523,26 @@ function ViewEstimate() {
           ``
         )}
 
+        {ladder?.name ? (
+          <tr>
+            <th colSpan={2}>
+              <p>
+                Ladder charge ({ladder?.name})
+                <span style={{ color: "red" }}>{ladder?.message}</span>
+              </p>
+            </th>
+            <th colSpan={1}>{getPriceFormate(ladder?.price)}</th>
+          </tr>
+        ) : (
+          ``
+        )}
         <tr>
-          <th colSpan="2">Grand total</th>
-          <th colSpan="1">{getPriceFormate(getGrandTotal())}</th>
+          <th colSpan={2}>Cartage amount</th>
+          <th colSpan={1}>{cartageAmount}</th>
+        </tr>
+        <tr>
+          <th colSpan={2}>Grand total</th>
+          <th colSpan={1}>{getPriceFormate(getGrandTotal())}</th>
         </tr>
       </>
     );
@@ -2682,6 +2692,7 @@ function ViewEstimate() {
               {console.log("rooms", rooms)}
               {rooms?.length > 0
                 ? rooms?.map((room, roomIndex) => {
+                    // console.log("riooooommm", room);
                     const styles = getRoomStyles(room);
 
                     return (
@@ -2701,7 +2712,6 @@ function ViewEstimate() {
 
                           <td>{getCategoryNames(room)}</td>
                           <td>
-                            {console.log("styles", styles)}
                             {styles?.map((roomStyle, styleIndex) => {
                               const totalRoom = getTotalWindowPrice(roomStyle);
 
@@ -2733,15 +2743,13 @@ function ViewEstimate() {
                             })}
                           </td>
                         </tr>
-                        {console.log(
-                          "roomdata",
-                          roomIndex === rooms.length - 1
-                        )}
+
                         {roomIndex === rooms.length - 1
                           ? renderTotalEnquiryAmount(
                               totalEnquiryAmount,
                               depositAmount,
-                              getLadder()
+                              getLadder(),
+                              cartageAmount
                             )
                           : ``}
                       </table>
