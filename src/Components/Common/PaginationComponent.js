@@ -1,18 +1,17 @@
-import React from 'react'
-import {
-  Pagination,
-  PaginationItem,
-  PaginationLink
-} from 'reactstrap'
+import React from "react";
+import { Pagination, PaginationItem, PaginationLink } from "reactstrap";
 
-const PaginationComponent = ({ currentPage, setCurrentPage, setCallApi, totalPage, handlePageClick }) => {
+const PaginationComponent = ({
+  currentPage,
+  setCurrentPage,
+  setCallApi,
+  totalPage,
+  handlePageClick,
+}) => {
   return (
     <>
       <Pagination aria-label="Page navigation example">
-        <PaginationItem
-          disabled={currentPage <= 1}
-          className="page-item"
-        >
+        <PaginationItem disabled={currentPage <= 1} className="page-item">
           <PaginationLink
             className="page-link"
             onClick={(e) => {
@@ -52,7 +51,10 @@ const PaginationComponent = ({ currentPage, setCurrentPage, setCallApi, totalPag
             </PaginationLink>
           </PaginationItem>
         ))}
-        <PaginationItem disabled={currentPage >= totalPage} className="page-item">
+        <PaginationItem
+          disabled={currentPage >= totalPage}
+          className="page-item"
+        >
           <PaginationLink
             className="page-link"
             onClick={(e) => {
@@ -64,7 +66,10 @@ const PaginationComponent = ({ currentPage, setCurrentPage, setCallApi, totalPag
             href="javascript:void(0);"
           />
         </PaginationItem>
-        <PaginationItem disabled={currentPage >= totalPage} className="page-item">
+        <PaginationItem
+          disabled={currentPage >= totalPage}
+          className="page-item"
+        >
           <PaginationLink
             className="page-link"
             onClick={(e) => {
@@ -78,7 +83,7 @@ const PaginationComponent = ({ currentPage, setCurrentPage, setCallApi, totalPag
         </PaginationItem>
       </Pagination>
     </>
-  )
-}
+  );
+};
 
-export default PaginationComponent
+export default PaginationComponent;

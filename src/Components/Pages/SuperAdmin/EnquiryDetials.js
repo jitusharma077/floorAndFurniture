@@ -44,6 +44,9 @@ function EnquiryDetials() {
           setCustomerId(response?.data?.customer?.id);
           if (response.data.rooms.length > 0) {
             setIsRoomData(true);
+            setIcName(
+              `${response?.data?.user?.firstName} ${response?.data?.user?.lastName}`
+            );
           }
         }
       }
@@ -99,6 +102,14 @@ function EnquiryDetials() {
     });
   };
 
+  const printPageArea = (areaID) => {
+    var printContent = document.getElementById(areaID).innerHTML;
+    var originalContent = document.body.innerHTML;
+    document.body.innerHTML = printContent;
+    window.print();
+    document.body.innerHTML = originalContent;
+  };
+
   return (
     <>
       {console.log("lenghtcustomerrrrrr", CustomerId)}
@@ -120,142 +131,148 @@ function EnquiryDetials() {
       >
         <SuperAdminHeader />
         <SuperAdminSidebar />
-        <div className="content-body">
+        <div className="Buttons">
+          <div className="d-flex">
+            <button
+              data-bs-toggle="modal"
+              data-bs-target="#exampleModalCenter"
+              className="btn btn-mybutton"
+            >
+              View Status
+            </button>
+            <button
+              className="btn btn-mybutton"
+              onClick={() => printPageArea("printableArea")}
+            >
+              Print page
+            </button>
+            <button
+              // onClick={() => setModal1(!modal1)}
+              className="btn btn-mybutton"
+              data-bs-toggle="modal"
+              data-bs-target=".bd-example-modal-lg-2"
+            >
+              Cancel Enquiry
+            </button>
+
+            {isRoomData === true ? (
+              <>
+                {EnquiryDetials?.data?.status !== "fresh" &&
+                  EnquiryDetials?.data?.status !== "inprogess" && (
+                    <button
+                      className="btn btn-mybutton"
+                      data-bs-toggle="modal"
+                      data-bs-target=".bd-example-modal-lg"
+                    >
+                      View Measurements
+                    </button>
+                  )}
+
+                <button
+                  onClick={() => sendEmail()}
+                  className="btn btn-mybutton"
+                >
+                  Send Email
+                </button>
+
+                {EnquiryDetials?.data?.enquiryschedules[0]?.status &&
+                  EnquiryDetials?.data?.enquiryschedules[
+                    EnquiryDetials?.data?.enquiryschedules.length - 1
+                  ]?.status === "pending" && (
+                    <>
+                      <button
+                        className="btn btn-mybutton"
+                        onClick={() => setModal(!modal)}
+                      >
+                        Postpone Measurement
+                      </button>
+                    </>
+                  )}
+                <button
+                  onClick={() => {
+                    navigate("/add-schedule", {
+                      state: { data: enquiryId },
+                    });
+                  }}
+                  className="btn btn-mybutton"
+                >
+                  Assign Measurer
+                </button>
+
+                {EnquiryDetials?.data?.installer_tasks[0]?.status &&
+                EnquiryDetials?.data?.installer_tasks[
+                  EnquiryDetials?.data?.installer_tasks.length - 1
+                ]?.status === "pending" ? (
+                  <>
+                    <button
+                      className="btn btn-mybutton"
+                      // onClick={() => setModal(!modal)}
+                      data-bs-toggle="modal"
+                      data-bs-target=".bd-example-modal-lg-3"
+                    >
+                      Postpone Installer
+                    </button>
+                  </>
+                ) : (
+                  EnquiryDetials?.data?.status !== "inprogess" &&
+                  EnquiryDetials?.data?.status !== "fresh" && (
+                    <button
+                      onClick={() => {
+                        navigate("/AddInstalerSchdule", {
+                          state: {
+                            enquiryId: enquiryId,
+                            customerId: CustomerId,
+                          },
+                        });
+                      }}
+                      className="btn btn-mybutton"
+                    >
+                      Assign Installer
+                    </button>
+                  )
+                )}
+
+                {EnquiryDetials?.data?.status !== "inprogess" &&
+                  EnquiryDetials?.data?.status !== "fresh" &&
+                  EnquiryDetials?.data?.orders?.length === 0 && (
+                    <button
+                      onClick={() => {
+                        navigate("/CreateOrder", {
+                          state: {
+                            enquiryId: enquiryId,
+                            customerId: CustomerId,
+                          },
+                        });
+                      }}
+                      className="btn btn-mybutton"
+                    >
+                      Create Order
+                    </button>
+                  )}
+
+                {EnquiryDetials?.data?.status !== "fresh" && (
+                  <button
+                    onClick={() => {
+                      navigate("/ViewEstimate", {
+                        state: {
+                          EnquiryDetials: EnquiryDetials.data,
+                        },
+                      });
+                    }}
+                    className="btn btn-mybutton"
+                  >
+                    View Estimate
+                  </button>
+                )}
+              </>
+            ) : null}
+          </div>
+        </div>
+        <div className="content-body" id="printableArea">
           {/* row */}
           <div className="container-fluid">
             <div className="row">
               <div className="col-xl-11">
-                <div className="Buttons">
-                  <div className="d-flex">
-                    <button
-                      data-bs-toggle="modal"
-                      data-bs-target="#exampleModalCenter"
-                      className="btn btn-mybutton"
-                    >
-                      View Status
-                    </button>
-                    <button
-                      // onClick={() => setModal1(!modal1)}
-                      className="btn btn-mybutton"
-                      data-bs-toggle="modal"
-                      data-bs-target=".bd-example-modal-lg-2"
-                    >
-                      Cancel Enquiry
-                    </button>
-
-                    {isRoomData === true ? (
-                      <>
-                        {EnquiryDetials?.data?.status !== "fresh" &&
-                          EnquiryDetials?.data?.status !== "inprogess" && (
-                            <button
-                              className="btn btn-mybutton"
-                              data-bs-toggle="modal"
-                              data-bs-target=".bd-example-modal-lg"
-                            >
-                              View Measurements
-                            </button>
-                          )}
-
-                        <button
-                          onClick={() => sendEmail()}
-                          className="btn btn-mybutton"
-                        >
-                          Send Email
-                        </button>
-
-                        {EnquiryDetials?.data?.enquiryschedules[0]?.status &&
-                          EnquiryDetials?.data?.enquiryschedules[
-                            EnquiryDetials?.data?.enquiryschedules.length - 1
-                          ]?.status === "pending" && (
-                            <>
-                              <button
-                                className="btn btn-mybutton"
-                                onClick={() => setModal(!modal)}
-                              >
-                                Postpone Measurement
-                              </button>
-                            </>
-                          )}
-                        <button
-                          onClick={() => {
-                            navigate("/add-schedule", {
-                              state: { data: enquiryId },
-                            });
-                          }}
-                          className="btn btn-mybutton"
-                        >
-                          Assign Measurer
-                        </button>
-
-                        {EnquiryDetials?.data?.installer_tasks[0]?.status &&
-                        EnquiryDetials?.data?.installer_tasks[
-                          EnquiryDetials?.data?.installer_tasks.length - 1
-                        ]?.status === "pending" ? (
-                          <>
-                            <button
-                              className="btn btn-mybutton"
-                              // onClick={() => setModal(!modal)}
-                              data-bs-toggle="modal"
-                              data-bs-target=".bd-example-modal-lg-3"
-                            >
-                              Postpone Installer
-                            </button>
-                          </>
-                        ) : (
-                          EnquiryDetials?.data?.status !== "inprogess" &&
-                          EnquiryDetials?.data?.status !== "fresh" && (
-                            <button
-                              onClick={() => {
-                                navigate("/AddInstalerSchdule", {
-                                  state: {
-                                    enquiryId: enquiryId,
-                                    customerId: CustomerId,
-                                  },
-                                });
-                              }}
-                              className="btn btn-mybutton"
-                            >
-                              Assign Installer
-                            </button>
-                          )
-                        )}
-
-                        {EnquiryDetials?.data?.status !== "inprogess" &&
-                          EnquiryDetials?.data?.status !== "fresh" &&
-                          EnquiryDetials?.data?.orders?.length === 0 && (
-                            <button
-                              onClick={() => {
-                                navigate("/CreateOrder", {
-                                  state: {
-                                    enquiryId: enquiryId,
-                                    customerId: CustomerId,
-                                  },
-                                });
-                              }}
-                              className="btn btn-mybutton"
-                            >
-                              Create Order
-                            </button>
-                          )}
-
-                        {EnquiryDetials?.data?.status !== "fresh" && (
-                          <button
-                            onClick={() => {
-                              navigate("/ViewEstimate", {
-                                state: {
-                                  EnquiryDetials: EnquiryDetials.data,
-                                },
-                              });
-                            }}
-                            className="btn btn-mybutton"
-                          >
-                            View Estimate
-                          </button>
-                        )}
-                      </>
-                    ) : null}
-                  </div>
-                </div>
                 <div className="card">
                   <div
                     className={

@@ -181,7 +181,10 @@ function CustomerDetials() {
                                 <button
                                   onClick={() => {
                                     navigate("/EnquiryDetials", {
-                                      state: { data: item.id },
+                                      state: {
+                                        data: item.id,
+                                        category: item?.products,
+                                      },
                                     });
                                   }}
                                   className="btn btn-primary btn-sm"

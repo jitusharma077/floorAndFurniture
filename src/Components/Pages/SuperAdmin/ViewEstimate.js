@@ -8,7 +8,7 @@ import { Helper } from "../../Utility/helper";
 function ViewEstimate() {
   const location = useLocation();
   const type = location.state.EnquiryDetials?.id;
-  // console.log("typeee", location.state.EnquiryDetials);
+  console.log("typeee", location.state.EnquiryDetials?.service_amount);
   const [getAllEstimateData, setAllEstimateData] = useState([]);
   const [Loading, setLoading] = useState(false);
   const [EnquiryDetials, getEnquiryDetials] = useState([]);
@@ -38,6 +38,13 @@ function ViewEstimate() {
   const email = customer?.primary_email ?? "";
   const Gst = customer?.GST ?? "Not found";
   const icUser = EnquiryDetials?.user ?? "";
+  const serviceAmount = location.state.EnquiryDetials?.service_amount
+    ? location.state.EnquiryDetials?.service_amount
+    : 0;
+  const expected_installation_date = EnquiryDetials?.expected_installation_date;
+  const expected_delivery_date = EnquiryDetials?.expected_delivery_date;
+
+  // console.log("Enqqq expected_delivery_date", EnquiryDetials);
 
   const renderTotalRoomAmount = (amount, colspan = 14) => {
     if (!amount) {
@@ -107,6 +114,7 @@ function ViewEstimate() {
     }
     return total;
   };
+
   const renderStitchingCost = (window, colspan = 16) => {
     const stitching = window?.stitchingList ?? [];
 
@@ -411,34 +419,33 @@ function ViewEstimate() {
 
         <tr>
           <th>Sno</th>
-          <th colSpan="1">Item</th>
-          <th colSpan="4">Item name</th>
-          <th>Qty</th>
-
-          <th>No of panel</th>
-          <th>Total Quantity</th>
-          <th>Fabric MRP per SQMT</th>
-          <th>Fitting charge</th>
-          <th>Hardware Per RFT including taxes</th>
-
-          <th>Gross amount</th>
-          <th>Dis </th>
-          <th>Net amount including taxes</th>
+          <th colSpan={1}>Item</th>
+          <th colSpan={1}>Item Name</th>
+          <th colSpan={1}>Type</th>
+          <th colSpan={1}>Wall width in cm</th>
+          <th colSpan={1}>Wall length in cm</th>
+          <th colSpan={1}>Area in SQMT</th>
+          <th colSpan={1}>Quantity</th>
+          <th colSpan={1}>MRP per roll</th>
+          <th colSpan={2}>Gross Amount</th>
+          <th colSpan={2}>Dis</th>
+          <th colSpan={3}>Net amount including taxes</th>
         </tr>
         {fabrics?.map((item, index) => {
           return (
             <tr>
               <td>{index + 1}</td>
-              <td colSpan="3">{item?.title}</td>
-              <td colSpan="1">{item?.fabric}</td>
-              <td colSpan="1">{item?.type}</td>
-              <td colSpan="1">{item?.width}</td>
-              <td colSpan="1">{item?.qty}</td>
-
-              <td colSpan="1">{item?.price}</td>
-              <td colSpan="2">{item?.totalPrice}</td>
-              <td colSpan="2">{`${item?.discount}%`}</td>
-              <td colSpan="3">{item?.grandTotal}</td>
+              <td colSpan={1}>{item?.title}</td>
+              <td colSpan={1}>{item?.fabric}</td>
+              <td colSpan={1}>{item?.type}</td>
+              <td colSpan={1}>{item?.wall_width}</td>
+              <td colSpan={1}>{item?.wall_length}</td>
+              <td colSpan={1}>{item?.width}</td>
+              <td colSpan={1}>{item?.qty}</td>
+              <td colSpan={1}>{item?.price}</td>
+              <td colSpan={2}>{item?.totalPrice}</td>
+              <td colSpan={2}>{item?.discount}%</td>
+              <td colSpan={3}>{item?.grandTotal}</td>
             </tr>
           );
         })}
@@ -588,7 +595,7 @@ function ViewEstimate() {
         )
         {fabrics?.map((item, index) => (
           <tr>
-            {console.log("iteemmmm=======+++>>>>>", item?.totalDiscount)}
+            {/* {console.log("iteemmmm=======+++>>>>>", item?.totalDiscount)} */}
             <td>{index + 1}</td>
             <td colSpan="4">{item?.title}</td>
             <td colSpan="1">{item?.fabric}</td>
@@ -1135,6 +1142,9 @@ function ViewEstimate() {
       width = "",
       installationCharge = "",
       primerPrice,
+      door_cut_cost,
+      wall_width,
+      wall_length,
     }) => {
       const _totalPrice = qty * price;
 
@@ -1153,6 +1163,9 @@ function ViewEstimate() {
         width,
         installationCharge,
         primerPrice: getPriceFormate(primerPrice),
+        door_cut_cost: getPriceFormate(door_cut_cost),
+        wall_width,
+        wall_length,
       };
     };
 
@@ -1256,6 +1269,24 @@ function ViewEstimate() {
         const sofa = getDataFromRoomByKey("sofa");
         const flooring = getDataFromRoomByKey("flooring");
         const wallpaper = getDataFromRoomByKey("Wallpaper");
+
+        const getWallBreadthAndLength = (index) => {
+          const obj = {
+            breadth: 0,
+            length: 0,
+          };
+
+          if (wallpaperStyle[index]) {
+            if (wallpaperStyle[index]?.wallpaperareas[0]) {
+              obj["breadth"] =
+                wallpaperStyle[index]?.wallpaperareas[0]?.windowBreadth;
+              obj["length"] =
+                wallpaperStyle[index]?.wallpaperareas[0]?.windowLength;
+            }
+          }
+
+          return obj;
+        };
 
         if (curtain) {
           if (curtain?.fabric1 && curtain?.fabric1[index]) {
@@ -2351,12 +2382,13 @@ function ViewEstimate() {
           }
         }
 
-        if (wallpaperStyle && wallpaper) {
+        if (index == 0 && wallpaperStyle && wallpaper) {
           const walls =
             wallpaper?.wall_information?.length > 0
               ? [...wallpaper?.wall_information]
               : [];
-          walls?.map((_item) => {
+          walls?.map((_item, _index) => {
+            const wall_data = getWallBreadthAndLength(_index);
             if (Helper.isWallpaperTypeMural(_item?.type)) {
               wallpaperList?.push(
                 getDataForFlooring({
@@ -2371,6 +2403,8 @@ function ViewEstimate() {
                   grandTotal: _item?.netAmount,
                   primerPrice: _item?.primer_price,
                   totalPrice: _item?.mural_cost,
+                  wall_width: wall_data.breadth,
+                  wall_length: wall_data.length,
                 })
               );
 
@@ -2400,6 +2434,8 @@ function ViewEstimate() {
                   grandTotal: _item?.netAmount,
                   primerPrice: _item?.primer_price,
                   totalPrice: _item?.total_roll_cost,
+                  wall_width: wall_data.breadth,
+                  wall_length: wall_data.length,
                 })
               );
 
@@ -2495,15 +2531,21 @@ function ViewEstimate() {
     amount,
     deposit = 0,
     ladder,
-    cartageAmount
+    cartageAmount,
+    serviceAmount = 0
   ) => {
     const ladderCharge = ladder?.price;
     const getGrandTotal = () => {
       if (deposit && +deposit > 0) {
-        return +ladderCharge + +cartageAmount + amount - +deposit;
+        return (
+          +ladderCharge + +cartageAmount + amount - +deposit + +serviceAmount
+        );
       }
-      return +ladderCharge + amount + +cartageAmount;
+      return +ladderCharge + amount + +cartageAmount + +serviceAmount;
     };
+    if (amount < 0) {
+      return ``;
+    }
     if (amount < 0) {
       return ``;
     }
@@ -2541,6 +2583,10 @@ function ViewEstimate() {
           <th colSpan={1}>{cartageAmount}</th>
         </tr>
         <tr>
+          <th colSpan={2}>Service amount</th>
+          <th colSpan={1}>{serviceAmount}</th>
+        </tr>
+        <tr>
           <th colSpan={2}>Grand total</th>
           <th colSpan={1}>{getPriceFormate(getGrandTotal())}</th>
         </tr>
@@ -2557,6 +2603,12 @@ function ViewEstimate() {
   };
 
   const getIcName = () => {
+    if (icUser?.firstName) {
+      return icUser?.firstName + " " + icUser?.lastName;
+    }
+    return "";
+  };
+  const getAssetimateDate = () => {
     if (icUser?.firstName) {
       return icUser?.firstName + " " + icUser?.lastName;
     }
@@ -2655,6 +2707,80 @@ function ViewEstimate() {
                               {renderHeaderDetails("Address ", getAddress())}
                               {renderHeaderDetails("Email", email)}
                               {renderHeaderDetails("GST No", Gst)}
+                              <div style={{ display: "flex" }}>
+                                <p
+                                  style={{
+                                    marginRight: 30,
+                                    paddingLeft: 20,
+                                    paddingTop: 5,
+                                  }}
+                                >
+                                  expected delivery date
+                                </p>
+                                <p
+                                  style={{
+                                    marginRight: 30,
+                                    paddingLeft: 20,
+                                    paddingTop: 5,
+                                  }}
+                                >
+                                  {expected_delivery_date}
+                                </p>
+                              </div>
+                              <div style={{ display: "flex" }}>
+                                <p
+                                  style={{
+                                    marginRight: 30,
+                                    paddingLeft: 20,
+                                    paddingTop: 5,
+                                  }}
+                                >
+                                  expected installation date
+                                </p>
+                                <p
+                                  style={{
+                                    marginRight: 30,
+                                    paddingLeft: 20,
+                                    paddingTop: 5,
+                                  }}
+                                >
+                                  {expected_installation_date}
+                                </p>
+                              </div>
+                              <div style={{ display: "flex" }}>
+                                <p
+                                  style={{
+                                    marginRight: 30,
+                                    paddingLeft: 20,
+                                    paddingTop: 5,
+                                  }}
+                                >
+                                  Measurer
+                                </p>
+                                <p
+                                  style={{
+                                    marginRight: 30,
+                                    paddingLeft: 20,
+                                    paddingTop: 5,
+                                  }}
+                                >
+                                  {`${
+                                    EnquiryDetials?.enquiryschedules?.length > 0
+                                      ? EnquiryDetials?.enquiryschedules[
+                                          EnquiryDetials?.enquiryschedules
+                                            ?.length - 1
+                                        ]?.user?.firstName
+                                      : "Not assigned"
+                                  } ${
+                                    EnquiryDetials?.enquiryschedules?.length > 0
+                                      ? EnquiryDetials?.enquiryschedules[
+                                          EnquiryDetials?.enquiryschedules
+                                            ?.length - 1
+                                        ]?.user?.lastName
+                                      : ""
+                                  }`}
+                                </p>
+                              </div>
                             </div>
                             <div
                               align="center"
@@ -2749,7 +2875,8 @@ function ViewEstimate() {
                               totalEnquiryAmount,
                               depositAmount,
                               getLadder(),
-                              cartageAmount
+                              cartageAmount,
+                              serviceAmount
                             )
                           : ``}
                       </table>

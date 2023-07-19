@@ -54444,3 +54444,7 @@ html {
   text-decoration: none;
   background-color: #f8f9fa;
 }
+
+.pagination {
+  overflow: auto;
+}
