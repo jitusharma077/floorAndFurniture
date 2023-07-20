@@ -197,12 +197,12 @@ function SearchStock() {
                                 <td>1</td>
                                 <td>ds</td>
                                 <td>0</td>
-                                                                <td>32</td> 
+                                 <td>32</td> 
                                  <td>
-                                                                <button className="btn btn-primary">
-                                                                    View
-                                                                </button>
-                                                            </td>                                 
+                                    <button className="btn btn-primary">
+                                       View
+                                     </button>
+                                 </td>                                 
                               </tr>                        
                         </tbody>
                       </table>
