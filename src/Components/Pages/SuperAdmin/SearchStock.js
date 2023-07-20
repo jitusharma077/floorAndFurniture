@@ -133,12 +133,12 @@ function SearchStock() {
                                 <td>0</td>
                                 <td>32</td>
                                  <td>
-                                                                <button className="btn btn-primary">
-                                                                    <Link to="/search-item-detail">
+                                    <button className="btn btn-primary">
+                                         <Link to="/search-item-detail">
                                              View
                                       </Link>
-                                                                </button>
-                                                            </td>                                 
+                                         </button>
+                                </td>                                 
                               </tr>                        
                         </tbody>
                       </table>
