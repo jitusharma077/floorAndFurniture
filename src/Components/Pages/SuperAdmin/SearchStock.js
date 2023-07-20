@@ -156,7 +156,7 @@ function SearchStock() {
                             <th>Code</th>
                             <th>Name</th>
                             <th>Qty inv</th>
-                                                                <th>Pieces</th>
+                            <th>Pieces</th>
                             <th>Action</th>                                    
                           </tr>
                         </thead>
