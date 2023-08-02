@@ -31,7 +31,8 @@ function CancelEnquiry({ modal1, toggle1, id }) {
 
   return (
     <Modal isOpen={modal1} toggle1={toggle1}>
-      <ModalHeader>Why you want to cancel Enquiry</ModalHeader>
+      <ModalHeader>Why you want to cancel Enquiry
+      </ModalHeader>
       <ModalBody>
         <form onSubmit={handleSubmit(CreateNewOutlet)}>
           <div className="mb-3 row align-items-center">

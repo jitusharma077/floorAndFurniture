@@ -1,8 +1,22 @@
+import { useEffect, useState } from "react";
 import SuperAdminHeader from "./Common/SuperAdminHeader";
 import SuperAdminSidebar from "./Common/SuperAdminSidebar";
 import { Table } from "reactstrap";
+import { GetDataWithToken } from "../../ApiHelper/ApiHelper";
+import { useLocation } from "react-router-dom";
 
 function InvoiceDetails() {
+    const location = useLocation();
+    console.log('invoiceDetails', location);
+    const [detailData, setDetailData] = useState();
+    useEffect(() => {
+        GetDataWithToken(`superadmin/get-invoice-details?invoiceId=${location?.state?.data}`).then((response) => {
+            if (response.status === true) {
+                setDetailData(response?.data);
+            }
+        })
+    },[])
+
     return (
        <>
             <div
@@ -37,38 +51,38 @@ function InvoiceDetails() {
                                         <ul class="list-group list-group-flush">
                                                 <li class="list-group-item d-flex justify-content-between ">                                          
                                                     <strong>Invoice No:</strong>
-                                                      <span class="mb-0">SO-2324-12985</span>
+                                                    <span class="mb-0">{ detailData?.Code}</span>
                                                 </li>
                                             <li class="list-group-item d-flex justify-content-between">
                                                     
                                                     <strong>Invoice Date:</strong>
-                                                    <span class="mb-0">july 19,2023</span>
+                                                    <span class="mb-0">{ detailData?.InvoiceDate?.split('T')?.[0] }</span>
                                             </li>
                                             <li class="list-group-item d-flex justify-content-between">
                                                    
                                                     <strong>Order No:</strong>
-                                                     <span class="mb-0">7836010872</span>
+                                                    <span class="mb-0">{detailData?.OrderCode }</span>
                                                 </li>
                                                 <li class="list-group-item d-flex justify-content-between">
                                                     
                                                     <strong>Order Date:</strong>
-                                                    <span class="mb-0">18 Jul 2023, 13:03 SEND TO SEC 32</span>
+                                                    <span class="mb-0">{ detailData?.OrderDate?.split('T')?.[0] }</span>
                                             </li>
                                                 
                                                <li class="list-group-item d-flex justify-content-between">
                                                     
                                                     <strong>AWB No.</strong>
-                                                    <span class="mb-0">83601087</span>
+                                                    <span class="mb-0">{detailData?.AwbNo }</span>
                                                 </li>
                                                  <li class="list-group-item d-flex justify-content-between">
                                                     
                                                     <strong>Type</strong>
-                                                    <span class="mb-0">Credit Note</span>
+                                                    <span class="mb-0">{ detailData?.Type }</span>
                                                 </li>
                                                  <li class="list-group-item d-flex justify-content-between">
                                                     
                                                     <strong>Delivery Name</strong>
-                                                    <span class="mb-0">FFG-Concept Store-Head office</span>
+                                                    <span class="mb-0">{ detailData?.DeliveryName }</span>
                                                 </li>
                                             </ul>
                                         </div>
@@ -77,32 +91,32 @@ function InvoiceDetails() {
                                         <ul class="list-group list-group-flush">
                                                 <li class="list-group-item d-flex justify-content-between ">                                          
                                                     <strong>Delivery Mode</strong>
-                                                      <span class="mb-0">shipping</span>
+                                                    <span class="mb-0">{ detailData?.DeliveryMode}</span>
                                                 </li>
                                             <li class="list-group-item d-flex justify-content-between">
                                                     
                                                     <strong>Transport</strong>
-                                                    <span class="mb-0">--</span>
+                                                    <span class="mb-0">{ detailData?.Transport }</span>
                                                 </li>
                                                 <li class="list-group-item d-flex justify-content-between">
                                                    
                                                     <strong>Sales Person Name</strong>
-                                                     <span class="mb-0">Anamika</span>
+                                                    <span class="mb-0">{ detailData?.SalesPersonName }</span>
                                                 </li>
                                             <li class="list-group-item d-flex justify-content-between">
                                                    
                                                     <strong>Sales Person Email</strong>
-                                                     <span class="mb-0">retailbd@fandf.in</span>
+                                                    <span class="mb-0">{detailData?.SalesPersonEmail?.split(';')?.map((data) => <p style={{justifyContent:"end"}}>{data}</p>)}</span>
                                                 </li>
                                                 <li class="list-group-item d-flex justify-content-between">
                                                     
                                                     <strong>Sales Person Contact</strong>
-                                                    <span class="mb-0">8092432016</span>
+                                                    <span class="mb-0">{ detailData?.SalesPersonContact}</span>
                                             </li>
                                                 <li class="list-group-item d-flex justify-content-between">
                                                     
                                                     <strong>Remarks:</strong>
-                                                    <span class="mb-0">Due to material recd. back vide inv-I-2324-08670/13-Jun-23</span>
+                                                    <span class="mb-0">{ detailData?.Remarks}</span>
                                             </li>
                                             </ul>
                                         </div>
@@ -124,14 +138,16 @@ function InvoiceDetails() {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                            <td>
-                                               BOOK ESLA & HANS
-                                            </td>
-                                            <td>
-                                               1
-                                            </td>
+                                                {detailData?.Lines.map((data) =>
+                                                    < tr >
+                                                         <td>
+                                                            {data?.ItemName}
+                                                         </td>
+                                                         <td>
+                                                           {data?.Qty}
+                                                        </td>
                                             </tr>
+                                           )}
                                         </tbody>
                                         </Table>
                                     </div>

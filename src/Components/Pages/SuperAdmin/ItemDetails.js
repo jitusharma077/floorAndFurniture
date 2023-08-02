@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useLocation } from "react-router-dom";
+import { GetDataWithToken } from "../../ApiHelper/ApiHelper";
+import { useState, useEffect } from "react";
 import SuperAdminHeader from "./Common/SuperAdminHeader";
 import SuperAdminSidebar from "./Common/SuperAdminSidebar";
 import {
@@ -10,18 +12,42 @@ import {
 
 
 function ItemDetails() {
-    const [tabOpen, setTabOpen] = useState("1");
+     const location = useLocation();
+     const [tabOpen, setTabOpen] = useState("1");
      const [tabOpen2, setTabOpen2] = useState("3");
+     const [detailsData, setDetailsData] = useState();
+    //  const [productCode, setProductCode] = useState();
+     const[tableData, setTableData] = useState({});
+     const setTabValue = (value) => {
+          setTabOpen(value);
+     };
     
-    const setTabValue = (value) => {
-        setTabOpen(value);
-    }
-    const setTabValue2 = (value) => { 
+    const setTabValue2 = (value) => {
         setTabOpen2(value);
-    }
+    };
+    
+    useEffect(() => {
+
+         GetDataWithToken(`superadmin/stock-item-details?code=${location?.state?.itemId}&companyCode=ffg`).then(
+        (response) => {
+         if (response.status === true) {
+          console.log('details dataaa',response?.data)
+          setDetailsData(response?.data);  
+           }
+         }
+       );
+        GetDataWithToken(`superadmin/stock-common-details/${location?.state?.itemId}`)
+            .then((response) => {
+                if (response.status === true) {
+                      setTableData(response?.data);
+                  }       
+            })  
+     }, []);
+
     return (
         <>
-              <div
+                   <>
+         <div
         data-typography="poppins"
         data-theme-version="light"
         data-layout="vertical"
@@ -65,15 +91,15 @@ function ItemDetails() {
                                                     <h1 className="card-title">Macaron Ivory</h1>
                                                     <div>
                                                          <strong>PRODUCT CODE:</strong>
-                                                    <span class="mb-0">FFG-C-61932</span>
+                                                        <span class="mb-0">{detailsData?.ITEMID}</span>
                                                     </div>
                                                     <div>
                                                          <strong>SEARCH NAME:</strong>
-                                                         <span class="mb-0">MACARON IVORY</span>
+                                                        <span class="mb-0">{detailsData?.SearchName }</span>
                                                     </div>
                                                     <div>
                                                          <strong>CURRENT STOCK:</strong>
-                                                         <span class="mb-0">0</span>
+                                                         <span class="mb-0">{ detailsData?.QtySO }</span>
                                                     </div>
                                                 </li>
                                                  <Nav tabs>
@@ -82,7 +108,7 @@ function ItemDetails() {
                                                 className={tabOpen==="1"?"active":""}
                                                 onClick={()=>setTabValue('1')}
                                             >
-                                                FF1
+                                                FFI
                                             </NavLink>
                                             </NavItem>
                                             <NavItem>
@@ -98,7 +124,7 @@ function ItemDetails() {
                                             <TabPane tabId="1">
                                                      <li class="list-group-item d-flex justify-content-between ">                                          
                                                     <strong> Item family code:</strong>
-                                                      <span class="mb-0">NON STOCK</span>
+                                                      <span class="mb-0">null</span>
                                                 </li>
                                             <li class="list-group-item d-flex justify-content-between">
                                                     
@@ -113,40 +139,40 @@ function ItemDetails() {
                                                 <li class="list-group-item d-flex justify-content-between">
                                                     
                                                     <strong>Vendor Group:</strong>
-                                                    <span class="mb-0">Cr-Int-com</span>
+                                                    <span class="mb-0">null</span>
                                                         </li>
                                                         <li class="list-group-item d-flex justify-content-between">
                                                     
                                                     <strong>Primary vendor:</strong>
-                                                    <span class="mb-0">F&F GLOBAL PVT LTD, DHARUHERA</span>
+                                                    <span class="mb-0">null</span>
                                             </li> <li class="list-group-item d-flex justify-content-between">
                                                     
                                                     <strong>Contact No:</strong>
-                                                    <span class="mb-0">123456</span>
+                                                    <span class="mb-0">null</span>
                                                         </li>
                                                         <li class="list-group-item d-flex justify-content-between">  
                                                     <strong>External Item No:</strong>
-                                                    <span class="mb-0">YS-22223B-03</span>
+                                                    <span class="mb-0">null</span>
                                                         </li>
                                                         <li class="list-group-item d-flex justify-content-between">
                                                     
                                                     <strong>Purchase Price:</strong>
-                                                    <span class="mb-0">954.00</span>
+                                                    <span class="mb-0">null</span>
                                                         </li>
                                                          <li class="list-group-item d-flex justify-content-between">
                                                     <strong>MRP:</strong>
-                                                    <span class="mb-0">2137</span>
+                                                    <span class="mb-0">null</span>
                                             </li> 
                                             </TabPane>
                                                 <TabPane tabId="2">
                                                       <li class="list-group-item d-flex justify-content-between ">                                          
                                                     <strong> Item family code:</strong>
-                                                      <span class="mb-0">NON STOCK</span>
+                                                      <span class="mb-0">{ detailsData?.ItemFamilyCode }</span>
                                                 </li>
                                             <li class="list-group-item d-flex justify-content-between">
                                                     
                                                     <strong>Reserved Qty:</strong>
-                                                    <span class="mb-0">0</span>
+                                                    <span class="mb-0">{ detailsData?.QtySO }</span>
                                             </li>
                                             <li class="list-group-item d-flex justify-content-between">
                                                    
@@ -156,29 +182,29 @@ function ItemDetails() {
                                                 <li class="list-group-item d-flex justify-content-between">
                                                     
                                                     <strong>Vendor Group:</strong>
-                                                    <span class="mb-0">Cr-Int-com</span>
+                                                    <span class="mb-0">{ detailsData?.vendgroup }</span>
                                                         </li>
                                                         <li class="list-group-item d-flex justify-content-between">
                                                     
                                                     <strong>Primary vendor:</strong>
-                                                    <span class="mb-0">F&F GLOBAL PVT LTD, DHARUHERA</span>
+                                                    <span class="mb-0">{ detailsData?.VendorName }</span>
                                             </li> <li class="list-group-item d-flex justify-content-between">
                                                     
                                                     <strong>Contact No:</strong>
-                                                    <span class="mb-0">123456</span>
+                                                    <span class="mb-0">{ detailsData?.ContactNo }</span>
                                                         </li>
                                                         <li class="list-group-item d-flex justify-content-between">  
                                                     <strong>External Item No:</strong>
-                                                    <span class="mb-0">YS-22223B-03</span>
+                                                    <span class="mb-0">{ detailsData?.ExternalItemId }</span>
                                                         </li>
                                                         <li class="list-group-item d-flex justify-content-between">
                                                     
                                                     <strong>Purchase Price:</strong>
-                                                    <span class="mb-0">954.00</span>
+                                                    <span class="mb-0">{ detailsData?.PruchasePrice }</span>
                                                         </li>
                                                          <li class="list-group-item d-flex justify-content-between">
                                                     <strong>MRP:</strong>
-                                                    <span class="mb-0">2137</span>
+                                                    <span class="mb-0">{ detailsData?.MRP }</span>
                                             </li> 
                                             </TabPane>                                                                                                            
                                                 </TabContent> 
@@ -259,7 +285,21 @@ function ItemDetails() {
                                                         </li>                           
                                                     </TabPane>
                                               </TabContent>  
-                                            </ul>
+                                                </ul>
+                                               {tableData?.Batches?.length>0 && <table className="mt-4">
+                                                    <tr>
+                                                      <th>Batch</th>   
+                                                      <th>Loc</th>
+                                                      <th>Company</th>
+                                                      <th>Qty</th>
+                                                    </tr>
+                                                    {tableData?.Batches?.map((data)=><tr>
+                                                        <td>{ data?.Code }</td>
+                                                        <td>{ data?.LocId }</td>
+                                                        <td>{ data?.Company }</td>
+                                                        <td>{ data?.Qty }</td>
+                                                    </tr>)}
+                                                </table>}   
                                         </div>
                                     </div>
                                 </div>
@@ -269,6 +309,8 @@ function ItemDetails() {
             </div>        
         </div>   
         </>
-    );
+        </>
+    )
 }
+ 
 export default ItemDetails;

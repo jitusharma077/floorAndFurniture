@@ -1,8 +1,32 @@
 import SuperAdminHeader from "./Common/SuperAdminHeader";
 import SuperAdminSidebar from "./Common/SuperAdminSidebar";
 import { Table } from "reactstrap";
+import { useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { GetDataWithToken } from "../../ApiHelper/ApiHelper";
 
 function CustomerLedgerDetails() {
+     const location = useLocation();
+    const [totalData, setTotalData] = useState();
+    console.log('ddddddddddddddddd',location?.state);
+    let data = location?.state?.data;
+    let creditTotal = 0;
+    let debitTotal = 0;
+
+    for (let i = 0; i < data.length; i++){
+        creditTotal += +data[i]?.CreditAmount;
+        // console.log(data[i]?.CreditAmount,data[i]?.DebitAmount);
+        debitTotal += +data[i]?.DebitAmount;
+    }
+    console.log(creditTotal, debitTotal);
+    useEffect(() => { 
+         GetDataWithToken(`superadmin/total-balance?customerCode=${location?.state?.customerId}&fromDate=${location?.state?.startDate}&toDate=${location?.state?.endDate}`)
+            .then((response) => { 
+                if (response.status === true) {
+                    setTotalData(response.data);
+                }
+            })
+    }, []);
     return (
        <>
             <div
@@ -35,46 +59,35 @@ function CustomerLedgerDetails() {
                                     <div>
                                         <Table bordered>
                                             <thead>
+                                                <tr> OPENING BAL: INR {totalData?.OpeningBalance}, CURRENT BAL: INR {totalData?.BalanceAmount} </tr>
                                                 <tr>
-                                                    OPENING BAL: INR 0, CURRENT BAL: INR 0
+                                                    <th> Type </th>
+                                                     <th> Posting Date </th>
+                                                    <th> Doc No.</th>
+                                                    <th> Debit </th>
+                                                    <th> Credit</th>
                                                 </tr>
-                                             <tr>
-                                               <th>
-                                               Type
-                                            </th>
-                                            
-                                                    <th>
-                                              Posting Date
-                                                    </th>
-                                                     <th>
-                                             Doc No.
-                                                    </th>
-                                                    <th>
-                                              Debit
-                                                    </th>
-                                                     <th>
-                                              Credit
-                                            </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                            <td>
-                                               Payment
-                                            </td>
-                                            <td>
-                                               30/04/2023
-                                                    </td>
-                                                    <td>
-                                                        CCR-2324-00432
-                                                    </td>
-                                                    <td>
-                                               0
-                                                    </td>
-                                                     <td>
-                                               -1000
-                                            </td>
-                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                                {data?.map((data) => (
+                                               <tr>
+                                                        <td> {data?.Type} </td>
+                                                        <td>{
+                                                            data?.PostingDate?.split('T')?.[0]
+                                                         
+                                                        }</td>
+                                                        <td>{ data?.DocumentCode }</td>
+                                                        <td>{ data?.DebitAmount}</td>
+                                                        <td>{ data.CreditAmount>0?-data.CreditAmount:data.CreditAmount}</td>
+                                             </tr> 
+                                                ))}
+                                                <tr>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td>TOTAL</td>
+                                                    <td>{ debitTotal }</td>
+                                                    <td>-{ creditTotal }</td>
+                                                </tr>   
                                         </tbody>
                                         </Table>
                                     </div>

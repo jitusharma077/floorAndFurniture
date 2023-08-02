@@ -1,8 +1,21 @@
+import { useEffect, useState } from "react";
 import SuperAdminHeader from "./Common/SuperAdminHeader";
 import SuperAdminSidebar from "./Common/SuperAdminSidebar";
 import { Table } from "reactstrap";
+import { GetDataWithToken } from "../../ApiHelper/ApiHelper";
+import { useLocation } from "react-router-dom";
 
 function OrderDetails() {
+    const location = useLocation();
+    console.log('looooooooooo', location);
+    const [orderData, setOrderData] = useState();
+    useEffect(() => {
+        GetDataWithToken(`superadmin/sales-order-details/${location?.state?.orderId}`)
+            .then((response) => {
+                setOrderData(response.data);
+            })
+    },[]);
+    
     return (
        <>
             <div
@@ -37,28 +50,28 @@ function OrderDetails() {
                                         <ul class="list-group list-group-flush">
                                                 <li class="list-group-item d-flex justify-content-between ">                                          
                                                     <strong>Order No.</strong>
-                                                      <span class="mb-0">SO-2324-12985</span>
+                                                    <span class="mb-0">{ orderData?.Code  }</span>
                                                 </li>
                                             <li class="list-group-item d-flex justify-content-between">
                                                     
                                                     <strong>Order Date.</strong>
-                                                    <span class="mb-0">july 19,2023</span>
+                                                    <span class="mb-0">{ orderData?.OrderDate?.split('T')?.[0] }</span>
                                             </li>
                                             <li class="list-group-item d-flex justify-content-between">
                                                    
                                                     <strong>Sales person Contact</strong>
-                                                     <span class="mb-0">7836010872</span>
+                                                    <span class="mb-0">{ orderData?.SalesPersonContact }</span>
                                                 </li>
                                                 <li class="list-group-item d-flex justify-content-between">
                                                     
                                                     <strong>Remarks.</strong>
-                                                    <span class="mb-0">18 Jul 2023, 13:03 SEND TO SEC 32</span>
+                                                    <span class="mb-0">{ orderData?.Remarks }</span>
                                             </li>
                                                 
                                                <li class="list-group-item d-flex justify-content-between">
                                                     
                                                     <strong>Delivery Mode</strong>
-                                                    <span class="mb-0">By Van</span>
+                                                    <span class="mb-0">{ orderData?.DeliveryMode }</span>
                                             </li>
                                             </ul>
                                         </div>
@@ -67,28 +80,28 @@ function OrderDetails() {
                                         <ul class="list-group list-group-flush">
                                                 <li class="list-group-item d-flex justify-content-between ">                                          
                                                     <strong>Customer No.</strong>
-                                                      <span class="mb-0">FFG-C-61932</span>
+                                                    <span class="mb-0">{ orderData?.CustomerCode }</span>
                                                 </li>
                                             <li class="list-group-item d-flex justify-content-between">
                                                     
                                                     <strong>Sales Person Name</strong>
-                                                    <span class="mb-0">Jagadish Singh</span>
+                                                    <span class="mb-0">{ orderData?.SalesPersonName }</span>
                                             </li>
                                             <li class="list-group-item d-flex justify-content-between">
                                                    
                                                     <strong>Sales Person Email</strong>
-                                                     <span class="mb-0">retailbd@fandf.in</span>
+                                                    <span class="mb-0">{ orderData?.SalesPersonEmail }</span>
                                                 </li>
                                                 <li class="list-group-item d-flex justify-content-between">
                                                     
                                                     <strong>Transport</strong>
-                                                    <span class="mb-0">By Van</span>
+                                                    <span class="mb-0">{orderData?.Transport?.Code}</span>
+                                                    <span class="mb-0">{orderData?.Transport?.Name}</span>
                                             </li>
                                                 
-                                               <li class="list-group-item d-flex justify-content-between">
-                                                    
+                                               <li class="list-group-item d-flex justify-content-between">                                                 
                                                     <strong>Delivery Name</strong>
-                                                    <span class="mb-0">dfsfa</span>
+                                                    <span class="mb-0">{ orderData?.DeliveryName }</span>
                                             </li>
                                             </ul>
                                         </div>
@@ -118,23 +131,25 @@ function OrderDetails() {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
+                                         {orderData?.Lines?.map((data) =>
+                                           < tr >
                                             <td>
-                                               BOOK ESLA & HANS
+                                              {data?.ItemName}
                                             </td>
                                             <td>
-                                               1
+                                               {data?.Qty}
                                             </td>
                                             <td>
-                                               1
+                                               {data?.QtyPending}
                                             </td>
                                             <td>
-                                                july 1 2023
+                                               {data?.ShippingDate?.split('T')?.[0]}
                                                     </td>
                                                     <td>
-                                                open order
+                                                {data?.Status}
                                             </td>
                                             </tr>
+                                           )}
                                         </tbody>
                                         </Table>
                                     </div>

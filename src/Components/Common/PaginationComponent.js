@@ -36,7 +36,7 @@ const PaginationComponent = ({
             href="javascript:void(0);"
           />
         </PaginationItem>
-        {[...Array(totalPage)].map((page, i) => (
+        {[...Array(totalPage)]?.map((page, i) => (
           <PaginationItem
             className="page-item"
             active={i === currentPage - 1}

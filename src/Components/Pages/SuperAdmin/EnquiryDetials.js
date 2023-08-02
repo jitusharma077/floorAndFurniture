@@ -37,7 +37,7 @@ function EnquiryDetials() {
     setCategory(location.state.category);
     setIcName(location.state.icPerson);
 
-    GetDataWithToken(`sales/get-enquiry/${location.state.data}`).then(
+    GetDataWithToken(`sales/get-enquiry/${location?.state?.data}`).then(
       (response) => {
         if (response.status === true) {
           setEnquiryDetials(response);

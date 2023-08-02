@@ -1,22 +1,84 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SuperAdminHeader from "./Common/SuperAdminHeader";
 import SuperAdminSidebar from "./Common/SuperAdminSidebar";
+import Loader from "../../Common/Loader";
+import PaginationComponent from "../../Common/PaginationComponent";
 import {
   Nav,
   NavItem,
     NavLink,
-  TabContent,TabPane,Row,Col
+  TabContent,TabPane
 } from 'reactstrap';
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { GetDataWithToken } from "../../ApiHelper/ApiHelper";
+import OrdersModal from "../../Common/OrdersModal";
+import moment from "moment";
 
 
 function Orders() {
-     const [tabOpen, setTabOpen] = useState("1");
+    const navigate = useNavigate();
+    const [tabOpen, setTabOpen] = useState("1");
+    const[callApi,setCallApi]=useState(true);
+    const[orderData,setOrderData]=useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPage, settotalPage] = useState(10);
+    const [statusCode, setStatusCode] = useState('CONFIRMED');
+    const [searchData, setSearchData] = useState('');
+    const [openModal, setOpenModal] = useState(false); 
+    const [customerCode, setCustomerCode] = useState('');
     
-    const setTabValue = (value) => {
-        setTabOpen(value);
+    const[deliveryName, setDeliveryName] = useState('');
+    const [date, setDate] = useState({
+    fromDate: '',
+    toDate: '',
+    });
+  
+  const modalToggle = () => setOpenModal(!openModal);
+  
+    const handlePageClick = (e, index) => {
+        e.preventDefault();
+        setCurrentPage(index + 1);
+        setCallApi(true);
+        setOrderData([]);
+        setIsLoading(true);
+    };
+
+  const searchHandler = () => {
+     setCurrentPage(1);
+    setOrderData([]);
+     setCallApi(true);
+    setIsLoading(true);
+   }
+
+  const setTabValue = (value) => {
+     setTabOpen(value);
+    value === '2' ? setStatusCode('NOT-CONFIRMED'):setStatusCode('CONFIRMED');
+    setCallApi(true);
+    setOrderData([]);
+    setIsLoading(true);
+     setCurrentPage(1);
     }
-    return (
+
+  let fromDate = date?.fromDate ?moment(date?.fromDate, "ddd MMM DD YYYY HH:mm:ss [GMT]ZZ")?.format("YYYY-MM-DD"):'';
+  let toDate = date?.toDate ? moment(date?.toDate, "ddd MMM DD YYYY HH:mm:ss [GMT]ZZ")?.format("YYYY-MM-DD"):''; 
+  
+  useEffect(() => {
+    if (callApi) {
+      GetDataWithToken(`superadmin/sales-orders/?page=${currentPage}&pageSize=10&statusCode=${statusCode}&customerCode=${customerCode}&fromDate=${fromDate}&toDate=${toDate}&searchText=${searchData}&deliveryName=${deliveryName}`)
+        .then((response) => {
+          if (response.status === true) {
+            setOrderData(response.data);
+            setCallApi(false);
+            setIsLoading(false);
+             settotalPage(response?.data?.length > 0 && Math?.ceil(response?.totalCount/10));
+          }
+           setIsLoading(false);
+      })
+    }
+   }, [callApi]);
+  
+  return (
         <>
             <div
         data-typography="poppins"
@@ -42,29 +104,22 @@ function Orders() {
                                 <div className="card">
                                     <div className="card-header">
                                           <div className="col-lg-3">
-                                             <h4 className="card-title">Search stock</h4>
+                                             <h4 className="card-title">ORDERS</h4>
                                         </div>
-                                          <div className="col-lg-5 d-flex">
+                                          <div className="col-lg-7 d-flex">
                                               <input
                                                     type="text"
                                                     className="form-control"
                                                     placeholder="Search"
+                                                    onChange={(e)=>setSearchData(e.target.value)}
                                                 />
-                                                 <button className="btn btn-primary ms-2">Search
+                                                 <button className="btn btn-primary ms-2" onClick={searchHandler}>Search
                                                  </button>
                                         </div>
-                                        <div className="col-lg-3 d-flex">
-                                                <div className="btn btn-primary ms-2">Sort by
-                                               </div>
-                                            <div>
-                                              <input type="radio" id="brand" name="size"/>
-                                              <label for="brand">brand</label>    
-                                            </div>
-                                            <div>
-                                              <input type="radio" id="collection" name="size"/>
-                                              <label for="collection">collection</label>    
-                                            </div>
-                                        </div>
+                                         <div className="col-lg-2 d-flex">
+                                                <button className="btn btn-primary ms-5" onClick={modalToggle}>Filter
+                                                </button>
+                                          </div> 
                                     </div>
                                     <div>
                                         <Nav tabs>
@@ -94,73 +149,129 @@ function Orders() {
                         style={{ minWidth: "845px" }}
                       >
                         <thead>
-                          <tr>
+                              <tr>
+                            <th>S.NO.</th>    
                             <th>Code</th>
                             <th>Date</th>
                             <th>Name</th>
                             <th>Action</th>
                           </tr>
                         </thead>
-                        <tbody>
-                              <tr>
-                                <td>1</td>
-                                <td>ds</td>
+                            <tbody>
+                              {isLoading && <Loader />}
+                              
+                              {orderData && orderData?.length == 0 ? (
+                                <h3
+                                  style={{
+                                    position: "absolute",
+                                    left: "40%",
+                                    padding: "10px",
+                                  }}
+                                >
+                                  No data found
+                                </h3>
+                              ) : orderData?.map((data, index) =>
+                                <tr>
+                                  <td>{index+1}</td>
+                                  <td>{ data?.Code }</td>
+                                  <td>{ data?.OrderDate?.split('T')?.[0] }</td>
                                   <td>
-                                    jitender
-                                 </td>
-                                 <td>
-                                    <button className="btn btn-primary" >
-                                      <Link to="/order-detail">
-                                             View
-                                      </Link>
+                                    {data?.DeliveryName}
+                                  </td>
+                                  <td>
+                                    <button className="btn btn-primary" onClick={() => navigate("/order-detail", {
+                                      state: {
+                                        orderId:data?.Code,
+                                      }
+                                    })}>
+                                     
+                                        View
+                                      
                                     </button>
-                                 </td>                                 
-                              </tr>                        
+                                  </td>
+                                </tr>)}                        
                         </tbody>
                       </table>
-                                           </div>
-                                            </TabPane>
-                                                <TabPane tabId="2">
-                                                      <div className="table-responsive">
+                    </div>
+                      </TabPane>
+                      <TabPane tabId="2">
+                      <div className="table-responsive">
                       <table
                         id="example4"
                         className="table card-table display mb-4 shadow-hover table-responsive-lg"
                         style={{ minWidth: "845px" }}
                       >
                         <thead>
-                          <tr>
+                            <tr>
+                             <th>S.NO.</th>     
                             <th>Code</th>
                             <th>Date</th>
-                                                                <th>Name</th>
-                                                                <th>Action</th>
+                            <th>Name</th>
+                            <th>Action</th>
                           </tr>
                         </thead>
-                        <tbody>
-                              <tr>
-                                <td>1</td>
-                                <td>ds</td>
-                                <td>jitender
-                                                                </td> 
-                                 <td>
-                                    <button className="btn btn-primary">
-                                                            
-                                                                    View
-                                                                </button>
-                                                            </td>                                 
-                              </tr>                        
+                            <tbody>
+                              {isLoading && <Loader />}
+                              {orderData && orderData?.length == 0 ? (
+                                <h3
+                                  style={{
+                                    position: "absolute",
+                                    left: "40%",
+                                    padding: "10px",
+                                  }}
+                                >
+                                  No data found
+                                </h3>
+                              ) : orderData?.map((data, index) =>
+                                <tr>
+                                  <td>{ index + 1 }</td>
+                                  <td>{ data?.Code }</td>
+                                  <td>{ data?.OrderDate?.split('T')?.[0] }</td>
+                                  <td> {data?.DeliveryName}
+                                  </td>
+                                  <td>
+                                    <button className="btn btn-primary" onClick={()=>navigate("/order-detail", {
+                                      state: {
+                                        orderId:data?.Code,
+                                      }
+                                    })} >
+                                      View
+                                    </button>
+                                  </td>
+                                </tr>)}                        
                         </tbody>
                       </table>
-                                           </div>
-                                                </TabPane>                                                                                                            
-                                        </TabContent>
-                                    </div>
-                                </div>
-                            </div>
-                            </div>
                      </div>
-                </div>        
-      </div>
-        </>
+                  </TabPane>                                                                                                            
+                 </TabContent>
+                  </div>
+                 </div>
+              </div>
+               <PaginationComponent
+                                 totalPage={totalPage}
+                                 currentPage={currentPage}
+                                 setCallApi={(val) => setCallApi(val)}
+                                 setCurrentPage={(val) => setCurrentPage(val)}
+                                 handlePageClick={handlePageClick}
+                />
+                </div>
+                </div>
+              </div>        
+          </div>
+      <OrdersModal
+        openModal={openModal}
+        modalToggle={modalToggle}
+        setCustomerCode={setCustomerCode}
+        customerCode={customerCode}
+        mainCallApi={setCallApi}
+        setDate={setDate}
+        date={date}
+        setDeliveryName={setDeliveryName}
+        deliveryName={deliveryName}
+        setIsLoading={setIsLoading}
+        setMainData={setOrderData}
+      />                         
+      </>
     );
 }
 export default Orders;
