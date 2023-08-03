@@ -3,7 +3,6 @@ import { Modal, ModalBody, ModalHeader } from "reactstrap";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { GetDataWithToken } from "../ApiHelper/ApiHelper";
-import moment from "moment";
 
 function OrdersModal({openModal,modalToggle,setCustomerCode,customerCode,mainCallApi,setDate,date,setDeliveryName,deliveryName,ledger,setIsLoading,setMainData}) {
     const [nextPage, setNextPage] = useState(0);

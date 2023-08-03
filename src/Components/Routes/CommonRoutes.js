@@ -74,6 +74,7 @@ import CustomerLedger from "../Pages/SuperAdmin/CustomerLedger";
 import OrderDetails from "../Pages/SuperAdmin/OrderDetails";
 import ItemDetails from "../Pages/SuperAdmin/ItemDetails";
 import CustomerLedgerDetails from "../Pages/SuperAdmin/CustomerLedgerDetails";
+import SearchEnquiry from "../Pages/SuperAdmin/SearchEnquiry";
 const CommonRoutes = () => {
   // const [type, setType] = useState({});
   const userDetails = useSelector((store) => store?.user?.userDetails?.type);
@@ -87,6 +88,7 @@ const CommonRoutes = () => {
         <Route path="/" element={<Login />} />
         {userDetails === superAdmin && (
           <>
+            <Route path="/searh-enquiry" element={<SearchEnquiry/>}/>
             <Route path="/customer-ledger-detail" element={<CustomerLedgerDetails/>}/>
             <Route path="/invoice-detail" element={<InvoiceDetails />} />
             <Route path="/search-item-detail" element={<ItemDetails/>}/>

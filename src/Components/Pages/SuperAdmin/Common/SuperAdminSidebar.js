@@ -77,6 +77,12 @@ function SuperAdminSidebar() {
                 <span className="nav-text">customer ledger</span>
               </Link>
             </li>
+              <li>
+              <Link to={"/searh-enquiry"} className aria-expanded="false">
+                <i className="fa fa-book-open fw-bold" aria-hidden="true" />
+                <span className="nav-text">Search enquiry</span>
+              </Link>
+            </li>
             {/* <li>
               <Link to={"/all-invoice"} className aria-expanded="false">
                 <i className="flaticon-022-copy" />
