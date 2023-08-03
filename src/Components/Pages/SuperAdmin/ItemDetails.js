@@ -71,7 +71,7 @@ function ItemDetails() {
                                 <div className="card">
                                       <div className="card-header">
                                           <div className="col-lg-3">
-                                             <h4 className="card-title">Order details</h4>
+                                             <h4 className="card-title">Item details</h4>
                                         </div>
                                     </div> 
                                     <div class="row">
@@ -79,8 +79,10 @@ function ItemDetails() {
                                             <div
                                             style={{marginLeft: '25%', marginTop: '10%'}}
                                             >
-                                                <img src="" width="50%" />
-                                               <button className="btn btn-primary ms-2">Find alternate items
+                                                    <div>
+                                                        <img src={`http://trade.fandf.in/Images/Items/${detailsData?.ITEMID}.jpg`} width="50%" />
+                                                    </div>    
+                                               <button className="btn btn-primary ms-4">Find alternate items
                                                  </button>
                                             </div>  
                                         </div>

@@ -3,11 +3,10 @@ import { useEffect, useState } from "react";
 import { GetDataWithToken } from "../../ApiHelper/ApiHelper";
 import SuperAdminHeader from "./Common/SuperAdminHeader";
 import SuperAdminSidebar from "./Common/SuperAdminSidebar";
-import { useNavigate } from "react-router-dom";
 import moment from "moment";
 
 function SearchEnquiry() {
-    const navigate = useNavigate();
+    
     const [enquiryId, setEnquiryId] = useState('');
     const [enquiryMail, setEnquiryMail] = useState('');
     const [callApi, setCallApi] = useState(false);
