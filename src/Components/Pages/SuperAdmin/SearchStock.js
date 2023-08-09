@@ -2,7 +2,7 @@ import { useNavigate,Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import SuperAdminHeader from "./Common/SuperAdminHeader";
 import SuperAdminSidebar from "./Common/SuperAdminSidebar";
-import { GetDataWithToken } from "../../ApiHelper/ApiHelper";
+import { GetDataWithToken,serverUrl } from "../../ApiHelper/ApiHelper";
 import PaginationComponent from "../../Common/PaginationComponent";
 import Loader from "../../Common/Loader";
 import SearchStockModal from "../../Common/SearchStockModal";
@@ -13,6 +13,7 @@ import {
   TabContent,TabPane
 } from 'reactstrap';
 import _ from "lodash";
+import axios from "axios";
 
 
 function SearchStock() {
@@ -31,6 +32,7 @@ function SearchStock() {
   const [categoryCode,setCategoryCode] = useState('FABRIC');
   const modalToggle = () => setSearchStockModalOpen(!searchStockModalOpen);
 
+  
  const setTabValue = (value,code) => {
    setTabOpen(value);
    setCategoryCode(code);
@@ -59,20 +61,33 @@ function SearchStock() {
     setCallApi(true);
   }
 
-  useEffect(() => {
-    
+   const DownloadReportHandler = () => {
+    // setLoadingData(true);
+     
+// http://203.115.102.6:6696/api/v1/superadmin/items-excel
+     axios({
+      url: `http://203.115.102.6:6696/api/v1/superadmin/items-excel?name=${searchData}&brandCode=${searchBrandData}&categoryCode=${categoryCode}&collectionCode=${searchCollectionData}`,
+      method: "GET",
+      responseType: "blob", // important
+    }).then((response) => {
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", "file.xls"); //or any other extension
+      document.body.appendChild(link);
+      link.click();
+      // setLoadingData(false);
+    });
+  };
+
+  useEffect(() => {    
     if(callApi){GetDataWithToken(`superadmin/stock-item-list?name=${searchData}&brandCode=${searchBrandData}&page=${currentPage}&pageSize=10&categoryCode=${categoryCode}&collectionCode=${searchCollectionData}`).then(
       (response) => {
         if (response.status === true) {
-          
           setCallApi(false);
           setdata(response?.data);
-          console.log(response?.data?.[0]?.TotalCount/10);
           settotalPage(response?.total && Math?.ceil(response?.total / 10));
-          console.log("totallll pageeeee", totalPage);
-          
           setIsLoading(false);
-          
         }
         setIsLoading(false);
       }
@@ -83,8 +98,7 @@ function SearchStock() {
         if(response.status === true) {
             setCategoryData(response.data);
         }
-      }
-        )
+      })
     }
   }, [callApi]);
     return (
@@ -112,7 +126,7 @@ function SearchStock() {
                               <div className="col-12">
                                 <div className="card">
                                     <div className="card-header">
-                                          <div className="col-lg-3">
+                                          <div className="col-lg-2">
                                              <h4 className="card-title">Search stock</h4>
                                         </div>
                                           <div className="col-lg-7 d-flex">
@@ -125,17 +139,13 @@ function SearchStock() {
                                                  <button className="btn btn-primary ms-2" onClick={submitSearchData}>Search
                                                  </button>
                                         </div>
-                                        <div className="col-lg-2 d-flex">
-                                                <button className="btn btn-primary ms-5" onClick={modalToggle}>Filter
+                                        <div className="d-flex">
+                                                <button className="btn btn-primary ms-2" onClick={modalToggle}>Filter
                                                </button>
-                                            {/* <div>
-                                              <input type="radio" id="brand" name="size"/>
-                                              <label for="brand">brand</label>    
-                                            </div>
-                                            <div>
-                                              <input type="radio" id="collection" name="size"/>
-                                              <label for="collection">collection</label>    
-                                            </div> */}
+                                       </div>
+                                         <div className="col-lg-2 d-flex">
+                                                <button className="btn btn-primary ms-2" onClick={DownloadReportHandler}>Download
+                                               </button>
                                         </div>
                                     </div>
                                     <div>
@@ -172,7 +182,7 @@ function SearchStock() {
                       >
                         <thead>
                            <tr>
-                            <th>S.NO</th>        
+                                
                             <th>Code</th>
                             <th>Name</th>
                             <th>Qty inv</th>
@@ -183,16 +193,17 @@ function SearchStock() {
                         <tbody>
                                 {data?.map((data,index) => (
                                   <tr>
-                                    <td>{ index+1 }</td>
+                                  
                                     <td>{data?.ITEMID}</td>
                                     <td>{ data?.Name}</td>
-                                    <td>{ data?.QtyInv}</td>
+                                    <td>{ +data?.QtyInv.toFixed(2)}</td>
                                     <td>{data?.BatchCount > 0 ? data?.BatchCount : 0}</td>
                                  <td>
                                       <button className="btn btn-primary" onClick={() => navigate("/search-item-detail", {
                                         state: {
                                           itemId: data?.ITEMID,
                                           brandCode:data?.brandCode
+                                          
                                         }
                                       })}>                                      
                                              View                                     

@@ -4,6 +4,7 @@ import SuperAdminSidebar from "./Common/SuperAdminSidebar";
 import { Table } from "reactstrap";
 import { GetDataWithToken } from "../../ApiHelper/ApiHelper";
 import { useLocation } from "react-router-dom";
+import moment from "moment";
 
 function InvoiceDetails() {
     const location = useLocation();
@@ -54,19 +55,18 @@ function InvoiceDetails() {
                                                     <span class="mb-0">{ detailData?.Code}</span>
                                                 </li>
                                             <li class="list-group-item d-flex justify-content-between">
-                                                    
                                                     <strong>Invoice Date:</strong>
-                                                    <span class="mb-0">{ detailData?.InvoiceDate?.split('T')?.[0] }</span>
+                                                    <span class="mb-0">{moment(detailData?.InvoiceDate)?.format('DD/MM/YYYY') }</span>
                                             </li>
                                             <li class="list-group-item d-flex justify-content-between">
                                                    
                                                     <strong>Order No:</strong>
-                                                    <span class="mb-0">{detailData?.OrderCode }</span>
+                                                    <span class="mb-0">{detailData?.OrderCode}</span>
                                                 </li>
                                                 <li class="list-group-item d-flex justify-content-between">
                                                     
                                                     <strong>Order Date:</strong>
-                                                    <span class="mb-0">{ detailData?.OrderDate?.split('T')?.[0] }</span>
+                                                    <span class="mb-0">{ moment(detailData?.OrderDate)?.format('DD/MM/YYYY')}</span>
                                             </li>
                                                 
                                                <li class="list-group-item d-flex justify-content-between">
@@ -131,20 +131,20 @@ function InvoiceDetails() {
                                                <th>
                                                item
                                             </th>
-                                            
+    
                                                     <th>
                                               Quantity
                                             </th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                                {detailData?.Lines.map((data) =>
+                                                {detailData?.Lines?.map((data) =>
                                                     < tr >
                                                          <td>
                                                             {data?.ItemName}
                                                          </td>
                                                          <td>
-                                                           {data?.Qty}
+                                                           {+Math?.abs(data?.Qty)?.toFixed(2)}
                                                         </td>
                                             </tr>
                                            )}

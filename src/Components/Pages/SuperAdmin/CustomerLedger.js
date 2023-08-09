@@ -119,7 +119,7 @@ function CustomerLedger() {
                       >
                         <thead>
                           <tr>
-                            <th>S.NO.</th>
+                           
                             <th>CUSTOMER NAME</th>
                             <th>Action</th>                                    
                           </tr>
@@ -136,8 +136,7 @@ function CustomerLedger() {
                             >
                               No data found
                             </h3>
-                          ) :    data?.map((data,index)=><tr>
-                                <td>{ index + 1 }</td>
+                          ) :    data?.map((data)=><tr>
                                 <td>{ data?.NAME }</td>
                                  <td >
                                     <button className="btn btn-primary"  onClick={()=>showLegerDetail(data?.ACCOUNTNUM)}>

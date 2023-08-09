@@ -4,6 +4,7 @@ import { Table } from "reactstrap";
 import { useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { GetDataWithToken } from "../../ApiHelper/ApiHelper";
+import moment from "moment";
 
 function CustomerLedgerDetails() {
      const location = useLocation();
@@ -59,10 +60,10 @@ function CustomerLedgerDetails() {
                                     <div>
                                         <Table bordered>
                                             <thead>
-                                                <tr> OPENING BAL: INR {totalData?.OpeningBalance}, CURRENT BAL: INR {totalData?.BalanceAmount} </tr>
+                                                <tr> OPENING BAL: INR {totalData?.OpeningBalance?.toFixed(2)}, CURRENT BAL: INR{totalData?.BalanceAmount.toFixed(2)} </tr>
                                                 <tr>
                                                     <th> Type </th>
-                                                     <th> Posting Date </th>
+                                                    <th> Posting Date </th>
                                                     <th> Doc No.</th>
                                                     <th> Debit </th>
                                                     <th> Credit</th>
@@ -72,21 +73,19 @@ function CustomerLedgerDetails() {
                                                 {data?.map((data) => (
                                                <tr>
                                                         <td> {data?.Type} </td>
-                                                        <td>{
-                                                            data?.PostingDate?.split('T')?.[0]
-                                                         
-                                                        }</td>
+                                                        <td>{moment(data?.PostingDate)?.format('DD/MM/YYYY')}  
+                                                        </td>
                                                         <td>{ data?.DocumentCode }</td>
-                                                        <td>{ data?.DebitAmount}</td>
-                                                        <td>{ data.CreditAmount>0?-data.CreditAmount:data.CreditAmount}</td>
+                                                        <td>{ data?.DebitAmount?.toFixed(2)}</td>
+                                                        <td>{ data?.CreditAmount>0?-data?.CreditAmount?.toFixed(2):data?.CreditAmount?.toFixed(2)}</td>
                                              </tr> 
                                                 ))}
                                                 <tr>
                                                     <td></td>
                                                     <td></td>
                                                     <td>TOTAL</td>
-                                                    <td>{ debitTotal }</td>
-                                                    <td>-{ creditTotal }</td>
+                                                    <td>{ debitTotal?.toFixed(2) }</td>
+                                                    <td>-{ creditTotal?.toFixed(2)  }</td>
                                                 </tr>   
                                         </tbody>
                                         </Table>

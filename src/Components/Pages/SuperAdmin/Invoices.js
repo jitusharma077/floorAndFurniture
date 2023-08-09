@@ -81,7 +81,7 @@ function Invoices() {
 
     return (
         <>
-            <div
+        <div
         data-typography="poppins"
         data-theme-version="light"
         data-layout="vertical"
@@ -112,12 +112,12 @@ function Invoices() {
                                                     type="text"
                                                     className="form-control"
                                                     placeholder="Search"
-                                                onChange={(e) => {
-                                                    setSearchData(e.target.value);
-                                                }}
+                                                    onChange={(e) => {
+                                                      setSearchData(e.target.value);
+                                                    }}
                                                 />
-                                                 <button className="btn btn-primary ms-2" onClick={searchDataHandler}>Search
-                                                 </button>
+                                            <button className="btn btn-primary ms-2" onClick={searchDataHandler}>Search
+                                          </button>
                                         </div>
                                        <div className="col-lg-2 d-flex">
                                                 <button className="btn btn-primary ms-5" onClick={modalToggle}>Filter
@@ -153,8 +153,8 @@ function Invoices() {
                                             >
                                                 <thead>
                                                 <tr>
-                                                    <th>Invoice No:</th>
-                                                    <th>Invoice Date:</th>
+                                                                <th>Invoice No:</th>
+                                                                <th>Invoice Date:</th>
                                                                 <th>Delivery name</th>
                                                                 <th>Invoices</th>
                                                                                       
@@ -162,10 +162,7 @@ function Invoices() {
                                                 </thead>
                                                         <tbody>
                                                             {isLoading && <Loader />} 
-
-                                                       
-
-                                                     {invoiceData && invoiceData?.length == 0 ? (
+                        {invoiceData && invoiceData?.length == 0 ? (
                             <h3
                               style={{
                                 position: "absolute",
@@ -177,8 +174,11 @@ function Invoices() {
                             </h3>
                           ) :    invoiceData?.map((data,index) =>
                                                              < tr >
-                                                             <td>{ index + 1 }</td>
-                                                             <td>{ data?.InvoiceDate?.split('T')?.[0] }</td>
+                                                             <td>{ data?.Code }</td>
+                                                             <td>{
+                                                                    moment(data?.InvoiceDate)?.format("DD/MM/YYYY")
+                            
+                                                                 }</td>
                                                              <td>{ data?.DeliveryName }</td>
                                                              <td>
                                                                     <button className="btn btn-primary" onClick={() => {
@@ -224,13 +224,17 @@ function Invoices() {
                                                             >
                                                             No data found
                                                             </h3>
-                                                        ) :  invoiceData?.map((data,index) =>
+                                                        ) :  invoiceData?.map((data) =>
                                                              < tr >
-                                                             <td>{ index + 1 }</td>
-                                                             <td>{ data?.InvoiceDate?.split('T')?.[0] }</td>
+                                                             <td>{ data?.Code }</td>
+                                                                <td>{
+                                                                    moment(data?.InvoiceDate)?.format("DD/MM/YYYY")
+                                                                    
+                                                                }</td>
                                                              <td>{ data?.DeliveryName }</td>
                                                              <td>
-                                                                   <button className="btn btn-primary" onClick={() => {
+                                                                    <button className="btn btn-primary"
+                                                                        onClick={() => {
                                                                        navigate("/invoice-detail",{
                                                                            state: {
                                                                              data:data?.Code
