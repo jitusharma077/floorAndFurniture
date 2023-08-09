@@ -196,7 +196,7 @@ function SearchStock() {
                                   
                                     <td>{data?.ITEMID}</td>
                                     <td>{ data?.Name}</td>
-                                    <td>{ +data?.QtyInv.toFixed(2)}</td>
+                                    <td>{data?.QtyInv && +data?.QtyInv.toFixed(2)}</td>
                                     <td>{data?.BatchCount > 0 ? data?.BatchCount : 0}</td>
                                  <td>
                                       <button className="btn btn-primary" onClick={() => navigate("/search-item-detail", {

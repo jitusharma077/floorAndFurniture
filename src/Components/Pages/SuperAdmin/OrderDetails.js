@@ -57,7 +57,7 @@ function OrderDetails() {
                                                     
                                                     <strong>Order Date.</strong>
                                                     <span class="mb-0">{
-                                                        moment( orderData?.OrderDate)?.format('DD/MM/YYYY')
+                                                        orderData?.OrderDate&& moment( orderData?.OrderDate)?.format('DD/MM/YYYY')
                                                             
                                                     }
                                                     </span>
@@ -142,14 +142,14 @@ function OrderDetails() {
                                               {data?.ItemName}
                                             </td>
                                             <td>
-                                                     {+data?.Qty.toFixed(2)}
+                                                     {data?.Qty&&+data?.Qty?.toFixed(2)}
                                                      
                                             </td>
                                             <td>
-                                               {+data?.QtyPending.toFixed(2)}
+                                               {data?.QtyPending && +data?.QtyPending.toFixed(2)}
                                             </td>
                                             <td>
-                                               {moment(data?.ShippingDate)?.format("DD/MM/YYYY")}
+                                               {data?.ShippingDate&&moment(data?.ShippingDate)?.format("DD/MM/YYYY")}
                                              </td>
                                             <td>
                                                 {data?.Status}

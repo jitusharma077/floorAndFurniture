@@ -60,7 +60,7 @@ function CustomerLedgerDetails() {
                                     <div>
                                         <Table bordered>
                                             <thead>
-                                                <tr> OPENING BAL: INR {totalData?.OpeningBalance?.toFixed(2)}, CURRENT BAL: INR{totalData?.BalanceAmount.toFixed(2)} </tr>
+                                                <tr> OPENING BAL: INR {totalData?.OpeningBalance&&totalData?.OpeningBalance?.toFixed(2)}, CURRENT BAL: INR{totalData?.BalanceAmount&&totalData?.BalanceAmount?.toFixed(2)} </tr>
                                                 <tr>
                                                     <th> Type </th>
                                                     <th> Posting Date </th>
@@ -73,10 +73,10 @@ function CustomerLedgerDetails() {
                                                 {data?.map((data) => (
                                                <tr>
                                                         <td> {data?.Type} </td>
-                                                        <td>{moment(data?.PostingDate)?.format('DD/MM/YYYY')}  
+                                                        <td>{data?.PostingDate&&moment(data?.PostingDate)?.format('DD/MM/YYYY')}  
                                                         </td>
                                                         <td>{ data?.DocumentCode }</td>
-                                                        <td>{ data?.DebitAmount?.toFixed(2)}</td>
+                                                        <td>{data?.DebitAmount&& data?.DebitAmount?.toFixed(2)}</td>
                                                         <td>{ data?.CreditAmount>0?-data?.CreditAmount?.toFixed(2):data?.CreditAmount?.toFixed(2)}</td>
                                              </tr> 
                                                 ))}
@@ -84,8 +84,8 @@ function CustomerLedgerDetails() {
                                                     <td></td>
                                                     <td></td>
                                                     <td>TOTAL</td>
-                                                    <td>{ debitTotal?.toFixed(2) }</td>
-                                                    <td>-{ creditTotal?.toFixed(2)  }</td>
+                                                    <td>{ debitTotal&&debitTotal?.toFixed(2) }</td>
+                                                    <td>-{creditTotal&& creditTotal?.toFixed(2)  }</td>
                                                 </tr>   
                                         </tbody>
                                         </Table>
