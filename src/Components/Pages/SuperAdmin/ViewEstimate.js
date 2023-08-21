@@ -2552,18 +2552,9 @@ function ViewEstimate() {
     return (
       <>
         <tr>
-          <th colSpan={2}>Total Room amount</th>
+          <th colSpan={2}>Sub Total</th>
           <th colSpan={1}>{getPriceFormate(amount)}</th>
         </tr>
-
-        {+deposit > 0 ? (
-          <tr>
-            <th colSpan={2}>Deposit amount</th>
-            <th colSpan={1}>{deposit}</th>
-          </tr>
-        ) : (
-          ``
-        )}
 
         {ladder?.name ? (
           <tr>
@@ -2586,6 +2577,14 @@ function ViewEstimate() {
           <th colSpan={2}>Service amount</th>
           <th colSpan={1}>{serviceAmount}</th>
         </tr>
+        {+deposit > 0 ? (
+          <tr>
+            <th colSpan={2}>Deposit amount</th>
+            <th colSpan={1}>{`(-) ${deposit}`}</th>
+          </tr>
+        ) : (
+          ``
+        )}
         <tr>
           <th colSpan={2}>Grand total</th>
           <th colSpan={1}>{getPriceFormate(getGrandTotal())}</th>
