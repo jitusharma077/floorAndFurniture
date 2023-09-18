@@ -7,6 +7,7 @@ import PaginationComponent from "../../Common/PaginationComponent";
 import Loader from "../../Common/Loader";
 import OrdersModal from "../../Common/OrdersModal";
 import moment from "moment";
+import { useInView } from "react-intersection-observer";
 
 function CustomerLedger() {
   const [dateModal, setDateModal] = useState(false);
@@ -18,8 +19,10 @@ function CustomerLedger() {
   const [searchData, setSearchData] = useState('');
   const [customerId, setCustomerId] = useState();
   const [isLoading, setIsLoading] = useState(true);
+  const [isLoading2, setIsLoading2] = useState(false);
   const [openModal, setOpenModal] = useState(false); 
-   const [customerCode, setCustomerCode] = useState('');
+  const [customerCode, setCustomerCode] = useState('');
+   const { ref: myRef, inView: visibleElement } = useInView();
     const [date, setDate] = useState({
     fromDate: '',
     toDate: '',
@@ -32,14 +35,14 @@ function CustomerLedger() {
     dateToggle();
   };
 
-  const handlePageClick = (e, index) => {
-    e.preventDefault();
-    setCurrentPage(index + 1);
-    setCallApi(true);
-    setdata([]);
-    setIsLoading(true);
+  // const handlePageClick = (e, index) => {
+  //   e.preventDefault();
+  //   setCurrentPage(index + 1);
+  //   setCallApi(true);
+  //   setdata([]);
+  //   setIsLoading(true);
     
-  };
+  // };
 
   const handleSearch = () => {
      setCurrentPage(1);
@@ -52,22 +55,28 @@ function CustomerLedger() {
    let toDate = date?.toDate ? moment(date?.toDate, "ddd MMM DD YYYY HH:mm:ss [GMT]ZZ")?.format("YYYY-MM-DD"):'';
 
   useEffect(() => {
-     if(callApi){GetDataWithToken(`superadmin/customer?searchText=${searchData}&page=${currentPage}&pageSize=10&fromDate=${fromDate}&toDate=${toDate}&customerCode=${customerCode}`).then(
+    if (visibleElement) {
+        // currentPage<=totalPage&&setCurrentPage((prevPage) => prevPage + 1);
+      // currentPage<=totalPage&&
+      setIsLoading2(true);
+      // setCallApi(true);
+    }
+     if(callApi||visibleElement){GetDataWithToken(`superadmin/customer?searchText=${searchData}&page=${currentPage}&pageSize=10&fromDate=${fromDate}&toDate=${toDate}&customerCode=${customerCode}`).then(
       (response) => {
          if (response.status === true) {
-          
-          setCallApi(false);
-          setdata(response?.data);
-          console.log(response?.data?.[0]?.TotalCount/10);
-          settotalPage(response?.data?.length > 0 && Math?.ceil(response?.data?.[0]?.TotalCount / 10));
-          console.log("totallll pageeeee", totalPage);
-          setIsLoading(false);
+           setIsLoading2(false);
+           setCallApi(false);
+           setdata(prevData => [...prevData, ...response?.data]);
+           settotalPage(response?.data?.length > 0 && Math?.ceil(response?.data?.[0]?.TotalCount / 10));
+           currentPage<=totalPage && setCurrentPage(prevPage => prevPage + 1);
+           setIsLoading(false);
          }
          setIsLoading(false);
+         setIsLoading2(false);
       }
     );  
     }
-  },[callApi])
+  },[callApi,visibleElement])
 
     return (
         <>
@@ -145,17 +154,20 @@ function CustomerLedger() {
                                  </td>                                 
                               </tr>)  }                      
                         </tbody>
-                      </table>
-                                </div>
-                            </div>
+                        {data?.length > 0 && currentPage<=totalPage && <div ref={myRef} id="scroll"></div> }
+                    </table>
+                    </div>
+                  </div>
               </div>
-                <PaginationComponent
+             
+            { isLoading2 &&currentPage > 1 && <h3 style={{textAlign:'center'}}>Loading...</h3> }  
+                {/* <PaginationComponent
                       totalPage={totalPage}
                       currentPage={currentPage}
                       setCallApi={(val) => setCallApi(val)}
                       setCurrentPage={(val) => setCurrentPage(val)}
                       handlePageClick={handlePageClick}
-              />
+              /> */}
 
                      </div>
                 </div>          
@@ -169,8 +181,9 @@ function CustomerLedger() {
         setDate={setDate}
         date={date}
         ledger={'ledger'}  
-        setIsLoading={setIsLoading}  
+        setIsLoading={setIsLoading} 
         setMainData={setdata}  
+        setCurrentPage={setCurrentPage} 
       />   
 
         </>

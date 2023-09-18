@@ -1,11 +1,12 @@
 import { useNavigate,Link } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect,useRef } from "react";
 import SuperAdminHeader from "./Common/SuperAdminHeader";
 import SuperAdminSidebar from "./Common/SuperAdminSidebar";
 import { GetDataWithToken,serverUrl } from "../../ApiHelper/ApiHelper";
 import PaginationComponent from "../../Common/PaginationComponent";
 import Loader from "../../Common/Loader";
 import SearchStockModal from "../../Common/SearchStockModal";
+import { useInView } from 'react-intersection-observer';
 import {
   Nav,
   NavItem,
@@ -17,11 +18,15 @@ import axios from "axios";
 
 
 function SearchStock() {
+
+  const { ref: myRef, inView: visibleElement } = useInView();
+  // const [visibleElement1, setVisibleElement1] = useState();
+  // setVisibleElement1(visibleElement);
   const navigate = useNavigate();
   const [tabOpen, setTabOpen] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
   const [isLoading,setIsLoading]=useState(true);
-  const [totalPage, settotalPage] = useState(10);
+  const [totalPage, settotalPage] = useState(1);
   const [data, setdata] = useState([]);
   const [callApi, setCallApi] = useState(true);
   const [searchData, setSearchData] = useState('');
@@ -29,9 +34,10 @@ function SearchStock() {
   const [searchCollectionData, setSearchCollectionData] = useState('');
   const [searchStockModalOpen, setSearchStockModalOpen] = useState(false);
   const [catagoryData, setCategoryData] = useState([]);
-  const [categoryCode,setCategoryCode] = useState('FABRIC');
+  const [categoryCode, setCategoryCode] = useState('FABRIC');
+  const [isLoading2, setIsLoading2] = useState(false);
   const modalToggle = () => setSearchStockModalOpen(!searchStockModalOpen);
-
+  
   
  const setTabValue = (value,code) => {
    setTabOpen(value);
@@ -42,13 +48,13 @@ function SearchStock() {
    setCurrentPage(1);
  }
   
-  const handlePageClick = (e, index) => {
-    e.preventDefault();
-    setCurrentPage(index + 1);
-    setCallApi(true);
-    setIsLoading(true);
-    setdata([]);
-  };
+  // const handlePageClick = (e, index) => {
+  //   e.preventDefault();
+  //   setCurrentPage(index + 1);
+  //   setCallApi(true);
+  //   setIsLoading(true);
+  //   setdata([]);
+  // };
 
   const handleInputChange = (e) => {
     setSearchData(e.target.value);
@@ -80,16 +86,29 @@ function SearchStock() {
     });
   };
 
-  useEffect(() => {    
-    if(callApi){GetDataWithToken(`superadmin/stock-item-list?name=${searchData}&brandCode=${searchBrandData}&page=${currentPage}&pageSize=10&categoryCode=${categoryCode}&collectionCode=${searchCollectionData}`).then(
+    
+  
+  
+
+  useEffect(() => {  
+    
+    if (visibleElement) {
+      // setCallApi(true);
+      setIsLoading2(true);
+    }
+    if(callApi||visibleElement){GetDataWithToken(`superadmin/stock-item-list?name=${searchData}&brandCode=${searchBrandData}&page=${currentPage}&pageSize=10&categoryCode=${categoryCode}&collectionCode=${searchCollectionData}`).then(
       (response) => {
         if (response.status === true) {
-          setCallApi(false);
-          setdata(response?.data);
+           setCallApi(false);
+           setdata(prevData => [...prevData, ...response?.data]);
+          // setdata([...response?.data]);
           settotalPage(response?.total && Math?.ceil(response?.total / 10));
+          currentPage<=totalPage && setCurrentPage((prevPage) => prevPage + 1);
           setIsLoading(false);
+          setIsLoading2(false);
         }
         setIsLoading(false);
+        setIsLoading2(false);
       }
     );  
     }
@@ -100,7 +119,7 @@ function SearchStock() {
         }
       })
     }
-  }, [callApi]);
+  }, [callApi,visibleElement]);
     return (
         <>
             <div
@@ -193,7 +212,6 @@ function SearchStock() {
                         <tbody>
                                 {data?.map((data,index) => (
                                   <tr>
-                                  
                                     <td>{data?.ITEMID}</td>
                                     <td>{ data?.Name}</td>
                                     <td>{data?.QtyInv && +data?.QtyInv.toFixed(2)}</td>
@@ -208,156 +226,31 @@ function SearchStock() {
                                       })}>                                      
                                              View                                     
                                          </button>
-                                </td>                                 
+                                    </td>
+                                   
                               </tr>
-                             ))}                        
+                                ))}     
                         </tbody>
-                      </table>
+                              </table >
+                             
+                             {/* <Loader />  */}
                         </div>
-                            </TabPane>
-                            {/* <TabPane tabId="2">
-                       <div className="table-responsive">
-                      <table
-                        id="example4"
-                        className="table card-table display mb-4 shadow-hover table-responsive-lg"
-                        style={{ minWidth: "845px" }}
-                      >
-                        <thead>
-                          <tr>
-                            <th>Code</th>
-                            <th>Name</th>
-                            <th>Qty inv</th>
-                            <th>Pieces</th>
-                            <th>Action</th>                                    
-                          </tr>
-                        </thead>
-                        <tbody>
-                              <tr>
-                                <td>1</td>
-                                <td>ds</td>
-                                <td>0</td>
-                                <td>32</td>
-                                 <td>
-                                    <button className="btn btn-primary">
-                                        View
-                                    </button>
-                                 </td>                                 
-                              </tr>                        
-                        </tbody>
-                      </table>
-                     </div>
-                     </TabPane>    */}
-                      {/* <TabPane tabId="3">
-                      <div className="table-responsive">
-                      <table
-                        id="example4"
-                        className="table card-table display mb-4 shadow-hover table-responsive-lg"
-                        style={{ minWidth: "845px" }}
-                      >
-                        <thead>
-                          <tr>
-                            <th>Code</th>
-                            <th>Name</th>
-                            <th>Qty inv</th>
-                            <th>Pieces</th>
-                            <th>Action</th>                                    
-                          </tr>
-                        </thead>
-                        <tbody>
-                              <tr>
-                                <td>1</td>
-                                <td>ds</td>
-                                <td>0</td>
-                                 <td>32</td> 
-                                 <td>
-                                    <button className="btn btn-primary">
-                                       View
-                                     </button>
-                                 </td>                                 
-                              </tr>                        
-                        </tbody>
-                      </table>
-                      </div>
-                     </TabPane>                                        */}
-                                        
-                   {/* <TabPane tabId="4">
-                      <div className="table-responsive">
-                      <table
-                        id="example4"
-                        className="table card-table display mb-4 shadow-hover table-responsive-lg"
-                        style={{ minWidth: "845px" }}
-                      >
-                        <thead>
-                          <tr>
-                            <th>Code</th>
-                            <th>Name</th>
-                            <th>Qty inv</th>
-                            <th>Pieces</th>
-                            <th>Action</th>                                    
-                          </tr>
-                        </thead>
-                        <tbody>
-                              <tr>
-                                <td>1</td>
-                                <td>ds</td>
-                                <td>0</td>
-                                <td>32</td> 
-                                 <td>
-                                   <button className="btn btn-primary">
-                                        View
-                                   </button>
-                                 </td>                                 
-                              </tr>                        
-                        </tbody>
-                      </table>
-                     </div>
-                    </TabPane>                                         */}
-                    {/* <TabPane tabId="5">
-                    <div className="table-responsive">
-                      <table
-                        id="example4"
-                        className="table card-table display mb-4 shadow-hover table-responsive-lg"
-                        style={{ minWidth: "845px" }}
-                      >
-                        <thead>
-                          <tr>
-                            <th>Code</th>
-                            <th>Name</th>
-                            <th>Qty inv</th>
-                            <th>Pieces</th>
-                            <th>Action</th>                                    
-                          </tr>
-                        </thead>
-                        <tbody>
-                              <tr>
-                                <td>1</td>
-                                <td>ds</td>
-                                <td>0</td>
-                                 <td>32</td>
-                                 <td>
-                                 <button className="btn btn-primary">
-                                 <Link to="/item-detail">
-                                             View
-                                 </Link>
-                                 </button>
-                                </td>                                 
-                              </tr>                        
-                        </tbody>
-                      </table>
-                     </div>
-                     </TabPane>                                         */}
+                          </TabPane>
                    </TabContent>)}
                    </div>
+                   { data?.length>0&&currentPage<=totalPage && <div ref={myRef}id="scroll"></div>}              
                   </div>
                 </div>
               </div>
-              <PaginationComponent
+              
+              {isLoading2 && currentPage>1&& <h3 style={{textAlign:'center'}} >Loading...</h3>}
+              {/* <PaginationComponent
                       totalPage={totalPage}
                       currentPage={currentPage}
                       setCallApi={(val) => setCallApi(val)}
                       setCurrentPage={(val) => setCurrentPage(val)}
                       handlePageClick={handlePageClick}
-              />
+              /> */}
             </div>
           </div>        
         </div>
@@ -371,7 +264,8 @@ function SearchStock() {
           searchCollectionData={searchCollectionData}
           categoryCode={categoryCode}
           setIsLoading={setIsLoading}
-          setMainData={ setdata}
+          setMainData={setdata}
+          setCurrentPage={setCurrentPage}
         />
         </>
     );

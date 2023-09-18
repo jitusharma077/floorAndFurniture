@@ -13,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 import { GetDataWithToken } from "../../ApiHelper/ApiHelper";
 import OrdersModal from "../../Common/OrdersModal";
 import moment from "moment";
+import { useInView } from "react-intersection-observer";
 
 
 function Orders() {
@@ -21,14 +22,16 @@ function Orders() {
     const[callApi,setCallApi]=useState(true);
     const[orderData,setOrderData]=useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const[isLoading2,setIsLoading2]=useState(true);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPage, settotalPage] = useState(10);
     const [statusCode, setStatusCode] = useState('CONFIRMED');
     const [searchData, setSearchData] = useState('');
     const [openModal, setOpenModal] = useState(false); 
     const [customerCode, setCustomerCode] = useState('');
-    
-    const[deliveryName, setDeliveryName] = useState('');
+    const [deliveryName, setDeliveryName] = useState('');
+    const { ref: myRef, inView: visibleElement } = useInView();
+  
     const [date, setDate] = useState({
     fromDate: '',
     toDate: '',
@@ -36,13 +39,13 @@ function Orders() {
   
   const modalToggle = () => setOpenModal(!openModal);
   
-    const handlePageClick = (e, index) => {
-        e.preventDefault();
-        setCurrentPage(index + 1);
-        setCallApi(true);
-        setOrderData([]);
-        setIsLoading(true);
-    };
+    // const handlePageClick = (e, index) => {
+    //     e.preventDefault();
+    //     setCurrentPage(index + 1);
+    //     setCallApi(true);
+    //     setOrderData([]);
+    //     setIsLoading(true);
+    // };
 
   const searchHandler = () => {
      setCurrentPage(1);
@@ -64,19 +67,28 @@ function Orders() {
   let toDate = date?.toDate ? moment(date?.toDate, "ddd MMM DD YYYY HH:mm:ss [GMT]ZZ")?.format("YYYY-MM-DD"):''; 
   
   useEffect(() => {
-    if (callApi) {
+    if (visibleElement) {
+      // setCallApi(true);
+     
+      setIsLoading2(true);
+    }
+    if (callApi||visibleElement) {
       GetDataWithToken(`superadmin/sales-orders/?page=${currentPage}&pageSize=10&statusCode=${statusCode}&customerCode=${customerCode}&fromDate=${fromDate}&toDate=${toDate}&searchText=${searchData}&deliveryName=${deliveryName}`)
         .then((response) => {
           if (response.status === true) {
-            setOrderData(response.data);
+             setOrderData(prevData => [...prevData, ...response?.data]);
+            // setOrderData(response.data);
             setCallApi(false);
             setIsLoading(false);
-             settotalPage(response?.data?.length > 0 && Math?.ceil(response?.totalCount/10));
-          }
+            settotalPage(response?.data?.length > 0 && Math?.ceil(response?.totalCount / 10));
+            currentPage<=totalPage&&setCurrentPage((prevPage) => prevPage + 1);
+            setIsLoading2(false); 
+            }
            setIsLoading(false);
+            setIsLoading2(false); 
       })
     }
-   }, [callApi]);
+   }, [callApi,visibleElement]);
   
   return (
         <>
@@ -141,7 +153,7 @@ function Orders() {
                                             </NavItem>                                                                                 
                                         </Nav>
                                         <TabContent activeTab={tabOpen}>
-                                            <TabPane tabId="1">
+                              <TabPane tabId="1">
                                            <div className="table-responsive">
                       <table
                         id="example4"
@@ -248,15 +260,18 @@ function Orders() {
                   </TabPane>                                                                                                            
                  </TabContent>
                   </div>
-                 </div>
+                </div>
+              {orderData?.length>0 && currentPage <= totalPage &&<div ref={myRef}id="scroll"></div>}
+               
               </div>
-               <PaginationComponent
+                { isLoading2 && currentPage>1 && <h3 style={{textAlign:'center'}}>Loading...</h3> } 
+               {/* <PaginationComponent
                                  totalPage={totalPage}
                                  currentPage={currentPage}
                                  setCallApi={(val) => setCallApi(val)}
                                  setCurrentPage={(val) => setCurrentPage(val)}
                                  handlePageClick={handlePageClick}
-                />
+                /> */}
                 </div>
                 </div>
               </div>        
@@ -273,6 +288,7 @@ function Orders() {
         deliveryName={deliveryName}
         setIsLoading={setIsLoading}
         setMainData={setOrderData}
+        setCurrentPage={setCurrentPage}
       />                         
       </>
     );

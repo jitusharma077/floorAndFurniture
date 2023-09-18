@@ -13,35 +13,38 @@ import {
 import { GetDataWithToken } from "../../ApiHelper/ApiHelper";
 import OrdersModal from "../../Common/OrdersModal";
 import moment from "moment";
+import { useInView } from "react-intersection-observer";
 
 function Invoices() {
     const navigate = useNavigate();
-     const [tabOpen, setTabOpen] = useState("1");
+    const [tabOpen, setTabOpen] = useState("1");
     const [callApi, setCallApi] = useState(true);
     const [invoiceData, setInvoiceData] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
-    const [totalPage, settotalPage] = useState(10);
+    const [totalPage, settotalPage] = useState(1);
     const [invoiceType, setInvoiceType] = useState('INVOICES');
     const [searchData, setSearchData] = useState('');
     const [isLoading, setIsLoading] = useState(true);
+    const [isLoading2, setIsLoading2] = useState(true);
     const [openModal, setOpenModal] = useState(false); 
     const [customerCode, setCustomerCode] = useState('');
-     const[deliveryName, setDeliveryName] = useState('');
+    const [deliveryName, setDeliveryName] = useState('');
     const [date, setDate] = useState({
     fromDate: '',
     toDate: '',
     });
+    const { ref: myRef, inView: visibleElement } = useInView();
 
     const modalToggle = () => setOpenModal(!openModal);
 
-    const handlePageClick = (e, index) => {
-        e.preventDefault();
-        setCurrentPage(index + 1);
-        setCallApi(true);
-        setInvoiceData([]);
-        setIsLoading(true);
+    // const handlePageClick = (e, index) => {
+    //     e.preventDefault();
+    //     setCurrentPage(index + 1);
+    //     setCallApi(true);
+    //     setInvoiceData([]);
+    //     setIsLoading(true);
        
-    };
+    // };
 
    const setTabValue=(value)=>{
         setTabOpen(value);
@@ -64,20 +67,32 @@ function Invoices() {
     let toDate = date?.toDate ? moment(date?.toDate, "ddd MMM DD YYYY HH:mm:ss [GMT]ZZ")?.format("YYYY-MM-DD"):'';
 
     useEffect(() => {
-        if (callApi) {
-            GetDataWithToken(`superadmin/get-invoice?page=${currentPage}&pageSize=10&&costumerCode=${customerCode}&typeCode=${invoiceType}&fromDate=${fromDate}&toDate=${toDate}&searchText=${searchData}&deliveryName=${deliveryName}`)
+        if (visibleElement) {
+            // setCallApi(true);
+           
+            setIsLoading2(true);
+        }
+        if (callApi||visibleElement) {
+            GetDataWithToken(`superadmin/get-invoice?page=${currentPage}&pageSize=10&costumerCode=${customerCode}&typeCode=${invoiceType}&fromDate=${fromDate}&toDate=${toDate}&searchText=${searchData}&deliveryName=${deliveryName}`)
                 .then((response) => {
                     if (response.status === true) { 
-                        console.log(response?.data);
-                        setCallApi(false);
-                        setInvoiceData(response?.data);
                         settotalPage(response?.data?.length > 0 && Math?.ceil(response?.total / 10));
+                
+                        setCallApi(false);
+                        setInvoiceData(prevData => [...prevData, ...response.data]);
+                        currentPage <= totalPage && setCurrentPage((prevPage) => prevPage + 1);
+                        console.log('currennnntttttt',currentPage)
                         setIsLoading(false);
+                        setIsLoading2(false);
+                        
                     }
+                     setIsLoading2(false);
                     setIsLoading(false);
             })
         }
-    },[callApi])
+    },[callApi,visibleElement])
+
+    console.log('dtaaaaa',invoiceData)
 
     return (
         <>
@@ -127,7 +142,8 @@ function Invoices() {
                                     <div>
                                         <Nav tabs>
                                             <NavItem>
-                                            <NavLink
+                                                <NavLink
+                                                
                                                 className={tabOpen==="1"?"active":""}
                                                 onClick={()=>setTabValue('1')}
                                             >
@@ -135,7 +151,8 @@ function Invoices() {
                                             </NavLink>
                                             </NavItem>
                                             <NavItem>
-                                            <NavLink
+                                                <NavLink
+                                                   
                                                 className={tabOpen==="2"?"active":""}
                                                 onClick={()=>setTabValue('2')}
                                             >
@@ -252,15 +269,19 @@ function Invoices() {
                                             </TabPane>                                                                                                            
                                         </TabContent>
                                     </div>
+                                    {invoiceData?.length > 0 && currentPage <= totalPage && <div ref={myRef} id="scroll"></div>}
+                                     { isLoading2 && currentPage>1&& <h3 style={{textAlign:'center'}}>Loading...</h3> }
                                 </div>
                             </div>
-                               <PaginationComponent
+                           
+                            
+                               {/* <PaginationComponent
                                  totalPage={totalPage}
                                  currentPage={currentPage}
                                  setCallApi={(val) => setCallApi(val)}
                                  setCurrentPage={(val) => setCurrentPage(val)}
                                  handlePageClick={handlePageClick}
-                             />
+                             /> */}
                             </div>
                      </div>
                 </div>        
@@ -277,6 +298,7 @@ function Invoices() {
                 deliveryName={deliveryName}
                 setIsLoading={setIsLoading}
                 setMainData={setInvoiceData}
+                setCurrentPage={setCurrentPage}
             />  
         </>
     );

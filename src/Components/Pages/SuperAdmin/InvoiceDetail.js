@@ -5,11 +5,34 @@ import { Table } from "reactstrap";
 import { GetDataWithToken } from "../../ApiHelper/ApiHelper";
 import { useLocation } from "react-router-dom";
 import moment from "moment";
+import axios from "axios";
 
 function InvoiceDetails() {
     const location = useLocation();
     console.log('invoiceDetails', location);
     const [detailData, setDetailData] = useState();
+
+
+    const downloadHandler = () => {
+        GetDataWithToken(`superadmin/download-pdf?code=${location?.state?.data}`).then((response) => {
+            // console.log('uuuuuuuuu', pdfUrl);
+      axios({
+      url: response?.url,
+      method: "GET",
+      responseType: "blob", // important
+    }).then((response) => {
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", "invoiceData.pdf"); //or any other extension
+      document.body.appendChild(link);
+      link.click();
+      // setLoadingData(false);
+    });
+   });   
+    
+  }
+
     useEffect(() => {
         GetDataWithToken(`superadmin/get-invoice-details?invoiceId=${location?.state?.data}`).then((response) => {
             if (response.status === true) {
@@ -45,6 +68,9 @@ function InvoiceDetails() {
                                       <div className="card-header">
                                           <div className="col-lg-3">
                                              <h4 className="card-title">Invoice details</h4>
+                                        </div>
+                                        <div className="col-lg-1">
+                                             <button className="btn btn-primary" onClick={downloadHandler}>download</button>
                                         </div>
                                     </div> 
                                     <div class="row">
@@ -144,7 +170,7 @@ function InvoiceDetails() {
                                                             {data?.ItemName}
                                                          </td>
                                                          <td>
-                                                           {+Math?.abs(data?.Qty)?.toFixed(2)}
+                                                           {data?.Qty&&+Math?.abs(data?.Qty)?.toFixed(2)}
                                                         </td>
                                             </tr>
                                            )}

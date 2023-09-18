@@ -5,6 +5,7 @@ import { useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { GetDataWithToken } from "../../ApiHelper/ApiHelper";
 import moment from "moment";
+import axios from "axios";
 
 function CustomerLedgerDetails() {
      const location = useLocation();
@@ -13,6 +14,22 @@ function CustomerLedgerDetails() {
     let data = location?.state?.data;
     let creditTotal = 0;
     let debitTotal = 0;
+
+    const downloadHandler = () => {
+     axios({
+      url:`http://203.115.102.6:6696/api/v1/superadmin/customer-ledger-excel?customerCode=${location?.state?.customerId}&fromDate=${location?.state?.startDate}&toDate=${location?.state?.endDate}`,
+      method: "GET",
+      responseType: "blob", // important
+    }).then((response) => {
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", "ledgerData.xls"); //or any other extension
+      document.body.appendChild(link);
+      link.click();
+      // setLoadingData(false);
+    });
+    }
 
     for (let i = 0; i < data.length; i++){
         creditTotal += +data[i]?.CreditAmount;
@@ -55,6 +72,9 @@ function CustomerLedgerDetails() {
                                       <div className="card-header">
                                           <div className="col-lg-3">
                                              <h4 className="card-title">Customer Ledger</h4>
+                                        </div>
+                                        <div className="col-lg-1">
+                                             <button className="btn btn-primary" onClick={downloadHandler}>Download</button>
                                         </div>
                                     </div> 
                                     <div>

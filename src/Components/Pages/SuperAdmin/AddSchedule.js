@@ -19,7 +19,7 @@ function AddSchedule() {
   useEffect(() => {
     console.log("first", location.state);
     setEnquiryId(location.state.data);
-    GetDataWithToken("superadmin/get-schedule/").then((response) => {
+    GetDataWithToken("superadmin/get-schedule?type=measurer").then((response) => {
       if (response.status === true) {
         setAllTimeSlot(response.data);
       }

@@ -211,10 +211,10 @@ function ViewEstimate() {
                 </td>
                 <td>{item?.qty ? item?.qty : ""}</td>
                 <td>{item?.mrp ? item?.mrp : item?.hardwareSqmt}</td>
-                <td>{item?.fittingCharge}</td>
-                <td>{item?.totalPrice}</td>
-                <td>{`${item?.dis}%`}</td>
-                <td>{item?.grandTotal}</td>
+                <td>{item?.fittingCharge&&item?.fittingCharge}</td>
+                <td>{item?.totalPrice&&item?.totalPrice}</td>
+                <td>{item?.dis?`${item?.dis}%`:'0'}</td>
+                <td>{item?.grandTotal?item?.grandTotal:''}</td>
               </tr>
             </>
           );
@@ -268,18 +268,18 @@ function ViewEstimate() {
           return (
             <tr>
               <td>{fabricIndex + 1}</td>
-              <td colSpan={1}>{fabric?.title}</td>
-              <td colSpan={4}>{fabric?.value}</td>
-              <td>{fabric?.qty}</td>
-              <td>{fabric?.noOfPanel}</td>
-              <td>{fabric?.totalFabricInM}</td>
-              <td>{fabric?.mrp}</td>
-              <td>{fabric?.fittingCharge}</td>
-              <td>{fabric?.hardwareSqmt}</td>
-              <td>{fabric?.totalPrice}</td>
+              <td colSpan={1}>{fabric?.title&&fabric?.title}</td>
+              <td colSpan={4}>{fabric?.value&&fabric?.value}</td>
+              <td>{fabric?.qty&&fabric?.qty}</td>
+              <td>{fabric?.noOfPanel&&fabric?.noOfPanel}</td>
+              <td>{fabric?.totalFabricInM&&fabric?.totalFabricInM}</td>
+              <td>{fabric?.mrp&&fabric?.mrp}</td>
+              <td>{fabric?.fittingCharge&&fabric?.fittingCharge}</td>
+              <td>{fabric?.hardwareSqmt&&fabric?.hardwareSqmt}</td>
+              <td>{fabric?.totalPrice&&fabric?.totalPrice}</td>
               {/* <td>{fabric?.dis}</td> */}
-              <td>{`${fabric?.dis}%`}</td>
-              <td>{fabric?.grandTotal}</td>
+              <td>{fabric?.dis&&`${fabric?.dis}%`}</td>
+              <td>{fabric?.grandTotal&&fabric?.grandTotal}</td>
             </tr>
           );
         })}
@@ -306,8 +306,8 @@ function ViewEstimate() {
           <th colSpan={16}>Blind stitching details</th>
         </tr>
         <tr>
-          <th colSpan={8}>Width - {blind?.width} cm</th>
-          <th colSpan={8}>height / Drop - {blind?.height} cm</th>
+          <th colSpan={8}>Width - {blind?.width && blind?.width} cm</th>
+          <th colSpan={8}>height / Drop - {blind?.height && blind?.height} cm</th>
         </tr>
         <tr>
           <th>Sno</th>
@@ -658,6 +658,8 @@ function ViewEstimate() {
   const renderFlooring = (flooring = [], colspan = 16) => {
     const fabrics = flooring?.flooringList ?? [];
 
+    console.log('fabbbbbbbbb',fabrics)
+
     const totalAmount = fabrics?.reduce((sum, fabric) => {
       return (sum = +sum + +fabric?.grandTotal);
     }, 0);
@@ -700,7 +702,7 @@ function ViewEstimate() {
 
               <td colspan="1">{item?.price}</td>
               <td colspan="2">{item?.totalPrice}</td>
-              <td colspan="2">{`${item?.dis}%`}</td>
+              <td colspan="2">{item?.discount?`${item?.discount}%`:0}</td>
               <td colspan="3">{item?.grandTotal}</td>
             </tr>
           );
@@ -1216,7 +1218,7 @@ function ViewEstimate() {
     };
 
     if (roomDetail) {
-      let windowList = Array(roomDetail?.numberOfWindow).fill(1);
+      let windowList = Array(roomDetail?.room_assets?.length).fill(1);
       if (windowList.length === 0) {
         windowList.push(0);
       }

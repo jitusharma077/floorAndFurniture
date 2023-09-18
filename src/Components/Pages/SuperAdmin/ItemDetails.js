@@ -38,7 +38,7 @@ function ItemDetails() {
        setCallApi2(true);
     }
   
-
+    
     useEffect(() => {
 
         if(callApi){ GetDataWithToken(`superadmin/stock-item-details?code=${altData?altData:location?.state?.itemId}&companyCode=${companyCode}`).then(
@@ -116,7 +116,7 @@ function ItemDetails() {
                                                         <h1 style={{ color: 'gray' }}>NO IMAGE FOUND</h1>
                                                     </div>}
                                                     </div>    
-                                                <button className="btn btn-primary ms-5 mt-3" onClick={() => { setOpenAlternateTab(true); setCallApi2(true); }}>Find alternate items
+                                                <button className="btn btn-primary ms-3 mt-3" onClick={() => { setOpenAlternateTab(true); setCallApi2(true); }}>Find alternate items
                                                  </button>
                                             </div>  
                                         </div>
@@ -165,9 +165,8 @@ function ItemDetails() {
                                             </NavItem>                                                                                 
                                         </Nav>
                                         <TabContent activeTab={tabOpen}>
-                                            
                                               <TabPane tabId="1">
-                                                      <li class="list-group-item d-flex justify-content-between ">                                          
+                                                      <li class="list-group-item d-flex justify-content-between">                                          
                                                     <strong> Item family code:</strong>
                                                       <span class="mb-0">{ detailsData?.ItemFamilyCode }</span>
                                                 </li>
@@ -340,7 +339,7 @@ function ItemDetails() {
                                                       <th>Loc</th>
                                                       <th>Company</th>
                                                       <th>Qty</th>
-                                                    </tr>        
+                                                    </tr>         
                                                    </thead>
                                                     <tbody>
                                                         {tableData?.Batches?.map((data) =>

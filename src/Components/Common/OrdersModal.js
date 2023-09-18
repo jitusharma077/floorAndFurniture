@@ -4,7 +4,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { GetDataWithToken } from "../ApiHelper/ApiHelper";
 
-function OrdersModal({openModal,modalToggle,setCustomerCode,customerCode,mainCallApi,setDate,date,setDeliveryName,deliveryName,ledger,setIsLoading,setMainData}) {
+function OrdersModal({openModal,modalToggle,setCustomerCode,customerCode,mainCallApi,setDate,date,setDeliveryName,deliveryName,ledger,setIsLoading,setMainData,setCurrentPage,enquiryFilter}) {
     const [nextPage, setNextPage] = useState(0);
     const [searchValue, setSearchValue] = useState('');
     const [customerList, setCustomerList] = useState([]);
@@ -13,6 +13,7 @@ function OrdersModal({openModal,modalToggle,setCustomerCode,customerCode,mainCal
     const [callApi, setCallApi] = useState(false);
     const [callApi2, setCallApi2] = useState(false);
     const [customerName, setCustomerName] = useState('');
+
     const toggle = () => {
         modalToggle();
         setNextPage(0);
@@ -27,9 +28,12 @@ function OrdersModal({openModal,modalToggle,setCustomerCode,customerCode,mainCal
 
     const submitSearchData = () => {
         setMainData([]);
-        setIsLoading(true);
+
+       setCurrentPage && setCurrentPage(1);
+        setIsLoading && setIsLoading(true);
         toggle();
         mainCallApi(true);
+       
     }
 
     const handleInputChange = (e) => { 
@@ -112,23 +116,25 @@ function OrdersModal({openModal,modalToggle,setCustomerCode,customerCode,mainCal
             </ModalHeader>
             <ModalBody>
                     <span className="ms-2" onClick={() => setNextPage(1)}>
-                        Order date:
+                        
+                        Select Date:
                        {date?.fromDate && `${dateFromArray?.[2]} ${dateFromArray?.[1]} ${dateFromArray?.[3]} to ${dateToArray?.[2]} ${dateToArray?.[1]} ${dateToArray?.[3]}`}
                     </span>
                      {date?.fromDate && <button className="btn btn-primary ms-2" onClick={()=>setDate({})}>X</button>}
-                <hr></hr>
-                    <span className="ms-2 w-50" onClick={() => { setNextPage(2); setCallApi(true)}}>Customer:{customerName}
-                     {/* <button className="btn">X</button> */}
+                    <hr></hr>
+                    {!enquiryFilter && <>
+                        <span className="ms-2 w-50" onClick={() => { setNextPage(2); setCallApi(true) }}>Customer:{customerName}
+                            {/* <button className="btn">X</button> */}
                       
-                    </span>
-                    {customerName && <button className="btn btn-primary ms-2" onClick={() => { setCustomerName(''); setCustomerCode('')}}>X</button>}
-                    
-                <hr></hr>
-                    {!ledger &&
-                        <>
-                        <span className="ms-2 mb-5" onClick={() => setNextPage(3)} >Delivery name:{deliveryName}
                         </span>
-                        {deliveryName && <button className="btn btn-primary ms-2" onClick={() => { setDeliveryName(''); setCallApi2(true)}}>X</button> }
+                        {customerName && <button className="btn btn-primary ms-2" onClick={() => { setCustomerName(''); setCustomerCode('') }}>X</button>}
+                     <hr></hr>    
+                    </>}
+                    {!ledger || !enquiryFilter &&
+                        <>
+                        <span className="ms-2 mb-5" onClick={() =>{ setNextPage(3); setCallApi2(true)}} >Delivery name:{deliveryName}
+                        </span>
+                        {deliveryName && <button className="btn btn-primary ms-2" onClick={() => { setDeliveryName('')}}>X</button> }
                         {/* <hr></hr>  */}
                      </>   
                     }
@@ -180,8 +186,7 @@ function OrdersModal({openModal,modalToggle,setCustomerCode,customerCode,mainCal
                       className="form-control"
                       placeholder="Search"
                       onChange={handleInputChange}
-                    />
-                        
+                    />       
                     </div>
                     <ul class="list-group list-group-flush">
                         {customerList?.map((data) => <li class="list-group-item d-flex justify-content-between" onClick={()=>customerListSubmitHandler(data?.ACCOUNTNUM,data?.NAME)}>{ data?.NAME }</li>)}

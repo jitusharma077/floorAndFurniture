@@ -3,23 +3,47 @@ import React, { useEffect, useState } from "react";
 import { GetDataWithToken, serverUrl } from "../../ApiHelper/ApiHelper";
 import SuperAdminHeader from "./Common/SuperAdminHeader";
 import SuperAdminSidebar from "./Common/SuperAdminSidebar";
+import OverdueModal from "../../Common/OverDueModal";
+import OverdueDetails from "../../Common/OverDueDetailModal";
+import OrdersModal from "../../Common/OrdersModal";
+import moment from "moment";
 
 function Dashboard() {
   const [AllDashboardData, setAllDashboardData] = useState("");
+  const [openModal, setOpenModal] = useState(false);
+  const [openModal2, setOpenModal2] = useState(false);
+  const toggle = () => setOpenModal(!openModal);
+  const toggle2 = () => setOpenModal2(!openModal2);
+  const [rowName, setRowName] = useState();
+  const [columnName, setColumnName] = useState();
+  const [callApi, setCallApi] = useState(false);
+  const [mainDashboardCallApi,setMainDashboardCallApi] = useState(true);
+  const [openDateModal, setOpenDateModal] = useState(false);
+  const modalDateToggle = () => { setOpenDateModal(!openDateModal) };
+   const [date, setDate] = useState({
+    fromDate: '',
+    toDate: '',
+   });
+  
+   let fromDate = date?.fromDate ?moment(date?.fromDate, "ddd MMM DD YYYY HH:mm:ss [GMT]ZZ")?.format("YYYY-MM-DD"):'';
+   let toDate = date?.toDate ? moment(date?.toDate, "ddd MMM DD YYYY HH:mm:ss [GMT]ZZ")?.format("YYYY-MM-DD"):'';
+
+  
   useEffect(() => {
-    GetDataWithToken("superadmin/dashboard").then((response) => {
+   GetDataWithToken(`superadmin/dashboard?fromDate=${fromDate}&toDate=${toDate}`).then((response) => {
       if (response.status === true) {
         setAllDashboardData(response.data);
+        setMainDashboardCallApi(false);
       }
     });
-  }, [""]);
+  }, [mainDashboardCallApi]);
 
   const [LoadingData, setLoadingData] = useState(false);
 
-  const DownloadReportHandler = () => {
+  const DownloadReportHandler = (url) => {
     setLoadingData(true);
     axios({
-      url: `${serverUrl}superadmin/storewise-measurement-aging/22`,
+      url: url,
       method: "GET",
       responseType: "blob", // important
     }).then((response) => {
@@ -33,121 +57,124 @@ function Dashboard() {
     });
   };
 
-  const DownloadReportHandler2 = () => {
-    setLoadingData(true);
-    axios({
-      url: `${serverUrl}superadmin/installer-installation-aging/22`,
-      method: "GET",
-      responseType: "blob", // important
-    }).then((response) => {
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement("a");
-      link.href = url;
-      link.setAttribute("download", "file.xls"); //or any other extension
-      document.body.appendChild(link);
-      link.click();
-      setLoadingData(false);
-    });
-  };
+  // const DownloadReportHandler2 = () => {
+  //   setLoadingData(true);
+  //   axios({
+  //     url: `${serverUrl}superadmin/installer-installation-aging/22`,
+  //     method: "GET",
+  //     responseType: "blob", // important
+  //   }).then((response) => {
+  //     const url = window.URL.createObjectURL(new Blob([response.data]));
+  //     const link = document.createElement("a");
+  //     link.href = url;
+  //     link.setAttribute("download", "file.xls"); //or any other extension
+  //     document.body.appendChild(link);
+  //     link.click();
+  //     setLoadingData(false);
+  //   });
+  // };
 
-  const DownloadReportHandler3 = () => {
-    setLoadingData(true);
-    axios({
-      url: `${serverUrl}superadmin/storewise-estimate-aging`,
-      method: "GET",
-      responseType: "blob", // important
-    }).then((response) => {
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement("a");
-      link.href = url;
-      link.setAttribute("download", "file.xls"); //or any other extension
-      document.body.appendChild(link);
-      link.click();
-      setLoadingData(false);
-    });
-  };
-  const DownloadReportHandler4 = () => {
-    setLoadingData(true);
-    axios({
-      url: `${serverUrl}superadmin/storewise-order-created/22`,
-      method: "GET",
-      responseType: "blob", // important
-    }).then((response) => {
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement("a");
-      link.href = url;
-      link.setAttribute("download", "file.xls"); //or any other extension
-      document.body.appendChild(link);
-      link.click();
-      setLoadingData(false);
-    });
-  };
+  // const DownloadReportHandler3 = () => {
+  //   setLoadingData(true);
+  //   axios({
+  //     url: `${serverUrl}superadmin/storewise-estimate-aging`,
+  //     method: "GET",
+  //     responseType: "blob", // important
+  //   }).then((response) => {
+  //     const url = window.URL.createObjectURL(new Blob([response.data]));
+  //     const link = document.createElement("a");
+  //     link.href = url;
+  //     link.setAttribute("download", "file.xls"); //or any other extension
+  //     document.body.appendChild(link);
+  //     link.click();
+  //     setLoadingData(false);
+  //   });
+  // };
 
-  const DownloadReportHandler5 = () => {
-    setLoadingData(true);
-    axios({
-      url: `${serverUrl}superadmin/storewise-qc-completed/22`,
-      method: "GET",
-      responseType: "blob", // important
-    }).then((response) => {
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement("a");
-      link.href = url;
-      link.setAttribute("download", "file.xls"); //or any other extension
-      document.body.appendChild(link);
-      link.click();
-      setLoadingData(false);
-    });
-  };
-  const DownloadReportHandler6 = () => {
-    setLoadingData(true);
-    axios({
-      url: `${serverUrl}superadmin/installer-installation-aging/22`,
-      method: "GET",
-      responseType: "blob", // important
-    }).then((response) => {
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement("a");
-      link.href = url;
-      link.setAttribute("download", "file.xls"); //or any other extension
-      document.body.appendChild(link);
-      link.click();
-      setLoadingData(false);
-    });
-  };
+  // const DownloadReportHandler4 = () => {
+  //   setLoadingData(true);
+  //   axios({
+  //     url: `${serverUrl}superadmin/storewise-order-created/22`,
+  //     method: "GET",
+  //     responseType: "blob", // important
+  //   }).then((response) => {
+  //     const url = window.URL.createObjectURL(new Blob([response.data]));
+  //     const link = document.createElement("a");
+  //     link.href = url;
+  //     link.setAttribute("download", "file.xls"); //or any other extension
+  //     document.body.appendChild(link);
+  //     link.click();
+  //     setLoadingData(false);
+  //   });
+  // };
 
-  const DownloadReportHandler7 = () => {
-    setLoadingData(true);
-    axios({
-      url: `${serverUrl}superadmin/storewise-total`,
-      method: "GET",
-      responseType: "blob", // important
-    }).then((response) => {
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement("a");
-      link.href = url;
-      link.setAttribute("download", "file.xls"); //or any other extension
-      document.body.appendChild(link);
-      link.click();
-      setLoadingData(false);
-    });
-  };
-  const DownloadReportHandler8 = () => {
-    setLoadingData(true);
-    axios({
-      url: `${serverUrl}superadmin/installer-installation-completed/:id`,
-      method: "GET",
-      responseType: "blob", // important
-    }).then((response) => {
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement("a");
-      link.href = url;
-      link.setAttribute("download", "file.xls"); //or any other extension
-      document.body.appendChild(link);
-      link.click();
-      setLoadingData(false);
-    });
-  };
+  // const DownloadReportHandler5 = () => {
+  //   setLoadingData(true);
+  //   axios({
+  //     url: `${serverUrl}superadmin/storewise-qc-completed/22`,
+  //     method: "GET",
+  //     responseType: "blob", // important
+  //   }).then((response) => {
+  //     const url = window.URL.createObjectURL(new Blob([response.data]));
+  //     const link = document.createElement("a");
+  //     link.href = url;
+  //     link.setAttribute("download", "file.xls"); //or any other extension
+  //     document.body.appendChild(link);
+  //     link.click();
+  //     setLoadingData(false);
+  //   });
+  // };
+
+  // const DownloadReportHandler6 = () => {
+  //   setLoadingData(true);
+  //   axios({
+  //     url: `${serverUrl}superadmin/installer-installation-aging/22`,
+  //     method: "GET",
+  //     responseType: "blob", // important
+  //   }).then((response) => {
+  //     const url = window.URL.createObjectURL(new Blob([response.data]));
+  //     const link = document.createElement("a");
+  //     link.href = url;
+  //     link.setAttribute("download", "file.xls"); //or any other extension
+  //     document.body.appendChild(link);
+  //     link.click();
+  //     setLoadingData(false);
+  //   });
+  // };
+
+  // const DownloadReportHandler7 = () => {
+  //   setLoadingData(true);
+  //   axios({
+  //     url: `${serverUrl}superadmin/storewise-total`,
+  //     method: "GET",
+  //     responseType: "blob", // important
+  //   }).then((response) => {
+  //     const url = window.URL.createObjectURL(new Blob([response.data]));
+  //     const link = document.createElement("a");
+  //     link.href = url;
+  //     link.setAttribute("download", "file.xls"); //or any other extension
+  //     document.body.appendChild(link);
+  //     link.click();
+  //     setLoadingData(false);
+  //   });
+  // };
+
+  // const DownloadReportHandler8 = () => {
+  //   setLoadingData(true);
+  //   axios({
+  //     url: `${serverUrl}superadmin/installer-installation-completed/:id`,
+  //     method: "GET",
+  //     responseType: "blob", // important
+  //   }).then((response) => {
+  //     const url = window.URL.createObjectURL(new Blob([response.data]));
+  //     const link = document.createElement("a");
+  //     link.href = url;
+  //     link.setAttribute("download", "file.xls"); //or any other extension
+  //     document.body.appendChild(link);
+  //     link.click();
+  //     setLoadingData(false);
+  //   });
+  // };
 
   return (
     <>
@@ -175,8 +202,18 @@ function Dashboard() {
             <div className="row">
               <div className="col-xl-12">
                 <div className="alert bg-secondary mb-5">
-                  <h3 className="text-white ">Super Admin Dashboard</h3>
+                  <div className="row">
+                    <div className="col-xl-10">
+                    <h3 className="text-white ">Super Admin Dashboard</h3>
+                    </div>
+                     <div className="col-xl-2">
+                       <button className="btn btn-primary mx-5" onClick={modalDateToggle}>Filter</button>
+                  </div>
+                  </div>
+                 
+                   
                 </div>
+              
                 <div className="row">
                   <div className="col-xl-12">
                     <div className="row">
@@ -189,16 +226,22 @@ function Dashboard() {
                               </span>
                               <div className="ms-4">
                                 <h2 className="mb-0 font-w600">
-                                  {AllDashboardData.totalEnquiry?.enquiry}
+                                  {AllDashboardData?.totalEnquiry?.enquiry}
                                 </h2>
                                 <p className="mb-0 text-nowrap">
                                   Total Enquiry
                                 </p>
                                 <button
-                                  onClick={() => DownloadReportHandler7()}
+                                  onClick={() => DownloadReportHandler(AllDashboardData?.totalEnquiry?.url)}
                                   className="btn btn-primary"
                                 >
                                   Download
+                                </button>
+                                 <button
+                                  onClick={() => setOpenModal(true)}
+                                  className="btn btn-primary mt-2"
+                                >
+                                  View
                                 </button>
                               </div>
                             </div>
@@ -219,11 +262,11 @@ function Dashboard() {
                                 <h2 className="mb-0 font-w600">
                                   {AllDashboardData.measurementPending?.enquiry}
                                 </h2>
-                                <p className="mb-0 text-nowrap">
+                                <p className="mb-0 text-wrap">
                                   Pending Measurements
                                 </p>
                                 <button
-                                  onClick={() => DownloadReportHandler()}
+                                  onClick={() => DownloadReportHandler(AllDashboardData?.measurementPending?.url)}
                                   className="btn btn-primary"
                                 >
                                   Download
@@ -246,7 +289,7 @@ function Dashboard() {
                                 </h2>
                                 <p className="mb-0">Pending Share Estimates</p>
                                 <button
-                                  onClick={() => DownloadReportHandler3()}
+                                  onClick={() => DownloadReportHandler(AllDashboardData?.estimateShared?.url)}
                                   className="btn btn-primary"
                                 >
                                   Download
@@ -271,7 +314,7 @@ function Dashboard() {
                                   Pending Order Confirmations
                                 </p>
                                 <button
-                                  onClick={() => DownloadReportHandler4()}
+                                  onClick={() => DownloadReportHandler(AllDashboardData?.orderConfirmed?.url)}
                                   className="btn btn-primary"
                                 >
                                   Download
@@ -294,7 +337,7 @@ function Dashboard() {
                                 </h2>
                                 <p className="mb-0">Qc completed</p>
                                 <button
-                                  onClick={() => DownloadReportHandler5()}
+                                  onClick={() =>DownloadReportHandler(AllDashboardData?.qcComplete?.url)}
                                   className="btn btn-primary"
                                 >
                                   Download
@@ -352,7 +395,7 @@ function Dashboard() {
                                 </h2>
                                 <p className="mb-0">Work Done/Feedback’s</p>
                                 <button
-                                  onClick={() => DownloadReportHandler5()}
+                                  onClick={() =>DownloadReportHandler(AllDashboardData?.installerAssigned?.url)}
                                   className="btn btn-primary"
                                 >
                                   Download
@@ -375,7 +418,7 @@ function Dashboard() {
                                 </h2>
                                 <p className="mb-0">Installer Assigned</p>
                                 <button
-                                  onClick={() => DownloadReportHandler6()}
+                                  onClick={() => DownloadReportHandler(AllDashboardData?.installerAssigned?.url)}
                                   className="btn btn-primary"
                                 >
                                   Download
@@ -417,13 +460,14 @@ function Dashboard() {
                                   {AllDashboardData?.completedEnquiry?.enquiry}
                                 </h2>
                                 <p className="mb-0">Complete Enquiry</p>
-                              </div>
-                              <button
-                                onClick={() => DownloadReportHandler8()}
+                                    <button
+                                onClick={() => DownloadReportHandler(AllDashboardData?.completedEnquiry?.url)}
                                 className="btn btn-primary"
                               >
                                 Download
                               </button>
+                              </div>
+                            
                             </div>
                           </div>
                         </div>
@@ -561,6 +605,24 @@ function Dashboard() {
           </div>
         </div>
       </div>
+      <OverdueModal openModal={openModal} toggle={toggle}
+        toggle2={toggle2} setColumnName={setColumnName}
+        setRowName={setRowName}  mainSetCallApi={setCallApi}                         
+      />
+      <OverdueDetails openModal={openModal2} toggle={toggle2} columnName={columnName}
+        rowName={rowName} mainCallApi={callApi} mainSetCallApi={setCallApi}
+      />
+       <OrdersModal
+        openModal={openDateModal}
+        modalToggle={modalDateToggle}
+        date={date}
+        setDate={setDate}
+        enquiryFilter="enquiryFilter"
+        setMainData={setAllDashboardData}
+        // setIsLoading={setisLoading}
+        mainCallApi={setMainDashboardCallApi}
+        // setCurrentPage={setCurrentPage}
+      /> 
     </>
   );
 }

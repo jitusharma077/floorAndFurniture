@@ -30,7 +30,7 @@ function AddInstalerSchdule() {
       }
     });
 
-    GetDataWithToken(`superadmin/get-installer-schedule`).then((response) => {
+    GetDataWithToken(`superadmin/get-schedule?type=installer`).then((response) => {
       if (response.status === true) {
         setAllTimeSlot(response.data);
       }
