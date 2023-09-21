@@ -79,7 +79,9 @@ const CustomerAssignMeasurer = () => {
                             <div class="row align-items-center">
                               <div class="col-lg-12 my-1">
                                 <label class="me-sm-2">Select Date For Measurement</label>
-                                <input type="date" min="2023-09-13" class="form-control" name="date"
+                                <input type="date"
+                                  min={new Date(new Date().setDate(new Date().getDate() + 1)).toISOString().split('T')[0]}
+                                  class="form-control" name="date"
                                   {...register(`date`, {
                                     required: true,
                                     maxLength: 80,

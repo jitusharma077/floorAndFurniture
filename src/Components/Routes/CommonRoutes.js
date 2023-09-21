@@ -90,6 +90,7 @@ import CustomerAssignMeasurer from "../Pages/Customer/CustomerAssignMeasurer";
 import CustomerAssignInstaller from "../Pages/Customer/CustomerAssignInstaller";
 import CustomerFeedback from "../Pages/Customer/CustomerFeedback";
 import CustomerComplaintDetail from "../Pages/SuperAdmin/CustomerComplaintDetails";
+import CustomerViewEstimate from "../Pages/Customer/CustomerViewEstimate";
 const CommonRoutes = () => {
   // const [type, setType] = useState({});
   const userDetails = useSelector((store) => store?.user?.userDetails?.type);
@@ -227,17 +228,18 @@ const CommonRoutes = () => {
         )}
 
         <Route path="*" element={<Error />} />
-        <Route path="customer-feedback" element={<CustomerFeedback />} />
+
         <Route path="customer-assign-Installer" element={<CustomerAssignInstaller />} />
         <Route path="customer-assign-mearurer" element={<CustomerAssignMeasurer />} />
         <Route path="customer-status-detail" element={<CustomerStatusDetail />} />
         <Route path="customer-schedule/:url" element={<CustomerSchedule />} />
-
+        <Route path="/customer-view-estimate" element={<CustomerViewEstimate />} />
         <Route path="customer-login" element={<CustomerLogin />} />
         <Route path="customer-Enquiries" element={<CustomerEnquiryList />} />
         <Route path="customer-options" element={<CustomerSelectOption />} />
         <Route path="customer-complaint-category" element={<CustomerComplaintCategory />} />
         <Route path="customer-complaint-form" element={<CustomerComplaintForm />} />
+        <Route path="customer-feedback" element={<CustomerFeedback />} />
       </Routes>
     </BrowserRouter>
   );

@@ -91,7 +91,7 @@ const CustomerComplaintForm = () => {
                     <h4>Complaint form</h4>
                     <span onClick={() => { navigate(-1) }} style={{ cursor: "pointer" }}><i className="fas fa-arrow-left" style={{ fontSize: "20px" }}></i></span>
                   </div>
-                  <div className="basic-form">
+                  <div className="basic-form p-3">
                     <form onSubmit={handleSubmit(onSubmit)}>
                       <div class="row align-items-center">
                         {location.state.data.map((data, index) =>
@@ -133,7 +133,9 @@ const CustomerComplaintForm = () => {
                         </div> */}
                         <div class="col-lg-12 my-1">
                           <label class="me-sm-2">Select Date For installer</label>
-                          <input type="date" min="2023-09-13" class="form-control"
+                          <input type="date"
+                            min={new Date(new Date().setDate(new Date().getDate() + 1)).toISOString().split('T')[0]}
+                            class="form-control"
                             {...register(`date`, {
                               required: true,
                               maxLength: 80,

@@ -10,6 +10,7 @@ import SuperAdminSidebar from "./Common/SuperAdminSidebar";
 import EnquiryCustom from "./Common/EnquiryCustom";
 import ReAssignmesurer from "../../Common/ReAssignmesurer";
 import WcrModal from "../../Common/WcrModal";
+import AdminRemarkModal from "../../Common/AdminRemarkModal";
 
 function EnquiryDetials() {
   const location = useLocation();
@@ -17,6 +18,9 @@ function EnquiryDetials() {
   const [isRoomData, setIsRoomData] = useState(false);
   const [CustomerId, setCustomerId] = useState("");
   const [modal, setModal] = useState(false);
+  const [remarkModal, setRemarkModal] = useState(false);
+
+  const remarkToggle = () => { setRemarkModal(!remarkModal) };
   const toggle = () => setModal(!modal);
   const [modal1, setModal1] = useState(false);
   const toggle1 = () => setModal1(!modal1);
@@ -35,6 +39,17 @@ function EnquiryDetials() {
   const wcrModalToggle = () => setWcrModal(!wcrModal);
   const [wcrData, setWcrData] = useState();
 
+  const customMessageHandler = () => {
+    GetDataWithToken(`customer/send-message?enquiryId=${enquiryId}`).then(response => {
+      if (response.status === true) {
+        console.log(response);
+        toast.success(response.message);
+      } else {
+        toast.error(response.message);
+      }
+    })
+  }
+
   useEffect(() => {
     console.log("location", location);
     setEnquiryId(location.state.data);
@@ -44,11 +59,7 @@ function EnquiryDetials() {
     GetDataWithToken(`installer/get-wcr/${location?.state?.data}`).then((response) => {
       if (response.status === true) {
         setWcrData(response.data);
-      } else {
-        toast.error(response?.data?.message);
       }
-
-
     });
 
     GetDataWithToken(`sales/get-enquiry/${location?.state?.data}`).then(
@@ -95,8 +106,6 @@ function EnquiryDetials() {
           position: toast.POSITION.TOP_CENTER,
         });
         window.location.reload(true);
-      } else {
-        toast.error(response.data.message);
       }
     });
   };
@@ -289,6 +298,22 @@ function EnquiryDetials() {
                 >
                   WCR Report
                 </button>}
+                <>
+                  <button
+                    className="btn btn-mybutton"
+                    onClick={remarkToggle}
+
+                  >
+                    Admin Remarks
+                  </button>
+                  <button
+                    className="btn btn-mybutton"
+                    onClick={customMessageHandler}
+
+                  >
+                    Custom message
+                  </button>
+                </>
               </>
             ) : null}
           </div>
@@ -3131,6 +3156,13 @@ function EnquiryDetials() {
           </div>
         </div>
       </div>
+
+      <AdminRemarkModal
+        enquiryId={enquiryId}
+        remarkModal={remarkModal}
+        toggle={remarkToggle}
+
+      />
 
       <ReAssignmesurer
         modal={modal}

@@ -93,7 +93,7 @@ const CustomerSelectOption = () => {
                               location?.state?.orderId.status !== "cancelled" || location?.state?.orderId.status !== "inprogess" ?
                               <Link
                                 className="btn btn-mybutton"
-                                to="/ViewEstimate"
+                                to="/customer-view-estimate"
                                 state={{ EnquiryDetials: EnquiryDetials.data }}
                               >
                                 View Estimate

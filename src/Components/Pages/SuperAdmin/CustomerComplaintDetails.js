@@ -5,15 +5,18 @@ import { useEffect, useState } from "react";
 import { GetDataWithToken } from "../../ApiHelper/ApiHelper";
 
 const CustomerComplaintDetail = () => {
-  const [feedbackList, setFeedbackList] = useState([]);
+  // const [feedbackList, setFeedbackList] = useState([]);
   const location = useLocation();
+  console.log("locooooo....", location);
 
-  useEffect(() => {
-    GetDataWithToken(`customer/get-feedback?enquiryId=${location?.state?.data?.enquiry?.id}`).then(response => {
-      console.log(response.data);
-      setFeedbackList(response.data.description);
-    })
-  }, [])
+  let feedbacks = location?.state?.data?.description && JSON.parse(location?.state?.data?.description);
+  const feedbackList = JSON.parse(feedbacks);
+  // useEffect(() => {
+  //   GetDataWithToken(`customer/get-feedback?enquiryId=${location?.state?.data?.enquiry?.id}`).then(response => {
+  //     console.log(response.data);
+  //     setFeedbackList(response.data.description);
+  //   })
+  // }, [])
   // console.log(feedbackList?.[0]);
   // let parsedData = JSON.parse(feedbackList[0]?.description);
   // console.log(JSON.parse(feedbackList[0]?.description));
@@ -45,7 +48,7 @@ const CustomerComplaintDetail = () => {
                 <div className="card-header">
                   <h4 className="card-title">Complaints and feedbacks</h4>
                 </div>
-                <div className="card-body">
+                {/* <div className="card-body">
                   <div>
                     Customer Complaints :
                     {location?.state?.data?.complaint_info &&
@@ -53,19 +56,12 @@ const CustomerComplaintDetail = () => {
                     }
                   </div>
 
-                </div>
+                </div> */}
                 <div className="card-body">
                   <div className="mb-2">
                     Customer Feedbacks :
                   </div>
-
                   {/* By following these steps and considering potential issues, you should be able to resolve the "map is not a function" error in your code. */}
-
-
-
-
-
-
                   <div>
                     {feedbackList?.length == 0 ? <div> Feedback not given</div> :
                       feedbackList?.map((data, index) =>
