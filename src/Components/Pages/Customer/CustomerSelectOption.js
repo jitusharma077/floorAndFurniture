@@ -71,14 +71,14 @@ const CustomerSelectOption = () => {
                               Feedback
                             </Link>}
 
-                            {/* {location?.state?.orderId.status === "qc-complete" ||
+                            {location?.state?.orderId.status === "qc-complete" ||
                               location?.state?.orderId.status === "inprogess" ? < Link
                                 to="/customer-assign-mearurer"
                                 className="btn btn-mybutton"
                                 state={{ EnquiryDetials: EnquiryDetials.data }}
                               >
                               Assign Measurer
-                            </Link> : ""} */}
+                            </Link> : ""}
 
                             {location?.state?.orderId.status === "measurement-complete" || location?.state?.orderId.status === "qc-complete" ? <Link
                               className="btn btn-mybutton"

@@ -6,17 +6,21 @@ import {
     Nav,
     NavItem,
     NavLink,
-    TabContent, TabPane, Row, Col
+    TabContent, TabPane, Row, Col, Modal, ModalHeader, ModalBody
 } from 'reactstrap';
 import Loader from "../../Common/Loader";
 import moment from "moment";
 import { Link } from "react-router-dom";
 
 const ComplaintList = () => {
+
     const [data, setData] = useState([]);
+    const [complaintDetail, setComplaintDetail] = useState([]);
     const [feedbackData, setFeedbackData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [tabOpen, setTabOpen] = useState("1");
+    const [modalOpen, setModalOpen] = useState(false);
+    const modalTogggle = () => setModalOpen(!modalOpen);
 
     const setTabValue = (value) => {
         setTabOpen(value);
@@ -26,6 +30,33 @@ const ComplaintList = () => {
         // setIsLoading(true);
         // setCurrentPage(1);
     }
+
+    const complaintDetailHandler = (data) => {
+
+        const result = [];
+        const nameToTypeMap = {};
+
+        for (const item of data?.complaint_info) {
+            const { material, type } = item;
+
+            if (!nameToTypeMap[material.name]) {
+                nameToTypeMap[material.name] = type;
+            } else {
+                // If the name already exists in the map, append the type
+                nameToTypeMap[material.name] += `, ${type}`;
+            }
+        }
+        // Create the result array based on the nameToTypeMap
+        for (const name in nameToTypeMap) {
+            const type = nameToTypeMap[name];
+            result.push({ name, type });
+        }
+        console.log("prev...", data.complaint_info);
+        console.log("new....", result);
+        setComplaintDetail(result);
+        modalTogggle();
+    }
+
 
 
     useEffect(() => {
@@ -101,10 +132,10 @@ const ComplaintList = () => {
                                                                 <th>Customer Name</th>
                                                                 <th>Mobile No.</th>
                                                                 <th>Status</th>
-                                                                <th>Complaints</th>
+                                                                {/* <th>Complaints</th> */}
                                                                 <th>Issue Date</th>
                                                                 <th>Resolve Date</th>
-                                                                {/* <th>Action</th> */}
+                                                                <th>Action</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
@@ -142,21 +173,22 @@ const ComplaintList = () => {
                                                                                     {data?.status}
                                                                                 </span>
                                                                             </td>
-                                                                            <td>
+                                                                            {/* <td>
                                                                                 {data?.complaint_info &&
                                                                                     JSON.parse(data?.complaint_info)?.length}
-                                                                                {/* {data?.complaint_info &&
-                                                                            JSON.parse(data?.complaint_info)?.map((data) => <p>{data?.type}</p>)} */}
-                                                                            </td>
+                                                                                {data?.complaint_info &&
+                                                                            JSON.parse(data?.complaint_info)?.map((data) => <p>{data?.type}</p>)}
+                                                                            </td> */}
                                                                             <td>
                                                                                 {moment(data?.createdAt).format("DD/MM/YYYY")}
                                                                             </td>
                                                                             <td>
                                                                                 {moment(data?.date).format("DD/MM/YYYY")}
                                                                             </td>
-                                                                            {/* <td>
-                                                                                <Link className="btn btn-primary" to="/customer-feedback&complaint-detail" state={{ data: data }} >View</Link>
-                                                                            </td> */}
+                                                                            <td>
+                                                                                <button className="btn btn-primary" onClick={() => complaintDetailHandler(data)}>View</button>
+                                                                                {/* <Link className="btn btn-primary" to="/customer-feedback&complaint-detail" state={{ data: data }} >View</Link> */}
+                                                                            </td>
                                                                         </>
                                                                     </tr>
                                                                 ))
@@ -252,6 +284,21 @@ const ComplaintList = () => {
                     </div>
                 </div>
             </div >
+            <Modal isOpen={modalOpen} toggle={modalTogggle}>
+                <ModalHeader>
+                    Complaints Detail
+                </ModalHeader>
+                <ModalBody>
+                    <div className="container">
+                        {complaintDetail?.map((data) =>
+                            <div>
+                                <h3>{data?.name}:</h3>
+                                <p className="mx-3">{data?.type}</p>
+                            </div>)}
+
+                    </div>
+                </ModalBody>
+            </Modal>
         </>
     );
 }

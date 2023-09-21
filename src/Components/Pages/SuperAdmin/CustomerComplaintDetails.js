@@ -46,7 +46,7 @@ const CustomerComplaintDetail = () => {
             <div className="col-xl-12">
               <div className="card">
                 <div className="card-header">
-                  <h4 className="card-title">Complaints and feedbacks</h4>
+                  <h4 className="card-title">feedbacks:</h4>
                 </div>
                 {/* <div className="card-body">
                   <div>
