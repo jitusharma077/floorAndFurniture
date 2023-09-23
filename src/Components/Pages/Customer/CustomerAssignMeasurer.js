@@ -36,6 +36,7 @@ const CustomerAssignMeasurer = () => {
     PostData(`auth/assign-schedule-enquiry`, submitData).then(response => {
       if (response.status === true) {
         toast.success("Measurer assigned successfully");
+        navigate(-1);
       } else {
         toast.error(response.data.message);
       }

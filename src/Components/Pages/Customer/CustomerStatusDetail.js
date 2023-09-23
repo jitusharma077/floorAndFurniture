@@ -42,7 +42,7 @@ const CustomerStatusDetail = () => {
                                           <div className="timeline-badge primary" />
                                           <a
                                             className="timeline-panel text-muted"
-                                            href="#"
+                                          // href="#"
                                           >
                                             <span className="text-white">
                                               {moment(item.createdAt).format("LLL")}

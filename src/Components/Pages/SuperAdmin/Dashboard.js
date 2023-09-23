@@ -17,20 +17,20 @@ function Dashboard() {
   const [rowName, setRowName] = useState();
   const [columnName, setColumnName] = useState();
   const [callApi, setCallApi] = useState(false);
-  const [mainDashboardCallApi,setMainDashboardCallApi] = useState(true);
+  const [mainDashboardCallApi, setMainDashboardCallApi] = useState(true);
   const [openDateModal, setOpenDateModal] = useState(false);
   const modalDateToggle = () => { setOpenDateModal(!openDateModal) };
-   const [date, setDate] = useState({
+  const [date, setDate] = useState({
     fromDate: '',
     toDate: '',
-   });
-  
-   let fromDate = date?.fromDate ?moment(date?.fromDate, "ddd MMM DD YYYY HH:mm:ss [GMT]ZZ")?.format("YYYY-MM-DD"):'';
-   let toDate = date?.toDate ? moment(date?.toDate, "ddd MMM DD YYYY HH:mm:ss [GMT]ZZ")?.format("YYYY-MM-DD"):'';
+  });
 
-  
+  let fromDate = date?.fromDate ? moment(date?.fromDate, "ddd MMM DD YYYY HH:mm:ss [GMT]ZZ")?.format("YYYY-MM-DD") : '';
+  let toDate = date?.toDate ? moment(date?.toDate, "ddd MMM DD YYYY HH:mm:ss [GMT]ZZ")?.format("YYYY-MM-DD") : '';
+
+
   useEffect(() => {
-   GetDataWithToken(`superadmin/dashboard?fromDate=${fromDate}&toDate=${toDate}`).then((response) => {
+    GetDataWithToken(`superadmin/dashboard?fromDate=${fromDate}&toDate=${toDate}`).then((response) => {
       if (response.status === true) {
         setAllDashboardData(response.data);
         setMainDashboardCallApi(false);
@@ -204,16 +204,16 @@ function Dashboard() {
                 <div className="alert bg-secondary mb-5">
                   <div className="row">
                     <div className="col-xl-10">
-                    <h3 className="text-white ">Super Admin Dashboard</h3>
+                      <h3 className="text-white ">Super Admin Dashboard</h3>
                     </div>
-                     <div className="col-xl-2">
-                       <button className="btn btn-primary mx-5" onClick={modalDateToggle}>Filter</button>
+                    <div className="col-xl-2">
+                      <button className="btn btn-primary mx-5" onClick={modalDateToggle}>Filter</button>
+                    </div>
                   </div>
-                  </div>
-                 
-                   
+
+
                 </div>
-              
+
                 <div className="row">
                   <div className="col-xl-12">
                     <div className="row">
@@ -237,7 +237,7 @@ function Dashboard() {
                                 >
                                   Download
                                 </button>
-                                 <button
+                                <button
                                   onClick={() => setOpenModal(true)}
                                   className="btn btn-primary mt-2"
                                 >
@@ -337,7 +337,7 @@ function Dashboard() {
                                 </h2>
                                 <p className="mb-0">Qc completed</p>
                                 <button
-                                  onClick={() =>DownloadReportHandler(AllDashboardData?.qcComplete?.url)}
+                                  onClick={() => DownloadReportHandler(AllDashboardData?.qcComplete?.url)}
                                   className="btn btn-primary"
                                 >
                                   Download
@@ -347,6 +347,7 @@ function Dashboard() {
                           </div>
                         </div>
                       </div>
+
 
                       {/* <div className="col-xl-3 col-sm-6">
                         <div className="card booking">
@@ -395,7 +396,7 @@ function Dashboard() {
                                 </h2>
                                 <p className="mb-0">Work Done/Feedback’s</p>
                                 <button
-                                  onClick={() =>DownloadReportHandler(AllDashboardData?.installerAssigned?.url)}
+                                  onClick={() => DownloadReportHandler(AllDashboardData?.installerAssigned?.url)}
                                   className="btn btn-primary"
                                 >
                                   Download
@@ -460,14 +461,14 @@ function Dashboard() {
                                   {AllDashboardData?.completedEnquiry?.enquiry}
                                 </h2>
                                 <p className="mb-0">Complete Enquiry</p>
-                                    <button
-                                onClick={() => DownloadReportHandler(AllDashboardData?.completedEnquiry?.url)}
-                                className="btn btn-primary"
-                              >
-                                Download
-                              </button>
+                                <button
+                                  onClick={() => DownloadReportHandler(AllDashboardData?.completedEnquiry?.url)}
+                                  className="btn btn-primary"
+                                >
+                                  Download
+                                </button>
                               </div>
-                            
+
                             </div>
                           </div>
                         </div>
@@ -485,6 +486,54 @@ function Dashboard() {
                                 </h2>
                                 <p className="mb-0">Cancelled Enquiry</p>
                               </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="col-xl-3 col-sm-6">
+                        <div className="card booking">
+                          <div className="card-body">
+                            <div className="booking-status d-flex align-items-center">
+                              <span>
+                                <img alt="" src="./images/qFollowup.svg" />
+                              </span>
+                              <div className="ms-4">
+                                <h2 className="mb-0 font-w600">
+                                  {AllDashboardData?.totalComplaints?.enquiry}
+                                </h2>
+                                <p className="mb-0">Total Complaints</p>
+                                <button
+                                  onClick={() => DownloadReportHandler(AllDashboardData?.totalComplaints?.url)}
+                                  className="btn btn-primary"
+                                >
+                                  Download
+                                </button>
+                              </div>
+
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="col-xl-3 col-sm-6">
+                        <div className="card booking">
+                          <div className="card-body">
+                            <div className="booking-status d-flex align-items-center">
+                              <span>
+                                <img alt="" src="./images/qFollowup.svg" />
+                              </span>
+                              <div className="ms-4">
+                                <h2 className="mb-0 font-w600">
+                                  {AllDashboardData?.feedback?.enquiry}
+                                </h2>
+                                <p className="mb-0">Total Feedbacks</p>
+                                <button
+                                  onClick={() => DownloadReportHandler(AllDashboardData?.feedback?.url)}
+                                  className="btn btn-primary"
+                                >
+                                  Download
+                                </button>
+                              </div>
+
                             </div>
                           </div>
                         </div>
@@ -607,12 +656,12 @@ function Dashboard() {
       </div>
       <OverdueModal openModal={openModal} toggle={toggle}
         toggle2={toggle2} setColumnName={setColumnName}
-        setRowName={setRowName}  mainSetCallApi={setCallApi}                         
+        setRowName={setRowName} mainSetCallApi={setCallApi}
       />
       <OverdueDetails openModal={openModal2} toggle={toggle2} columnName={columnName}
         rowName={rowName} mainCallApi={callApi} mainSetCallApi={setCallApi}
       />
-       <OrdersModal
+      <OrdersModal
         openModal={openDateModal}
         modalToggle={modalDateToggle}
         date={date}
@@ -621,8 +670,8 @@ function Dashboard() {
         setMainData={setAllDashboardData}
         // setIsLoading={setisLoading}
         mainCallApi={setMainDashboardCallApi}
-        // setCurrentPage={setCurrentPage}
-      /> 
+      // setCurrentPage={setCurrentPage}
+      />
     </>
   );
 }

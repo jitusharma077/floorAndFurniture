@@ -10,7 +10,7 @@ const CustomerComplaintDetail = () => {
   console.log("locooooo....", location);
 
   let feedbacks = location?.state?.data?.description && JSON.parse(location?.state?.data?.description);
-  const feedbackList = JSON.parse(feedbacks);
+  // const feedbackList = JSON.parse(feedbacks);
   // useEffect(() => {
   //   GetDataWithToken(`customer/get-feedback?enquiryId=${location?.state?.data?.enquiry?.id}`).then(response => {
   //     console.log(response.data);
@@ -63,8 +63,8 @@ const CustomerComplaintDetail = () => {
                   </div>
                   {/* By following these steps and considering potential issues, you should be able to resolve the "map is not a function" error in your code. */}
                   <div>
-                    {feedbackList?.length == 0 ? <div> Feedback not given</div> :
-                      feedbackList?.map((data, index) =>
+                    {feedbacks?.length == 0 ? <div> <strong> Feedback not given </strong></div> :
+                      feedbacks?.map((data, index) =>
                         <div>
                           <div><strong>{data?.ques}</strong></div>
                           <div><p>{data?.ans}</p></div>

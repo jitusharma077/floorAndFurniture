@@ -22,7 +22,7 @@ const CustomerFeedback = () => {
         console.log("Selected Values:", selectedValues);
 
         const submitData = {
-            description: JSON.stringify(selectedValues),
+            description: selectedValues,
             enquiryId: location?.state?.orderId?.id,
             customerId: location?.state?.orderId?.customerId,
         };

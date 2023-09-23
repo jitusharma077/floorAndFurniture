@@ -90,7 +90,8 @@ function SuperAdminSidebar() {
                 href="javascript:void()"
                 aria-expanded="false"
               >
-                <i className="fas fa-exclamation fa-3x" data-fa-mask="fa-comment" data-fa-transform="shrink-7 up-.5" aria-hidden="true" />
+                <i className="fas fa-exclamation fa-3x" data-fa-mask="fa-comment"
+                  data-fa-transform="shrink-7 up-.5" aria-hidden="true" />
                 <span className="nav-text">Complaint/Feedback</span>
               </a>
               <ul aria-expanded="false">
