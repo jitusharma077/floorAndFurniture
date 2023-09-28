@@ -18,11 +18,11 @@ const AddComplaintMain = () => {
   const location = useLocation();
   const navigate = useNavigate();
   console.log("useLocation: ", location.state.category);
-  const [inputFields, setInputFields] = useState([{ id: 1, value1: '', value2: '' }]);
+  const [inputFields, setInputFields] = useState([{ id: 1, value1: '', value2: '', value3: '' }]);
   const nextId = inputFields.length + 1;
 
   const handleAddField = () => {
-    setInputFields([...inputFields, { id: nextId, value1: '', value2: '' }]);
+    setInputFields([...inputFields, { id: nextId, value1: '', value2: '', value: "" }]);
   };
 
   const handleInputChange = (id, field, newValue) => {
@@ -45,6 +45,7 @@ const AddComplaintMain = () => {
     const submitData = inputFields.map((obj) => ({
       type: obj.value1,
       description: obj.value2,
+      tat: obj.value3,
       materialId: location.state.category,
     }));
 
@@ -157,6 +158,13 @@ const AddComplaintMain = () => {
                                     className="form-control"
                                     value={field.value2}
                                     onChange={(e) => handleInputChange(field.id, 'value2', e.target.value)}
+                                  />
+                                  <input
+                                    type="text"
+                                    placeholder="TAT..."
+                                    className="form-control my-2"
+                                    value={field.value3}
+                                    onChange={(e) => handleInputChange(field.id, 'value3', e.target.value)}
                                   />
                                 </div>
                                 <div className="col-xl-2 mt-4">

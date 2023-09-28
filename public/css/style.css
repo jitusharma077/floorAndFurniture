@@ -5221,13 +5221,14 @@ fieldset:disabled .btn {
   display: flex;
   align-items: center;
   width: 100%;
-  padding: 1rem 1.25rem;
+  /* padding: 1rem 1.25rem; */
   font-size: 0.875rem;
   color: #6e6e6e;
   text-align: left;
   background-color: transparent;
-  border: 1px solid rgba(0, 0, 0, 0.125);
-  border-radius: 0;
+  border:none;
+  /* border: 1px solid rgba(0, 0, 0, 0.125);
+  border-radius: 0; */
   overflow-anchor: none;
   transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
     border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out,
@@ -5245,8 +5246,8 @@ fieldset:disabled .btn {
 }
 
 .accordion-button:not(.collapsed) {
-  color: #cb2f24;
-  background-color: #fcebea;
+  /* color: #cb2f24; */
+  /* background-color: #fcebea; */
 }
 
 .accordion-button:not(.collapsed)::after {
@@ -5278,7 +5279,7 @@ fieldset:disabled .btn {
 
 .accordion-button:focus {
   z-index: 3;
-  border-color: #f19a94;
+  /* border-color: #f19a94; */
   outline: 0;
   box-shadow: 0 0 0 0.25rem rgba(226, 52, 40, 0.25);
 }
@@ -54452,3 +54453,4 @@ html {
 .pagination {
   overflow: auto;
 }
+

@@ -11,6 +11,7 @@ import EnquiryCustom from "./Common/EnquiryCustom";
 import ReAssignmesurer from "../../Common/ReAssignmesurer";
 import WcrModal from "../../Common/WcrModal";
 import AdminRemarkModal from "../../Common/AdminRemarkModal";
+import Swal from "sweetalert2";
 
 function EnquiryDetials() {
   const location = useLocation();
@@ -40,14 +41,27 @@ function EnquiryDetials() {
   const [wcrData, setWcrData] = useState();
 
   const customMessageHandler = () => {
-    GetDataWithToken(`customer/send-message?enquiryId=${enquiryId}`).then(response => {
-      if (response.status === true) {
-        console.log(response);
-        toast.success(response.message);
-      } else {
-        toast.error(response.message);
+    Swal.fire({
+      title: 'Do you want to send feedback message?',
+      showDenyButton: true,
+      showCancelButton: true,
+      confirmButtonText: 'Send',
+      // denyButtonText: `Don't dont send`,
+    }).then((result) => {
+      /* Read more about isConfirmed, isDenied below */
+      if (result.isConfirmed) {
+        GetDataWithToken(`customer/send-message?enquiryId=${enquiryId}`).then(response => {
+          if (response.status === true) {
+            console.log(response);
+            toast.success(response.message);
+          } else {
+            toast.error(response.message);
+          }
+        })
+        // Swal.fire('Saved!', '', 'success')
       }
     })
+
   }
 
   useEffect(() => {
@@ -334,7 +348,13 @@ function EnquiryDetials() {
                     <h4 className="card-title">
                       Enquiry No: {EnquiryDetials?.data?.id}
                     </h4>
-                    <h3>Remark: {EnquiryDetials?.data?.remark}</h3>
+                    <p><strong>Remark :</strong> {EnquiryDetials?.data?.remark} </p>
+
+                    <p>
+                      <strong>Admin Remarks : </strong>
+                      {EnquiryDetials?.data?.admin_remark}
+                    </p>
+                    {/* <h3></h3> */}
                     <div style={{ display: "flex" }}>
                       <p>Selected Category: </p>
                       {Category?.map((i, index) => {

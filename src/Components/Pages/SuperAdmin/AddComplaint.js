@@ -108,11 +108,12 @@ const AddComplaint = () => {
                       open={open} toggle={toggle}>
                       {materialList?.map((data, index) =>
                         <>
-                          <div className="addordian-item">
+                          <div className="addordian-item my-2">
 
 
                             <AccordionHeader
-                              className="accordion-header rounded-lg"
+
+                              // className="border-none"
                               // id={`accord-5One${index}`}
                               // data-bs-toggle="collapse"
                               // data-bs-target="#collapse5One"
@@ -128,7 +129,7 @@ const AddComplaint = () => {
                             <AccordionBody
                               accordionId={index + 1}
 
-                              className="accordion__body"
+                            // className="accordion__body"
                             // aria-labelledby="accord-5One"
                             // data-bs-parent="#accordion-five"
                             >

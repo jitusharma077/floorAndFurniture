@@ -133,6 +133,7 @@ const ComplaintList = () => {
                                                                 <th>Mobile No.</th>
                                                                 <th>Status</th>
                                                                 {/* <th>Complaints</th> */}
+                                                                <th>IC Name</th>
                                                                 <th>Issue Date</th>
                                                                 <th>Resolve Date</th>
                                                                 <th>Action</th>
@@ -179,6 +180,7 @@ const ComplaintList = () => {
                                                                                 {data?.complaint_info &&
                                                                             JSON.parse(data?.complaint_info)?.map((data) => <p>{data?.type}</p>)}
                                                                             </td> */}
+                                                                            <td>{data?.enquiry?.user?.firstName} {data?.enquiry?.user?.lastName}</td>
                                                                             <td>
                                                                                 {moment(data?.createdAt).format("DD/MM/YYYY")}
                                                                             </td>
@@ -209,10 +211,8 @@ const ComplaintList = () => {
                                                                 <th>Enq. No.</th>
                                                                 <th>Customer Name</th>
                                                                 <th>Mobile No.</th>
-                                                                {/* <th>Status</th>
-                                                                <th>Complaints</th>
-                                                                <th>Issue Date</th>
-                                                                <th>Resolve Date</th> */}
+                                                                <th>IC Name</th>
+                                                                <th>Date</th>
                                                                 <th>Action</th>
                                                             </tr>
                                                         </thead>
@@ -240,30 +240,9 @@ const ComplaintList = () => {
                                                                                 {data?.enquiry?.customer?.lastName}
                                                                             </th>
                                                                             <th>{data?.enquiry?.customer?.primary_phone}</th>
-                                                                            {/* <td>
-                                                                                <span
-                                                                                    className={
-                                                                                        data?.status === "inprogess"
-                                                                                            ? "badge  badge-primary"
-                                                                                            : "badge badge-dark"
-                                                                                    }
-                                                                                >
-                                                                                    {data?.status}
-                                                                                </span>
-                                                                            </td> */}
-                                                                            {/* <td>
-                                                                                {data?.complaint_info &&
-                                                                                    JSON.parse(data?.complaint_info)?.length}
-                                                                                {data?.complaint_info &&
-                                                                            JSON.parse(data?.complaint_info)?.map((data) =>
-                                                                             <p>{data?.type}</p>)}
-                                                                            </td> */}
-                                                                            {/* <td>
-                                                                                {moment(data?.createdAt).format("DD/MM/YYYY")}
-                                                                            </td>
-                                                                            <td>
-                                                                                {moment(data?.date).format("DD/MM/YYYY")}
-                                                                            </td> */}
+
+                                                                            <td>{data?.enquiry?.user?.firstName} {data?.enquiry?.user?.lastName}</td>
+                                                                            <td>{moment(data?.createdAt).format("DD/MM/YYYY")}</td>
                                                                             <td>
                                                                                 <Link className="btn btn-primary" to="/customer-feedback&complaint-detail" state={{ data: data }} >View</Link>
                                                                             </td>

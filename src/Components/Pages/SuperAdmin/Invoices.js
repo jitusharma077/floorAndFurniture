@@ -5,10 +5,10 @@ import SuperAdminSidebar from "./Common/SuperAdminSidebar";
 import Loader from "../../Common/Loader";
 import PaginationComponent from "../../Common/PaginationComponent";
 import {
-  Nav,
-  NavItem,
+    Nav,
+    NavItem,
     NavLink,
-  TabContent,TabPane,Row,Col
+    TabContent, TabPane, Row, Col
 } from 'reactstrap';
 import { GetDataWithToken } from "../../ApiHelper/ApiHelper";
 import OrdersModal from "../../Common/OrdersModal";
@@ -26,12 +26,12 @@ function Invoices() {
     const [searchData, setSearchData] = useState('');
     const [isLoading, setIsLoading] = useState(true);
     const [isLoading2, setIsLoading2] = useState(true);
-    const [openModal, setOpenModal] = useState(false); 
+    const [openModal, setOpenModal] = useState(false);
     const [customerCode, setCustomerCode] = useState('');
     const [deliveryName, setDeliveryName] = useState('');
     const [date, setDate] = useState({
-    fromDate: '',
-    toDate: '',
+        fromDate: '',
+        toDate: '',
     });
     const { ref: myRef, inView: visibleElement } = useInView();
 
@@ -43,16 +43,16 @@ function Invoices() {
     //     setCallApi(true);
     //     setInvoiceData([]);
     //     setIsLoading(true);
-       
+
     // };
 
-   const setTabValue=(value)=>{
+    const setTabValue = (value) => {
         setTabOpen(value);
         tabOpen === "1" ? setInvoiceType('CREDIT_NOTE') : setInvoiceType('INVOICES');
         setCallApi(true);
-       setInvoiceData([]);
-       setIsLoading(true);
-       setCurrentPage(1);
+        setInvoiceData([]);
+        setIsLoading(true);
+        setCurrentPage(1);
     }
 
     const searchDataHandler = () => {
@@ -60,233 +60,238 @@ function Invoices() {
         console.log(searchData)
         setCallApi(true);
         setIsLoading(true);
-         setInvoiceData([]);
+        setInvoiceData([]);
     }
 
-    let fromDate = date?.fromDate ?moment(date?.fromDate, "ddd MMM DD YYYY HH:mm:ss [GMT]ZZ")?.format("YYYY-MM-DD"):'';
-    let toDate = date?.toDate ? moment(date?.toDate, "ddd MMM DD YYYY HH:mm:ss [GMT]ZZ")?.format("YYYY-MM-DD"):'';
+    let fromDate = date?.fromDate ? moment(date?.fromDate, "ddd MMM DD YYYY HH:mm:ss [GMT]ZZ")?.format("YYYY-MM-DD") : '';
+    let toDate = date?.toDate ? moment(date?.toDate, "ddd MMM DD YYYY HH:mm:ss [GMT]ZZ")?.format("YYYY-MM-DD") : '';
 
     useEffect(() => {
         if (visibleElement) {
             // setCallApi(true);
-           
+
             setIsLoading2(true);
         }
-        if (callApi||visibleElement) {
+        if (callApi || visibleElement) {
             GetDataWithToken(`superadmin/get-invoice?page=${currentPage}&pageSize=10&costumerCode=${customerCode}&typeCode=${invoiceType}&fromDate=${fromDate}&toDate=${toDate}&searchText=${searchData}&deliveryName=${deliveryName}`)
                 .then((response) => {
-                    if (response.status === true) { 
+                    if (response.status === true) {
                         settotalPage(response?.data?.length > 0 && Math?.ceil(response?.total / 10));
-                
+
                         setCallApi(false);
                         setInvoiceData(prevData => [...prevData, ...response.data]);
                         currentPage <= totalPage && setCurrentPage((prevPage) => prevPage + 1);
-                        console.log('currennnntttttt',currentPage)
+                        console.log('currennnntttttt', currentPage)
                         setIsLoading(false);
                         setIsLoading2(false);
-                        
-                    }
-                     setIsLoading2(false);
-                    setIsLoading(false);
-            })
-        }
-    },[callApi,visibleElement])
 
-    console.log('dtaaaaa',invoiceData)
+                    }
+                    setIsLoading2(false);
+                    setIsLoading(false);
+                })
+        }
+    }, [callApi, visibleElement])
+
+    console.log('dtaaaaa', invoiceData)
 
     return (
         <>
-        <div
-        data-typography="poppins"
-        data-theme-version="light"
-        data-layout="vertical"
-        data-nav-headerbg="color_1"
-        data-headerbg="color_1"
-        data-sidebar-style="full"
-        data-sibebarbg="color_1"
-        data-sidebar-position="fixed"
-        data-header-position="fixed"
-        data-container="wide"
-        direction="ltr"
-        data-primary="color_1"
-        id="main-wrapper"
-        className="show">
-            <SuperAdminHeader />
+            <div
+                data-typography="poppins"
+                data-theme-version="light"
+                data-layout="vertical"
+                data-nav-headerbg="color_1"
+                data-headerbg="color_1"
+                data-sidebar-style="full"
+                data-sibebarbg="color_1"
+                data-sidebar-position="fixed"
+                data-header-position="fixed"
+                data-container="wide"
+                direction="ltr"
+                data-primary="color_1"
+                id="main-wrapper"
+                className="show">
+                <SuperAdminHeader />
                 <SuperAdminSidebar />
                 <div className="content-body">
                     <div className="container-fluid">
-                         <div className="row">
-                              <div className="col-12">
+                        <div className="row">
+                            <div className="col-12">
                                 <div className="card">
                                     <div className="card-header">
-                                          <div className="col-lg-3">
-                                             <h4 className="card-title">Invoices</h4>
+                                        <div className="col-lg-3">
+                                            <h4 className="card-title">Invoices</h4>
                                         </div>
-                                          <div className="col-lg-7 d-flex">
-                                              <input
-                                                    type="text"
-                                                    className="form-control"
-                                                    placeholder="Search"
-                                                    onChange={(e) => {
-                                                      setSearchData(e.target.value);
-                                                    }}
-                                                />
+                                        <div className="col-lg-7 d-flex">
+                                            <input
+                                                type="text"
+                                                className="form-control"
+                                                placeholder="Search"
+                                                onChange={(e) => {
+                                                    setSearchData(e.target.value);
+                                                }}
+                                            />
+
                                             <button className="btn btn-primary ms-2" onClick={searchDataHandler}>Search
-                                          </button>
-                                        </div>
-                                       <div className="col-lg-2 d-flex">
-                                                <button className="btn btn-primary ms-5" onClick={modalToggle}>Filter
+                                            </button>
+                                            <div className="col-lg-2 d-flex">
+                                                <button className="btn btn-primary ms-2" onClick={modalToggle}>
+                                                    <i className="fa fa-filter"></i>
                                                 </button>
-                                          </div>
+
+
+                                            </div>
+                                        </div>
+
                                     </div>
-                                    <div>
+                                    <div className="mt-2">
                                         <Nav tabs>
                                             <NavItem>
                                                 <NavLink
-                                                
-                                                className={tabOpen==="1"?"active":""}
-                                                onClick={()=>setTabValue('1')}
-                                            >
-                                                INVOICE
-                                            </NavLink>
+
+                                                    className={tabOpen === "1" ? "active" : ""}
+                                                    onClick={() => setTabValue('1')}
+                                                >
+                                                    INVOICE
+                                                </NavLink>
                                             </NavItem>
                                             <NavItem>
                                                 <NavLink
-                                                   
-                                                className={tabOpen==="2"?"active":""}
-                                                onClick={()=>setTabValue('2')}
-                                            >
-                                                CREDIT-NOTE
-                                            </NavLink>
-                                            </NavItem>                                                                                 
+
+                                                    className={tabOpen === "2" ? "active" : ""}
+                                                    onClick={() => setTabValue('2')}
+                                                >
+                                                    CREDIT-NOTE
+                                                </NavLink>
+                                            </NavItem>
                                         </Nav>
                                         <TabContent activeTab={tabOpen}>
                                             <TabPane tabId="1">
-                                           <div className="table-responsive">
-                                            <table
-                                                id="example4"
-                                                className="table card-table display mb-4 shadow-hover table-responsive-lg"
-                                                style={{ minWidth: "845px" }}
-                                            >
-                                                <thead>
-                                                <tr>
+                                                <div className="table-responsive">
+                                                    <table
+                                                        id="example4"
+                                                        className="table card-table display mb-4 shadow-hover table-responsive-lg"
+                                                        style={{ minWidth: "845px" }}
+                                                    >
+                                                        <thead>
+                                                            <tr>
                                                                 <th>Invoice No:</th>
                                                                 <th>Invoice Date:</th>
                                                                 <th>Delivery name</th>
                                                                 <th>Invoices</th>
-                                                                                      
-                                                </tr>
-                                                </thead>
+
+                                                            </tr>
+                                                        </thead>
                                                         <tbody>
-                                                            {isLoading && <Loader />} 
-                        {invoiceData && invoiceData?.length == 0 ? (
-                            <h3
-                              style={{
-                                position: "absolute",
-                                left: "40%",
-                                padding: "10px",
-                              }}
-                            >
-                              No data found
-                            </h3>
-                          ) :    invoiceData?.map((data,index) =>
-                                                             < tr >
-                                                             <td>{ data?.Code }</td>
-                                                             <td>{
-                                                                    moment(data?.InvoiceDate)?.format("DD/MM/YYYY")
-                            
-                                                                 }</td>
-                                                             <td>{ data?.DeliveryName }</td>
-                                                             <td>
-                                                                    <button className="btn btn-primary" onClick={() => {
-                                                                     navigate("/invoice-detail", {
-                                                                         state: {
-                                                                                data:data?.Code
-                                                                            }
-                                                                        })
-                                                                }}>
-                                                                           View 
-                                                                </button>
-                                                            </td>     
-                                                        </tr>
-                                                       )}                      
-                                                    </tbody>
-                                                </table>
-                                           </div>
+                                                            {isLoading && <Loader />}
+                                                            {invoiceData && invoiceData?.length == 0 ? (
+                                                                <h3
+                                                                    style={{
+                                                                        position: "absolute",
+                                                                        left: "40%",
+                                                                        padding: "10px",
+                                                                    }}
+                                                                >
+                                                                    No data found
+                                                                </h3>
+                                                            ) : invoiceData?.map((data, index) =>
+                                                                < tr >
+                                                                    <td>{data?.Code}</td>
+                                                                    <td>{
+                                                                        moment(data?.InvoiceDate)?.format("DD/MM/YYYY")
+
+                                                                    }</td>
+                                                                    <td>{data?.DeliveryName}</td>
+                                                                    <td>
+                                                                        <button className="btn btn-primary" onClick={() => {
+                                                                            navigate("/invoice-detail", {
+                                                                                state: {
+                                                                                    data: data?.Code
+                                                                                }
+                                                                            })
+                                                                        }}>
+                                                                            View
+                                                                        </button>
+                                                                    </td>
+                                                                </tr>
+                                                            )}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
                                             </TabPane>
-                                                <TabPane tabId="2">
-                                                 <div className="table-responsive">
-                                            <table
-                                                id="example4"
-                                                className="table card-table display mb-4 shadow-hover table-responsive-lg"
-                                                style={{ minWidth: "845px" }}
-                                            >
-                                                <thead>
-                                                <tr>
-                                                    <th>Invoice No:</th>
-                                                    <th>Invoice Date:</th>
-                                                    <th>Delivery name</th>
-                                                     <th>Action</th>                                         
-                                                </tr>
-                                                </thead>
+                                            <TabPane tabId="2">
+                                                <div className="table-responsive">
+                                                    <table
+                                                        id="example4"
+                                                        className="table card-table display mb-4 shadow-hover table-responsive-lg"
+                                                        style={{ minWidth: "845px" }}
+                                                    >
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Invoice No:</th>
+                                                                <th>Invoice Date:</th>
+                                                                <th>Delivery name</th>
+                                                                <th>Action</th>
+                                                            </tr>
+                                                        </thead>
                                                         <tbody>
-                                                         {isLoading && <Loader />}      
-                                                       {invoiceData && invoiceData?.length == 0 ? (
-                                                            <h3
-                                                            style={{
-                                                                position: "absolute",
-                                                                left: "40%",
-                                                                padding: "10px",
-                                                            }}
-                                                            >
-                                                            No data found
-                                                            </h3>
-                                                        ) :  invoiceData?.map((data) =>
-                                                             < tr >
-                                                             <td>{ data?.Code }</td>
-                                                                <td>{
-                                                                    moment(data?.InvoiceDate)?.format("DD/MM/YYYY")
-                                                                    
-                                                                }</td>
-                                                             <td>{ data?.DeliveryName }</td>
-                                                             <td>
-                                                                    <button className="btn btn-primary"
-                                                                        onClick={() => {
-                                                                       navigate("/invoice-detail",{
-                                                                           state: {
-                                                                             data:data?.Code
-                                                                         }
-                                                                         })
-                                                                   }}>
-                                                                    view   
-                                                                </button>
-                                                            </td>     
-                                                        </tr>
-                                                       )}                          
-                                                    </tbody>
-                                                </table>
-                                           </div>
-                                            </TabPane>                                                                                                            
+                                                            {isLoading && <Loader />}
+                                                            {invoiceData && invoiceData?.length == 0 ? (
+                                                                <h3
+                                                                    style={{
+                                                                        position: "absolute",
+                                                                        left: "40%",
+                                                                        padding: "10px",
+                                                                    }}
+                                                                >
+                                                                    No data found
+                                                                </h3>
+                                                            ) : invoiceData?.map((data) =>
+                                                                < tr >
+                                                                    <td>{data?.Code}</td>
+                                                                    <td>{
+                                                                        moment(data?.InvoiceDate)?.format("DD/MM/YYYY")
+
+                                                                    }</td>
+                                                                    <td>{data?.DeliveryName}</td>
+                                                                    <td>
+                                                                        <button className="btn btn-primary"
+                                                                            onClick={() => {
+                                                                                navigate("/invoice-detail", {
+                                                                                    state: {
+                                                                                        data: data?.Code
+                                                                                    }
+                                                                                })
+                                                                            }}>
+                                                                            view
+                                                                        </button>
+                                                                    </td>
+                                                                </tr>
+                                                            )}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </TabPane>
                                         </TabContent>
                                     </div>
                                     {invoiceData?.length > 0 && currentPage <= totalPage && <div ref={myRef} id="scroll"></div>}
-                                     { isLoading2 && currentPage>1&& <h3 style={{textAlign:'center'}}>Loading...</h3> }
+                                    {isLoading2 && currentPage > 1 && <h3 style={{ textAlign: 'center' }}>Loading...</h3>}
                                 </div>
                             </div>
-                           
-                            
-                               {/* <PaginationComponent
+
+
+                            {/* <PaginationComponent
                                  totalPage={totalPage}
                                  currentPage={currentPage}
                                  setCallApi={(val) => setCallApi(val)}
                                  setCurrentPage={(val) => setCurrentPage(val)}
                                  handlePageClick={handlePageClick}
                              /> */}
-                            </div>
-                     </div>
-                </div>        
+                        </div>
+                    </div>
+                </div>
             </div>
-             <OrdersModal
+            <OrdersModal
                 openModal={openModal}
                 modalToggle={modalToggle}
                 setCustomerCode={setCustomerCode}
@@ -294,12 +299,12 @@ function Invoices() {
                 mainCallApi={setCallApi}
                 setDate={setDate}
                 date={date}
-                setDeliveryName={setDeliveryName}   
+                setDeliveryName={setDeliveryName}
                 deliveryName={deliveryName}
                 setIsLoading={setIsLoading}
                 setMainData={setInvoiceData}
                 setCurrentPage={setCurrentPage}
-            />  
+            />
         </>
     );
 }
