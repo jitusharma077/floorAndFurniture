@@ -66,6 +66,12 @@ function SuperAdminSidebar() {
               </Link>
             </li>
             <li>
+              <Link to={"/customer-requests"} className aria-expanded="false">
+                <i className="fa fa-list fw-bold" aria-hidden="true" />
+                <span className="nav-text">Customer Requests</span>
+              </Link>
+            </li>
+            <li>
               <Link to={"/invoices"} className aria-expanded="false">
                 <i className="fa fa-table fw-bold" aria-hidden="true" />
                 <span className="nav-text">invoices</span>

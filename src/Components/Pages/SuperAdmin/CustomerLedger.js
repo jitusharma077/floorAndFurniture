@@ -120,7 +120,7 @@ function CustomerLedger() {
                         <i className="fa fa-filter"></i>
                       </button>
                       <button className="btn btn-primary ms-3" >
-                        W3 data
+                        <i className="fa fa-download"></i>
                       </button>
                     </div>
                   </div>

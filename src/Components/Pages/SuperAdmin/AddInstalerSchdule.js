@@ -6,9 +6,12 @@ import { useLocation } from "react-router-dom";
 import { GetDataWithToken, PostDataWithToken } from "../../ApiHelper/ApiHelper";
 import SuperAdminHeader from "./Common/SuperAdminHeader";
 import SuperAdminSidebar from "./Common/SuperAdminSidebar";
+import { Spinner } from "reactstrap";
 
 function AddInstalerSchdule() {
   const location = useLocation();
+  const [callApi, setCallApi] = useState(true);
+  const [callApi2, setCallApi2] = useState(false);
   const [AllTimeSlot, setAllTimeSlot] = useState([]);
   const [EnquiryId, setEnquiryId] = useState(null);
   const [AllUnAssignedUser, setAllUnAssignedUser] = useState([]);
@@ -19,74 +22,120 @@ function AddInstalerSchdule() {
   const [CoustomerId, setCoustomerId] = useState("");
   const [AllWhareHouse, setAllWhareHouse] = useState("");
   const [WareHouseId, setWareHouseId] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+
+  // console.log("loockcasafqw", location?.state?.schedule?.id);
 
   useEffect(() => {
-    console.log("Idddddd====>>>>>", location.state);
-    setEnquiryId(location.state.enquiryId);
-    setCoustomerId(location.state.customerId);
-    GetDataWithToken("superadmin/get-outlet").then((response) => {
-      if (response.status === true) {
-        setAllWhareHouse(response.data);
-      }
-    });
+    if (callApi) {
+      location?.state?.schedule?.id && setCallApi2(true);
+      setcustomerTimeSlot(location?.state?.schedule?.id ? location?.state?.schedule?.id : "");
+      console.log("Idddddd====>>>>>", location.state);
+      setEnquiryId(location?.state?.enquiryId);
+      setCoustomerId(location.state.customerId);
+      GetDataWithToken("superadmin/get-outlet").then((response) => {
+        if (response.status === true) {
+          setCallApi(false);
+          setAllWhareHouse(response.data);
+        }
+      });
+      GetDataWithToken(`superadmin/get-schedule?type=installer`).then((response) => {
+        if (response.status === true) {
+          setCallApi(false);
+          setAllTimeSlot(response.data);
+        } else {
+          setCallApi(false);
+        }
+      });
+    }
 
-    GetDataWithToken(`superadmin/get-schedule?type=installer`).then((response) => {
-      if (response.status === true) {
-        setAllTimeSlot(response.data);
-      }
-    });
-  }, [location.state]);
+    if (callApi2) {
+      GetDataWithToken(
+        `installer/get-unassign-installer/${customerTimeSlot}`
+      ).then((response) => {
+        if (response.status === true) {
+          setCallApi2(false);
+          setAllUnAssignedUser(response.data);
+        } else {
+          setCallApi2(false);
+        }
+      });
+    }
 
-  const getAssignedPerson = (e) => {
-    setAssignedPerson(e.target.value);
-  };
-  const getSelectedDate = (e) => {
-    console.log("date", e.target.value);
-    setGetDate(e.target.value);
-  };
+  }, [callApi, callApi2]);
+
+  // const getAssignedPerson = (e) => {
+  //   setAssignedPerson(e.target.value);
+  // };
+  // const getSelectedDate = (e) => {
+  //   console.log("date", e.target.value);
+  //   setGetDate(e.target.value);
+  // };
 
   const getTimeSlot = (timeSlot) => {
     console.log("timeSlot", timeSlot.target.value);
     setcustomerTimeSlot(timeSlot.target.value);
-
-    GetDataWithToken(
-      `installer/get-unassign-installer/${timeSlot.target.value}`
-    ).then((response) => {
-      if (response.status === true) {
-        setAllUnAssignedUser(response.data);
-      }
-    });
+    setCallApi2(true);
   };
-  const getwareHouse = (warehouse) => {
-    console.log("warehouse", warehouse.target.value);
-    setWareHouseId(warehouse.target.value);
-  };
+  // const getwareHouse = (warehouse) => {
+  //   console.log("warehouse", warehouse.target.value);
+  //   setWareHouseId(warehouse.target.value);
+  // };
 
   const ConfirmSchduled = (event) => {
+    setIsLoading(true);
+    console.log("eventttt...",);
     console.log("enquiryid", EnquiryId);
     event.preventDefault();
     let data = {
-      scheduleId: customerTimeSlot,
+      scheduleId: event.target?.[2]?.value,
       enquiryId: EnquiryId,
-      installerId: AssignedPerson,
-      date: moment(getDate).format("YYYY-MM-DD"),
-      warehouseId: WareHouseId,
+      installerId: event.target?.[3]?.value,
+      date: moment(event.target?.[1]?.value).format("YYYY-MM-DD"),
+      warehouseId: event.target?.[0]?.value,
       customerId: CoustomerId,
     };
+    console.log("submit DAtaaaaa...", data);
 
-    PostDataWithToken(`installer/assign-installer/`, data).then((response) => {
-      if (response.status === true) {
-        console.log("response", response);
-        toast.success(response.message);
-        // response.success("Schedule Confirmed Successfully", {
-        //   position: toast.POSITION.TOP_CENTER,
-        // });
-      } else {
-        toast.error(response?.data?.message, {
-          position: toast.POSITION.TOP_RIGHT,
-        });
-      }
-    });
+    let complaintData = {
+      scheduleId: event.target?.[2]?.value,
+      enquiryId: EnquiryId,
+      installerId: event.target?.[3]?.value,
+      date: moment(event.target?.[1]?.value).format("YYYY-MM-DD"),
+      warehouseId: event.target?.[0]?.value,
+      customerId: CoustomerId,
+      complaintId: location?.state?.id,
+    };
+
+    location?.state?.complaint_info?.length > 0 ?
+      PostDataWithToken(`customer/assign-installer`, complaintData).then((response) => {
+        if (response.status === true) {
+          setIsLoading(false);
+          toast.success(response.message);
+        } else {
+          setIsLoading(false);
+          toast.error(response?.data?.message, {
+            position: toast.POSITION.TOP_RIGHT,
+          });
+        }
+      })
+      :
+      PostDataWithToken(`installer/assign-installer/`, data).then((response) => {
+        if (response.status === true) {
+          console.log("response", response);
+          setIsLoading(false);
+          toast.success(response.message);
+          // response.success("Schedule Confirmed Successfully", {
+          //   position: toast.POSITION.TOP_CENTER,
+          // });
+        } else {
+          setIsLoading(false);
+          toast.error(response?.data?.message, {
+            position: toast.POSITION.TOP_RIGHT,
+          });
+        }
+      });
   };
   return (
     <>
@@ -131,9 +180,9 @@ function AddInstalerSchdule() {
                             /> */}
                             <select
                               className="me-sm-2  form-control"
-                              onChange={(e) => {
-                                getwareHouse(e);
-                              }}
+                            // onChange={(e) => {
+                            //   getwareHouse(e);
+                            // }}
                             >
                               <option selected>Choose...</option>
                               {AllWhareHouse &&
@@ -152,9 +201,10 @@ function AddInstalerSchdule() {
                             </label>
                             <input
                               type={"date"}
+                              defaultValue={location?.state?.date ? moment(location?.state?.date).format("YYYY-MM-DD") : null}
                               min={moment().add(0, "days").format("YYYY-MM-DD")}
                               className="form-control"
-                              onChange={getSelectedDate}
+                            // onChange={getSelectedDate}
                             />
                           </div>
                           <div className="col-lg-12 my-1">
@@ -163,15 +213,16 @@ function AddInstalerSchdule() {
                             </label>
                             <select
                               className="me-sm-2  form-control"
+
                               onChange={(e) => {
                                 getTimeSlot(e);
                               }}
                             >
-                              <option selected>Choose...</option>
+                              <option >Choose...</option>
                               {AllTimeSlot &&
                                 AllTimeSlot.map((item, index) => {
                                   return (
-                                    <option value={item.id}>
+                                    <option selected={location?.state?.schedule?.id === item.id} value={item.id} >
                                       {item.start_time} - {item.end_time}
                                     </option>
                                   );
@@ -184,9 +235,9 @@ function AddInstalerSchdule() {
                             </label>
                             <select
                               className="me-sm-2  form-control"
-                              onChange={(e) => {
-                                getAssignedPerson(e);
-                              }}
+                            // onChange={(e) => {
+                            //   getAssignedPerson(e);
+                            // }}
                             >
                               <option selected>Choose...</option>
                               {AllUnAssignedUser &&
@@ -200,7 +251,10 @@ function AddInstalerSchdule() {
                             </select>
                           </div>
                         </div>
-                        <button className="btn btn-primary">Submit </button>
+                        <button disabled={isLoading}
+                          className="btn btn-primary">
+                          {isLoading ? <Spinner /> : "Submit"}
+                        </button>
                       </form>
                     </div>
                   </div>

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import SuperAdminHeader from "./Common/SuperAdminHeader";
 import SuperAdminSidebar from "./Common/SuperAdminSidebar";
-import { GetDataWithToken } from "../../ApiHelper/ApiHelper";
+import { GetDataWithToken, PutDataWithToken } from "../../ApiHelper/ApiHelper";
 import {
     Nav,
     NavItem,
@@ -11,11 +11,15 @@ import {
 import Loader from "../../Common/Loader";
 import moment from "moment";
 import { Link } from "react-router-dom";
+import { toast } from "material-react-toastify";
+import Swal from "sweetalert2";
 
 const ComplaintList = () => {
 
     const [data, setData] = useState([]);
     const [complaintDetail, setComplaintDetail] = useState([]);
+
+    const [customerDetail, setCustomerDetail] = useState();
     const [feedbackData, setFeedbackData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [tabOpen, setTabOpen] = useState("1");
@@ -29,9 +33,34 @@ const ComplaintList = () => {
         // setInvoiceData([]);
         // setIsLoading(true);
         // setCurrentPage(1);
+    };
+
+    const completeComplaintHandler = () => {
+        // console.log("cccmplaintt", complaintDetail);
+        Swal.fire({
+            title: 'Do you want to send feedback message?',
+            showDenyButton: true,
+            showCancelButton: true,
+            confirmButtonText: 'Send',
+            // denyButtonText: `Don't dont send`,
+        }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+
+                PutDataWithToken(`superadmin/complaint-resolved/${customerDetail?.id}`).then((response) => {
+                    if (response.status === true) {
+                        toast.success("Complaint completed successfully");
+                    } else {
+                        toast.error(response.message);
+                    }
+                })
+                // Swal.fire('Saved!', '', 'success')
+            }
+        })
     }
 
     const complaintDetailHandler = (data) => {
+        setCustomerDetail(data);
 
         const result = [];
         const nameToTypeMap = {};
@@ -54,6 +83,7 @@ const ComplaintList = () => {
         console.log("prev...", data.complaint_info);
         console.log("new....", result);
         setComplaintDetail(result);
+
         modalTogggle();
     }
 
@@ -131,11 +161,13 @@ const ComplaintList = () => {
                                                                 <th>Enq. No.</th>
                                                                 <th>Customer Name</th>
                                                                 <th>Mobile No.</th>
-                                                                <th>Status</th>
+                                                                <th>Enquiry Status</th>
+                                                                <th>Complaint Status</th>
                                                                 {/* <th>Complaints</th> */}
                                                                 <th>IC Name</th>
                                                                 <th>Issue Date</th>
-                                                                <th>Resolve Date</th>
+                                                                {/* <th>Resolve Date</th> */}
+                                                                <th>Installation Date/Time</th>
                                                                 <th>Action</th>
                                                             </tr>
                                                         </thead>
@@ -163,11 +195,20 @@ const ComplaintList = () => {
                                                                                 {data?.enquiry?.customer?.lastName}
                                                                             </th>
                                                                             <th>{data?.enquiry?.customer?.primary_phone}</th>
+                                                                            <td><span
+                                                                                className={
+                                                                                    data?.enquiry?.status === "progress"
+                                                                                        ? "badge  badge-primary"
+                                                                                        : "badge badge-dark"
+                                                                                }
+                                                                            >{data?.enquiry?.status}
+                                                                            </span>
+                                                                            </td>
                                                                             <td>
                                                                                 <span
                                                                                     className={
-                                                                                        data?.status === "inprogess"
-                                                                                            ? "badge  badge-primary"
+                                                                                        data?.status === "active"
+                                                                                            ? "badge  badge-success"
                                                                                             : "badge badge-dark"
                                                                                     }
                                                                                 >
@@ -184,8 +225,12 @@ const ComplaintList = () => {
                                                                             <td>
                                                                                 {moment(data?.createdAt).format("DD/MM/YYYY")}
                                                                             </td>
-                                                                            <td>
+                                                                            {/* <td>
                                                                                 {moment(data?.date).format("DD/MM/YYYY")}
+                                                                            </td> */}
+                                                                            <td>
+                                                                                {moment(data?.date)?.format("DD/MM/YYYY")}
+                                                                                ({data?.schedule.start_time} - {data?.schedule.end_time})
                                                                             </td>
                                                                             <td>
                                                                                 <button className="btn btn-primary" onClick={() => complaintDetailHandler(data)}>View</button>
@@ -274,7 +319,10 @@ const ComplaintList = () => {
                                 <h3>{data?.name}:</h3>
                                 <p className="mx-3">{data?.type}</p>
                             </div>)}
-
+                        <div>
+                            <Link className="btn btn-primary" to="/AddInstalerSchdule" state={customerDetail}>Assign Installer</Link>
+                            <button className="btn btn-primary mx-2" onClick={completeComplaintHandler}>Complete Complaint </button>
+                        </div>
                     </div>
                 </ModalBody>
             </Modal>

@@ -91,6 +91,7 @@ import CustomerAssignInstaller from "../Pages/Customer/CustomerAssignInstaller";
 import CustomerFeedback from "../Pages/Customer/CustomerFeedback";
 import CustomerComplaintDetail from "../Pages/SuperAdmin/CustomerComplaintDetails";
 import CustomerViewEstimate from "../Pages/Customer/CustomerViewEstimate";
+import CustomerRequests from "../Pages/SuperAdmin/CustomerRequests";
 const CommonRoutes = () => {
   // const [type, setType] = useState({});
   const userDetails = useSelector((store) => store?.user?.userDetails?.type);
@@ -104,6 +105,7 @@ const CommonRoutes = () => {
         <Route path="/" element={<Login />} />
         {userDetails === superAdmin && (
           <>
+            <Route path="/customer-requests" element={<CustomerRequests />} />
             <Route path="/customer-feedback&complaint-detail" element={<CustomerComplaintDetail />} />
             <Route path="add-complaint-desription" element={<AddComplaintMain />} />
             <Route path="complaint-list" element={<ComplaintList />} />

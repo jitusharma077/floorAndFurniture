@@ -233,7 +233,7 @@ function EnquiryDetials() {
                 <button
                   onClick={() => {
                     navigate("/add-schedule", {
-                      state: { data: enquiryId },
+                      state: { enquiryId: enquiryId },
                     });
                   }}
                   className="btn btn-mybutton"
@@ -348,8 +348,7 @@ function EnquiryDetials() {
                     <h4 className="card-title">
                       Enquiry No: {EnquiryDetials?.data?.id}
                     </h4>
-                    <p><strong>Remark :</strong> {EnquiryDetials?.data?.remark} </p>
-
+                    <p><strong >Remark :</strong> {EnquiryDetials?.data?.remark} </p>
                     <p>
                       <strong>Admin Remarks : </strong>
                       {EnquiryDetials?.data?.admin_remark}

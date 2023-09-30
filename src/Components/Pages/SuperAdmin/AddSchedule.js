@@ -12,48 +12,65 @@ function AddSchedule() {
   const [EnquiryId, setEnquiryId] = useState(null);
   const [AllUnAssignedUser, setAllUnAssignedUser] = useState([]);
   const [AssignedPerson, setAssignedPerson] = useState("");
-  const [InquiryData, setInquiryData] = useState([]);
-  const [getDate, setGetDate] = useState("");
+  const [callApi, setCallApi] = useState(true);
+  const [callApi2, setCallApi2] = useState(false);
   const [customerTimeSlot, setcustomerTimeSlot] = useState("");
 
-  useEffect(() => {
-    console.log("first", location.state);
-    setEnquiryId(location.state.data);
-    GetDataWithToken("superadmin/get-schedule?type=measurer").then((response) => {
-      if (response.status === true) {
-        setAllTimeSlot(response.data);
-      }
-    });
-  }, [location.state]);
 
-  const getAssignedPerson = (e) => {
-    setAssignedPerson(e.target.value);
-  };
-  const getSelectedDate = (e) => {
-    console.log("date", e.target.value);
-    setGetDate(e.target.value);
-  };
+  // const [InquiryData, setInquiryData] = useState([]);
+  // const [getDate, setGetDate] = useState("");
+
+
+  useEffect(() => {
+    if (callApi) {
+      location?.state?.schedule?.id && setCallApi2(true);
+      setcustomerTimeSlot(location?.state?.schedule?.id ? location?.state?.schedule?.id : "");
+      console.log("first", location.state);
+      setEnquiryId(location.state.enquiryId ? location.state.enquiryId : location.state.data);
+      GetDataWithToken("superadmin/get-schedule?type=measurer").then((response) => {
+        if (response.status === true) {
+          setAllTimeSlot(response.data);
+          setCallApi(false);
+        } else {
+          setCallApi(false);
+        }
+      });
+    }
+    if (callApi2) {
+      GetDataWithToken(
+        `superadmin/get-unassigned-user/${customerTimeSlot}`
+      ).then((response) => {
+        if (response.status === true) {
+          setCallApi2(false);
+          setAllUnAssignedUser(response.data);
+        } else {
+          setCallApi2(false);
+        }
+      });
+    }
+  }, [callApi, callApi2]);
+
+  // const getAssignedPerson = (e) => {
+  //   setAssignedPerson(e.target.value);
+  // };
+  // const getSelectedDate = (e) => {
+  //   console.log("date", e.target.value);
+  //   setGetDate(e.target.value);
+  // };
 
   const getTimeSlot = (timeSlot) => {
-    console.log("timeSlot", timeSlot.target.value);
+    // console.log("timeSlot", timeSlot.target.value);
     setcustomerTimeSlot(timeSlot.target.value);
-
-    GetDataWithToken(
-      `superadmin/get-unassigned-user/${timeSlot.target.value}`
-    ).then((response) => {
-      if (response.status === true) {
-        setAllUnAssignedUser(response.data);
-      }
-    });
+    setCallApi2(true);
   };
 
   const ConfirmSchduled = (event) => {
     event.preventDefault();
     let data = {
-      schedulePersonId: AssignedPerson,
+      schedulePersonId: event.target?.[2].value,
       enquiryId: EnquiryId,
-      ScheduleId: customerTimeSlot,
-      date: moment(getDate).format("YYYY-MM-DD"),
+      ScheduleId: event?.target?.[1].value,
+      date: moment(event?.target?.[0].value).format("YYYY-MM-DD"),
     };
 
     PostDataWithToken(`auth/assign-schedule-enquiry`, data).then((response) => {
@@ -109,9 +126,10 @@ function AddSchedule() {
                             </label>
                             <input
                               type={"date"}
+                              defaultValue={location?.state?.date ? moment(location?.state?.date).format("YYYY-MM-DD") : null}
                               min={moment().add(0, "days").format("YYYY-MM-DD")}
                               className="form-control"
-                              onChange={getSelectedDate}
+                            // onChange={getSelectedDate}
                             />
                           </div>
                           <div className="col-lg-12 my-1">
@@ -124,11 +142,11 @@ function AddSchedule() {
                                 getTimeSlot(e);
                               }}
                             >
-                              <option selected>Choose...</option>
+                              <option>Choose...</option>
                               {AllTimeSlot &&
                                 AllTimeSlot.map((item, index) => {
                                   return (
-                                    <option value={item.id}>
+                                    <option selected={location?.state?.schedule?.id === item.id} value={item.id}>
                                       {item.start_time} - {item.end_time}
                                     </option>
                                   );
@@ -141,9 +159,9 @@ function AddSchedule() {
                             </label>
                             <select
                               className="me-sm-2  form-control"
-                              onChange={(e) => {
-                                getAssignedPerson(e);
-                              }}
+                            // onChange={(e) => {
+                            //   getAssignedPerson(e);
+                            // }}
                             >
                               <option selected>Choose...</option>
                               {AllUnAssignedUser &&
