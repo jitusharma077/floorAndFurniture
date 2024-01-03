@@ -231,6 +231,10 @@ function EnquiryDetials() {
                     </button>
                   )
                 )}
+                {console.log(
+                  "first, enquirryyy statussss",
+                  EnquiryDetials?.data?.status
+                )}
 
                 {EnquiryDetials?.data?.status !== "inprogess" &&
                   EnquiryDetials?.data?.status !== "fresh" &&

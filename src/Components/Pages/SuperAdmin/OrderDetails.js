@@ -4,6 +4,7 @@ import SuperAdminSidebar from "./Common/SuperAdminSidebar";
 import { Table } from "reactstrap";
 import { GetDataWithToken } from "../../ApiHelper/ApiHelper";
 import { useLocation } from "react-router-dom";
+import moment from "moment";
 
 function OrderDetails() {
     const location = useLocation();
@@ -55,7 +56,11 @@ function OrderDetails() {
                                             <li class="list-group-item d-flex justify-content-between">
                                                     
                                                     <strong>Order Date.</strong>
-                                                    <span class="mb-0">{ orderData?.OrderDate?.split('T')?.[0] }</span>
+                                                    <span class="mb-0">{
+                                                        orderData?.OrderDate&& moment( orderData?.OrderDate)?.format('DD/MM/YYYY')
+                                                            
+                                                    }
+                                                    </span>
                                             </li>
                                             <li class="list-group-item d-flex justify-content-between">
                                                    
@@ -137,15 +142,16 @@ function OrderDetails() {
                                               {data?.ItemName}
                                             </td>
                                             <td>
-                                               {data?.Qty}
+                                                     {data?.Qty&&+data?.Qty?.toFixed(2)}
+                                                     
                                             </td>
                                             <td>
-                                               {data?.QtyPending}
+                                               {data?.QtyPending && +data?.QtyPending.toFixed(2)}
                                             </td>
                                             <td>
-                                               {data?.ShippingDate?.split('T')?.[0]}
-                                                    </td>
-                                                    <td>
+                                               {data?.ShippingDate&&moment(data?.ShippingDate)?.format("DD/MM/YYYY")}
+                                             </td>
+                                            <td>
                                                 {data?.Status}
                                             </td>
                                             </tr>

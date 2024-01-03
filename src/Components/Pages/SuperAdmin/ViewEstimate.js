@@ -499,6 +499,68 @@ function ViewEstimate() {
     );
   };
 
+  // const renderRoomCurtain = (
+  //   window = {},
+  //   windowIndex,
+  //   tax = 0,
+  //   colspan = 16
+  // ) => {
+  //   const fabrics = window?.fabricList ?? [];
+  //   console.log("windowIndex", window);
+
+  //   const totalAmount = fabrics?.reduce((sum, fabric) => {
+  //     return (sum = +sum + +fabric?.grandTotal);
+  //   }, 0);
+
+  //   if (fabrics.length === 0) return "";
+  //   return (
+  //     <>
+  //       <tr>
+  //         <th colSpan={colspan}>Window - {windowIndex + 1} </th>
+  //       </tr>
+  //       <tr>
+  //         <th colSpan={16 / 2}>Width - {window?.width} cm</th>
+  //         <th colSpan={16 / 2}>Height / Drop - {window?.height} cm</th>
+  //       </tr>
+  //       {fabrics?.map((fabric, fabricIndex) => {
+  //         return (
+  //           <>
+  //             {fabricIndex === 0 ? (
+  //               <tr>
+  //                 <th>Sno</th>
+  //                 <th>Item</th>
+  //                 <th colSpan="4">Item name</th>
+  //                 <th colSpan="3">Curtain style</th>
+  //                 <th>No of panel</th>
+  //                 <th>Total Quantity</th>
+  //                 <th>MRP per meter including taxes</th>
+  //                 <th>Gross amount</th>
+  //                 <th>Dis</th>
+  //                 <th>Net amount including taxes</th>
+  //               </tr>
+  //             ) : (
+  //               ``
+  //             )}
+  //             <tr>
+  //               <td>{fabricIndex + 1}</td>
+  //               <td>{fabric?.title}</td>
+  //               <td colSpan="4">{fabric?.value}</td>
+  //               <td colSpan="3">{fabric?.curtainStyle}</td>
+  //               <td>{fabric?.noOfPanel}</td>
+  //               <td>{fabric?.totalFabricInM}</td>
+  //               <td>{fabric?.mrp}</td>
+  //               <td>{fabric?.totalPrice}</td>
+  //               <td>{`${fabric?.dis} %`}</td>
+  //               <td>{fabric?.grandTotal}</td>
+  //             </tr>
+  //           </>
+  //         );
+  //       })}
+  //       {renderTotalRoomAmount(totalAmount, colspan)}
+  //     </>
+  //   );
+  // };
+
   const renderRoomCurtain = (
     window = {},
     windowIndex,
@@ -559,6 +621,7 @@ function ViewEstimate() {
       </>
     );
   };
+
   const renderSofa = (sofa = [], colspan = 16) => {
     const fabrics = sofa?.sofaList ?? [];
     console.log("ress", sofa);
@@ -1216,7 +1279,7 @@ function ViewEstimate() {
     };
 
     if (roomDetail) {
-      let windowList = Array(roomDetail?.numberOfWindow).fill(1);
+      let windowList = Array(roomDetail?.room_assets?.length).fill(1);
       if (windowList.length === 0) {
         windowList.push(0);
       }
@@ -1237,7 +1300,7 @@ function ViewEstimate() {
       }
       console.log("windo listtt", windowList);
       // {
-      //   windowList.length === 0 && windowList.length === 1;
+      // windowList.length === 0 && windowList.length === 1;
       // }
       windowList.map((_, index) => {
         const assetId = _["assetId"] ? _["assetId"] : undefined;

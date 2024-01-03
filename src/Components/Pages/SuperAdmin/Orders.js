@@ -60,7 +60,7 @@ function Orders() {
      setCurrentPage(1);
     }
 
-  let fromDate = date?.fromDate ?moment(date?.fromDate, "ddd MMM DD YYYY HH:mm:ss [GMT]ZZ")?.format("YYYY-MM-DD"):'';
+  let fromDate = date?.fromDate ? moment(date?.fromDate, "ddd MMM DD YYYY HH:mm:ss [GMT]ZZ")?.format("YYYY-MM-DD"):'';
   let toDate = date?.toDate ? moment(date?.toDate, "ddd MMM DD YYYY HH:mm:ss [GMT]ZZ")?.format("YYYY-MM-DD"):''; 
   
   useEffect(() => {
@@ -80,7 +80,7 @@ function Orders() {
   
   return (
         <>
-            <div
+        <div
         data-typography="poppins"
         data-theme-version="light"
         data-layout="vertical"
@@ -150,7 +150,7 @@ function Orders() {
                       >
                         <thead>
                               <tr>
-                            <th>S.NO.</th>    
+                             
                             <th>Code</th>
                             <th>Date</th>
                             <th>Name</th>
@@ -172,9 +172,9 @@ function Orders() {
                                 </h3>
                               ) : orderData?.map((data, index) =>
                                 <tr>
-                                  <td>{index+1}</td>
+                                 
                                   <td>{ data?.Code }</td>
-                                  <td>{ data?.OrderDate?.split('T')?.[0] }</td>
+                                  <td>{moment(data?.OrderDate)?.format("DD/MM/YYYY")}</td>
                                   <td>
                                     {data?.DeliveryName}
                                   </td>
@@ -203,7 +203,7 @@ function Orders() {
                       >
                         <thead>
                             <tr>
-                             <th>S.NO.</th>     
+                               
                             <th>Code</th>
                             <th>Date</th>
                             <th>Name</th>
@@ -224,9 +224,12 @@ function Orders() {
                                 </h3>
                               ) : orderData?.map((data, index) =>
                                 <tr>
-                                  <td>{ index + 1 }</td>
+                                 
                                   <td>{ data?.Code }</td>
-                                  <td>{ data?.OrderDate?.split('T')?.[0] }</td>
+                                  <td>{moment(data?.OrderDate)?.format("DD/MM/YYYY")
+                                    // data?.OrderDate?.split('T')?.[0]
+                                    }
+                                  </td>
                                   <td> {data?.DeliveryName}
                                   </td>
                                   <td>
