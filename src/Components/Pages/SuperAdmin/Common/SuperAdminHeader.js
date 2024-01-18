@@ -52,6 +52,8 @@ function SuperAdminHeader() {
 
   return (
     <>
+      {/* my demo color */}
+      {/* background: linear-gradient(to left, rgb(18 2 100) , rgb(155 0 59 / 95%)); */}
       {/*--- Main wrapper start -----*/}
 
       {/*---- Nav Header Start -----*/}

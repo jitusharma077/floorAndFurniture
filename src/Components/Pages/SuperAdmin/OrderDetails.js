@@ -80,7 +80,7 @@ function OrderDetails() {
                                             </li>
                                             </ul>
                                         </div>
-                                       
+                                        
                                         <div class="col-lg-6">
                                         <ul class="list-group list-group-flush">
                                                 <li class="list-group-item d-flex justify-content-between ">                                          

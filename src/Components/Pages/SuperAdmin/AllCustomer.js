@@ -1,16 +1,52 @@
-import React from "react";
+import {useState,useEffect} from "react";
 // import DataTable from "react-data-table-component";
 import { useNavigate } from "react-router-dom";
-// import { GetDataWithToken } from "../../ApiHelper/ApiHelper";
+import { GetDataWithToken } from "../../ApiHelper/ApiHelper";
 import Loader from "../../Common/Loader";
 import useFetch from "../../Hooks/CallBack";
 // import DataTableBase from "./Common/DataTablebasic";
 import SuperAdminHeader from "./Common/SuperAdminHeader";
 import SuperAdminSidebar from "./Common/SuperAdminSidebar";
+import { current } from "@reduxjs/toolkit";
+import { useInView } from "react-intersection-observer";
+
 
 function AllCustomer() {
+  const { ref: myRef, inView: visibleElement } = useInView();
+   const [totalPage, settotalPage] = useState(1);
+  const [searchData, setSearchData] = useState('');
+  const [data, setData] = useState([]);
+  const [callApi, setCallApi] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(true);
+
   const navigate = useNavigate();
-  const { data, Error, isLoading } = useFetch("superadmin/get-customers");
+   const searchDataHandler = () => {
+        setCurrentPage(1);
+        console.log(searchData);
+        setCallApi(true);
+        setIsLoading(true);
+         setData([]);
+   }
+  useEffect(() => {
+    if (callApi||visibleElement) {
+      setIsLoading(true);
+      GetDataWithToken(`superadmin/get-customers?fullName=${searchData}&pageNo=${currentPage}&pageSize=10`)
+        .then((response) => {
+          if (response.status === true) {
+              settotalPage(response?.pageInfo?.totalPage);
+              setCurrentPage(currentPage + 1);
+              setData(prevData=> [...prevData, ...response.data]);
+              currentPage <= totalPage && setCurrentPage((prevPage) => prevPage + 1);
+              setCallApi(false);
+             setIsLoading(false);
+            
+          }
+           })   
+    }
+  }, [callApi,visibleElement])
+  
+  // const { data, Error, isLoading } = useFetch("");
 
   return (
     <>
@@ -40,6 +76,20 @@ function AllCustomer() {
                 <div className="card">
                   <div className="card-header">
                     <h4 className="card-title">All Customers</h4>
+                     <div className="col-lg-7 d-flex">
+                                              <input
+                                                    type="text"
+                                                    className="form-control"
+                                                    placeholder="Search"
+                                                    onChange={(e) => {
+                                                      setSearchData(e.target.value);
+                                                    }}
+                                                />
+                      <button className="btn btn-primary ms-2"
+                        onClick={searchDataHandler}
+                      >Search
+                                          </button>
+                                        </div>
                     {/* <button className=""></button> */}
                   </div>
                   <div className="card-body">
@@ -60,9 +110,7 @@ function AllCustomer() {
                         </thead>
                         <tbody>
                           {isLoading && <Loader />}
-                          {Error && <div>Error</div>}
-
-                          {data && data.length === 0 && (
+                          {data && !isLoading && data.length === 0 && (
                             <h3
                               style={{
                                 position: "absolute",
@@ -100,6 +148,7 @@ function AllCustomer() {
                           })}
                         </tbody>
                       </table>
+                       {data?.length > 0 && currentPage <= totalPage && <div ref={myRef} id="scroll"></div>}
                     </div>
                   </div>
                 </div>

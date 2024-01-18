@@ -2,7 +2,7 @@ import { Modal, ModalBody, ModalHeader } from "reactstrap";
 import { useEffect, useState } from "react";
 import { GetDataWithToken } from "../ApiHelper/ApiHelper";
 
-function SearchStockModal({ modalToggle, modalOpen,searchBrandData,setSearchBrandData,mainSetCallApi,searchCollectionData,setSearchCollectionData,categoryCode,setIsLoading,setMainData }) {
+function SearchStockModal({ modalToggle, modalOpen,searchBrandData,setSearchBrandData,mainSetCallApi,searchCollectionData,setSearchCollectionData,categoryCode,setIsLoading,setMainData,setCurrentPage }) {
     const [nextPage, setNextPage] = useState(0);
     const [brandData, setBrandData] = useState([]);
     const [collectionData, setCollectionData] = useState([]);
@@ -19,6 +19,7 @@ function SearchStockModal({ modalToggle, modalOpen,searchBrandData,setSearchBran
         setMainData([]);
         setIsLoading(true);
         toggle();
+        setCurrentPage(1);
         mainSetCallApi(true);
     }
 

@@ -36,7 +36,7 @@ import Error from "../Common/Error";
 import { useSelector } from "react-redux";
 import Search from "../Pages/SuperAdmin/Search";
 import StaffDetials from "../Pages/SuperAdmin/StaffDetials";
-import CreateTimeSlot from "../Pages/SuperAdmin/CreateTimeSlot";
+import CreateTimeSlot from "../Pages/SuperAdmin/CreateTimeSlotMeasurer";
 import CustomerRequestedTimeSlot from "../Pages/SuperAdmin/CustomerRequestedTimeSlot";
 import CustomerSchedule from "../Pages/Customer/CustomerSchedule";
 import EditEnquiry from "../Pages/SuperAdmin/EditEnquiry";
@@ -75,6 +75,24 @@ import OrderDetails from "../Pages/SuperAdmin/OrderDetails";
 import ItemDetails from "../Pages/SuperAdmin/ItemDetails";
 import CustomerLedgerDetails from "../Pages/SuperAdmin/CustomerLedgerDetails";
 import SearchEnquiry from "../Pages/SuperAdmin/SearchEnquiry";
+import CreateTimeSlotMeasurer from "../Pages/SuperAdmin/CreateTimeSlotMeasurer";
+import CreateTimeSlotInstaller from "../Pages/SuperAdmin/CreateTimeSlotInstaller";
+import ComplaintList from "../Pages/SuperAdmin/ComplaintList";
+import AddComplaint from "../Pages/SuperAdmin/AddComplaint";
+import AddComplaintMain from "../Pages/SuperAdmin/AddComplaintMain";
+import CustomerLogin from "../Pages/Customer/CustomerLogin";
+import CustomerEnquiryList from "../Pages/Customer/CustomerEnquiryList";
+import CustomerSelectOption from "../Pages/Customer/CustomerSelectOption";
+import CustomerComplaintCategory from "../Pages/Customer/CustomerComplaintCategory";
+import CustomerComplaintForm from "../Pages/Customer/CustomerComplaintForm";
+import CustomerStatusDetail from "../Pages/Customer/CustomerStatusDetail";
+import CustomerAssignMeasurer from "../Pages/Customer/CustomerAssignMeasurer";
+import CustomerAssignInstaller from "../Pages/Customer/CustomerAssignInstaller";
+import CustomerFeedback from "../Pages/Customer/CustomerFeedback";
+import CustomerComplaintDetail from "../Pages/SuperAdmin/CustomerComplaintDetails";
+import CustomerViewEstimate from "../Pages/Customer/CustomerViewEstimate";
+import CustomerRequests from "../Pages/SuperAdmin/CustomerRequests";
+import ComplaintDetials from "../Pages/SuperAdmin/ComplaintDetials";
 const CommonRoutes = () => {
   // const [type, setType] = useState({});
   const userDetails = useSelector((store) => store?.user?.userDetails?.type);
@@ -88,15 +106,29 @@ const CommonRoutes = () => {
         <Route path="/" element={<Login />} />
         {userDetails === superAdmin && (
           <>
-            <Route path="/searh-enquiry" element={<SearchEnquiry/>}/>
-            <Route path="/customer-ledger-detail" element={<CustomerLedgerDetails/>}/>
+            <Route path="/customer-requests" element={<CustomerRequests />} />
+            <Route
+              path="/customer-feedback&complaint-detail"
+              element={<CustomerComplaintDetail />}
+            />
+            <Route
+              path="add-complaint-desription"
+              element={<AddComplaintMain />}
+            />
+            <Route path="complaint-list" element={<ComplaintList />} />
+            <Route path="add-complaint" element={<AddComplaint />} />
+            <Route path="/searh-enquiry" element={<SearchEnquiry />} />
+            <Route
+              path="/customer-ledger-detail"
+              element={<CustomerLedgerDetails />}
+            />
             <Route path="/invoice-detail" element={<InvoiceDetails />} />
-            <Route path="/search-item-detail" element={<ItemDetails/>}/>
+            <Route path="/search-item-detail" element={<ItemDetails />} />
             <Route path="/order-detail" element={<OrderDetails />} />
-            <Route path="/customer-ledger" element={<CustomerLedger/>}/>
-            <Route path="/invoices" element={<Invoices />}/>
-            <Route path="/orders" element={<Orders/>} />
-            <Route path="/search-stock" element={<SearchStock />} /> 
+            <Route path="/customer-ledger" element={<CustomerLedger />} />
+            <Route path="/invoices" element={<Invoices />} />
+            <Route path="/orders" element={<Orders />} />
+            <Route path="/search-stock" element={<SearchStock />} />
             <Route path="/SuperAdminDashboard" element={<Dashboard />} />
             <Route
               path="/SuperAdmintestpage"
@@ -127,7 +159,14 @@ const CommonRoutes = () => {
             <Route path="Search" element={<Search />} />
             <Route path="Staff-detials" element={<StaffDetials />} />
             <Route path="Measurer-detials" element={<MesurerDetials />} />
-            <Route path="create-time-slot" element={<CreateTimeSlot />} />
+            <Route
+              path="create-time-slot-measurer"
+              element={<CreateTimeSlotMeasurer />}
+            />
+            <Route
+              path="create-time-slot-installer"
+              element={<CreateTimeSlotInstaller />}
+            />
             <Route
               path="Customer-requested-time-slot"
               element={<CustomerRequestedTimeSlot />}
@@ -149,6 +188,7 @@ const CommonRoutes = () => {
               element={<CustomerDetialsGetValue />}
             />
             <Route path="EnquiryProductList" element={<EnquiryProductList />} />
+            <Route path="ComplaintDetials" element={<ComplaintDetials />} />
           </>
         )}
 
@@ -206,7 +246,36 @@ const CommonRoutes = () => {
         )}
 
         <Route path="*" element={<Error />} />
+
+        <Route
+          path="customer-assign-Installer"
+          element={<CustomerAssignInstaller />}
+        />
+        <Route
+          path="customer-assign-mearurer"
+          element={<CustomerAssignMeasurer />}
+        />
+        <Route
+          path="customer-status-detail"
+          element={<CustomerStatusDetail />}
+        />
         <Route path="customer-schedule/:url" element={<CustomerSchedule />} />
+        <Route
+          path="/customer-view-estimate"
+          element={<CustomerViewEstimate />}
+        />
+        <Route path="customer-login" element={<CustomerLogin />} />
+        <Route path="customer-Enquiries" element={<CustomerEnquiryList />} />
+        <Route path="customer-options" element={<CustomerSelectOption />} />
+        <Route
+          path="customer-complaint-category"
+          element={<CustomerComplaintCategory />}
+        />
+        <Route
+          path="customer-complaint-form"
+          element={<CustomerComplaintForm />}
+        />
+        <Route path="customer-feedback" element={<CustomerFeedback />} />
       </Routes>
     </BrowserRouter>
   );

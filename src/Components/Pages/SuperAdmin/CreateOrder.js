@@ -11,6 +11,7 @@ function CreateOrder({ routes }) {
   const [EnquiryId, setEnquiryId] = useState(null);
   const [CoustomerId, setCoustomerId] = useState("");
   const [AllWhareHouse, setAllWhareHouse] = useState([]);
+  const [orderId, setOrderId] = useState();
 
   useEffect(() => {
     setEnquiryId(location.state.enquiryId);
@@ -30,13 +31,14 @@ function CreateOrder({ routes }) {
   };
 
   const ConfirmSchduled = (event) => {
-    console.log("enquiryid", EnquiryId);
+    // console.log("enquiryid", EnquiryId);
     event.preventDefault();
     let data = {
       enquiryId: EnquiryId,
       userId: WareHouseId,
       customerId: CoustomerId,
-      orderDate: new Date(),
+      orderDate: new Date().toISOString().split('T')?.[0],
+      orderId: orderId,
     };
     console.log("dataaaa", data);
     PostDataWithToken(`order/create`, data).then((response) => {
@@ -96,6 +98,7 @@ function CreateOrder({ routes }) {
                       /> */}
                           <select
                             className="me-sm-2  form-control"
+                            required
                             onChange={(e) => {
                               getwareHouse(e);
                             }}
@@ -110,6 +113,7 @@ function CreateOrder({ routes }) {
                                 );
                               })}
                           </select>
+                          <input type="number" className="me-sm-2 form-control my-2" placeholder="Order ID" min={6} required onChange={(e) => setOrderId(e.target.value)} />
                         </div>
                       </div>
                       <button className="btn btn-primary">Submit </button>

@@ -9,6 +9,9 @@ import SuperAdminHeader from "./Common/SuperAdminHeader";
 import SuperAdminSidebar from "./Common/SuperAdminSidebar";
 import EnquiryCustom from "./Common/EnquiryCustom";
 import ReAssignmesurer from "../../Common/ReAssignmesurer";
+import WcrModal from "../../Common/WcrModal";
+import AdminRemarkModal from "../../Common/AdminRemarkModal";
+import Swal from "sweetalert2";
 
 function EnquiryDetials() {
   const location = useLocation();
@@ -16,6 +19,9 @@ function EnquiryDetials() {
   const [isRoomData, setIsRoomData] = useState(false);
   const [CustomerId, setCustomerId] = useState("");
   const [modal, setModal] = useState(false);
+  const [remarkModal, setRemarkModal] = useState(false);
+
+  const remarkToggle = () => { setRemarkModal(!remarkModal) };
   const toggle = () => setModal(!modal);
   const [modal1, setModal1] = useState(false);
   const toggle1 = () => setModal1(!modal1);
@@ -30,12 +36,45 @@ function EnquiryDetials() {
   const [Category, setCategory] = useState([]);
   const [IcName, setIcName] = useState("");
   const [SelectedValue, setSelectedValue] = useState("");
+  const [wcrModal, setWcrModal] = useState(false);
+  const wcrModalToggle = () => setWcrModal(!wcrModal);
+  const [wcrData, setWcrData] = useState();
+
+  const customMessageHandler = () => {
+    Swal.fire({
+      title: 'Do you want to send feedback message?',
+      showDenyButton: true,
+      showCancelButton: true,
+      confirmButtonText: 'Send',
+      // denyButtonText: `Don't dont send`,
+    }).then((result) => {
+      /* Read more about isConfirmed, isDenied below */
+      if (result.isConfirmed) {
+        GetDataWithToken(`customer/send-message?enquiryId=${enquiryId}`).then(response => {
+          if (response.status === true) {
+            console.log(response);
+            toast.success(response.message);
+          } else {
+            toast.error(response.message);
+          }
+        })
+        // Swal.fire('Saved!', '', 'success')
+      }
+    })
+
+  }
 
   useEffect(() => {
     console.log("location", location);
     setEnquiryId(location.state.data);
     setCategory(location.state.category);
     setIcName(location.state.icPerson);
+
+    GetDataWithToken(`installer/get-wcr/${location?.state?.data}`).then((response) => {
+      if (response.status === true) {
+        setWcrData(response.data);
+      }
+    });
 
     GetDataWithToken(`sales/get-enquiry/${location?.state?.data}`).then(
       (response) => {
@@ -63,6 +102,8 @@ function EnquiryDetials() {
             toast.success("Mail Sent Successfully", {
               position: toast.POSITION.TOP_CENTER,
             });
+          } else {
+            toast.error(response.data.message);
           }
         }
       );
@@ -98,6 +139,8 @@ function EnquiryDetials() {
           position: toast.POSITION.TOP_CENTER,
         });
         window.location.reload(true);
+      } else {
+        toast.error(response.data.message);
       }
     });
   };
@@ -112,7 +155,6 @@ function EnquiryDetials() {
 
   return (
     <>
-      {console.log("lenghtcustomerrrrrr", CustomerId)}
       <div
         data-typography="poppins"
         data-theme-version="light"
@@ -191,7 +233,7 @@ function EnquiryDetials() {
                 <button
                   onClick={() => {
                     navigate("/add-schedule", {
-                      state: { data: enquiryId },
+                      state: { enquiryId: enquiryId },
                     });
                   }}
                   className="btn btn-mybutton"
@@ -200,9 +242,9 @@ function EnquiryDetials() {
                 </button>
 
                 {EnquiryDetials?.data?.installer_tasks[0]?.status &&
-                EnquiryDetials?.data?.installer_tasks[
-                  EnquiryDetials?.data?.installer_tasks.length - 1
-                ]?.status === "pending" ? (
+                  EnquiryDetials?.data?.installer_tasks[
+                    EnquiryDetials?.data?.installer_tasks.length - 1
+                  ]?.status === "pending" ? (
                   <>
                     <button
                       className="btn btn-mybutton"
@@ -268,6 +310,28 @@ function EnquiryDetials() {
                     View Estimate
                   </button>
                 )}
+                {wcrData?.id && <button
+                  onClick={wcrModalToggle}
+                  className="btn btn-mybutton"
+                >
+                  WCR Report
+                </button>}
+                <>
+                  <button
+                    className="btn btn-mybutton"
+                    onClick={remarkToggle}
+
+                  >
+                    Admin Remarks
+                  </button>
+                  <button
+                    className="btn btn-mybutton"
+                    onClick={customMessageHandler}
+
+                  >
+                    Custom message
+                  </button>
+                </>
               </>
             ) : null}
           </div>
@@ -288,7 +352,12 @@ function EnquiryDetials() {
                     <h4 className="card-title">
                       Enquiry No: {EnquiryDetials?.data?.id}
                     </h4>
-                    <h3>Remark: {EnquiryDetials?.data?.remark}</h3>
+                    <p><strong >Remark :</strong> {EnquiryDetials?.data?.remark} </p>
+                    <p>
+                      <strong>Admin Remarks : </strong>
+                      {EnquiryDetials?.data?.admin_remark}
+                    </p>
+                    {/* <h3></h3> */}
                     <div style={{ display: "flex" }}>
                       <p>Selected Category: </p>
                       {Category?.map((i, index) => {
@@ -331,7 +400,7 @@ function EnquiryDetials() {
                             <strong>
                               {EnquiryDetials?.data?.customer?.secondary_phone
                                 ? EnquiryDetials?.data?.customer
-                                    ?.secondary_phone
+                                  ?.secondary_phone
                                 : `${EnquiryDetials?.data?.contactNumber} (Delivery)`}
                             </strong>
                           </li>
@@ -354,23 +423,21 @@ function EnquiryDetials() {
                           <li className="list-group-item d-flex justify-content-between ">
                             <span className="mb-0">Measurer name :</span>
                             <strong>
-                              {`${
-                                EnquiryDetials?.data?.enquiryschedules?.length >
+                              {`${EnquiryDetials?.data?.enquiryschedules?.length >
                                 0
+                                ? EnquiryDetials?.data?.enquiryschedules[
+                                  EnquiryDetials?.data?.enquiryschedules
+                                    ?.length - 1
+                                ]?.user?.firstName
+                                : "Not assigned"
+                                } ${EnquiryDetials?.data?.enquiryschedules?.length >
+                                  0
                                   ? EnquiryDetials?.data?.enquiryschedules[
-                                      EnquiryDetials?.data?.enquiryschedules
-                                        ?.length - 1
-                                    ]?.user?.firstName
-                                  : "Not assigned"
-                              } ${
-                                EnquiryDetials?.data?.enquiryschedules?.length >
-                                0
-                                  ? EnquiryDetials?.data?.enquiryschedules[
-                                      EnquiryDetials?.data?.enquiryschedules
-                                        ?.length - 1
-                                    ]?.user?.lastName
+                                    EnquiryDetials?.data?.enquiryschedules
+                                      ?.length - 1
+                                  ]?.user?.lastName
                                   : ""
-                              }`}
+                                }`}
                             </strong>
                           </li>
                         </ul>
@@ -396,7 +463,7 @@ function EnquiryDetials() {
                                 ?.contactNumber === null
                                 ? "nil"
                                 : EnquiryDetials?.data?.customer?.addresses[0]
-                                    ?.contactNumber}
+                                  ?.contactNumber}
                             </strong>
                           </li>
                           <li className="list-group-item d-flex justify-content-between ">
@@ -508,9 +575,8 @@ function EnquiryDetials() {
                       {EnquiryDetials?.data &&
                         EnquiryDetials?.data?.rooms?.map((rooms, index) => (
                           <a
-                            className={`list-group-item list-group-item-action text-white ${
-                              index === 0 ? "active" : ""
-                            }`}
+                            className={`list-group-item list-group-item-action text-white ${index === 0 ? "active" : ""
+                              }`}
                             data-bs-toggle="list"
                             href={`#list-home-${index}`}
                             role="tab"
@@ -542,9 +608,8 @@ function EnquiryDetials() {
                           return (
                             <>
                               <div
-                                className={`tab-pane fade show ${
-                                  index === 0 ? "active" : ""
-                                }`}
+                                className={`tab-pane fade show ${index === 0 ? "active" : ""
+                                  }`}
                                 id={`list-home-${index}`}
                               >
                                 <h5>Main Curtain Fabric Description</h5>
@@ -552,7 +617,7 @@ function EnquiryDetials() {
                                   <EnquiryCustom
                                     image={
                                       room?.selectedsheer?.sheerStyle?.image ===
-                                      null
+                                        null
                                         ? ""
                                         : room?.selectedsheer?.sheerStyle?.image
                                     }
@@ -645,7 +710,7 @@ function EnquiryDetials() {
                                   </>
                                 )}
                                 {room?.selectedcurtain?.mock_fabric_required ===
-                                "No" ? (
+                                  "No" ? (
                                   ""
                                 ) : (
                                   <>
@@ -731,7 +796,7 @@ function EnquiryDetials() {
                                   room?.selectedcurtain?.border_required
                                 )}
                                 {room?.selectedcurtain?.border_required ===
-                                "No" ? (
+                                  "No" ? (
                                   ""
                                 ) : (
                                   <>
@@ -960,7 +1025,7 @@ function EnquiryDetials() {
                                   </>
                                 )}
                                 {room?.selectedcurtain?.pelmetTypeId ===
-                                null ? (
+                                  null ? (
                                   ""
                                 ) : (
                                   <>
@@ -1056,7 +1121,7 @@ function EnquiryDetials() {
                                         extraBracketRequired={
                                           room?.selectedTrack
                                             ?.primary_extra_track_bracket_required ===
-                                          null
+                                            null
                                             ? "no"
                                             : "yes"
                                         }
@@ -1071,29 +1136,29 @@ function EnquiryDetials() {
                                         overlapperRequired={
                                           room?.selectedTrack
                                             ?.primary_overlappper_required ===
-                                          null
+                                            null
                                             ? "no"
                                             : "yes"
                                         }
                                         overlapperQuantity={
                                           room?.selectedTrack
                                             ?.primary_number_of_overlappper_pair ===
-                                          null
+                                            null
                                             ? "No"
                                             : room?.selectedTrack
-                                                ?.primary_number_of_overlappper_pair
+                                              ?.primary_number_of_overlappper_pair
                                         }
                                         trackStickRequired={
                                           room?.selectedTrack
                                             ?.primary_track_curatin_stick_required ===
-                                          null
+                                            null
                                             ? "No"
                                             : "Yes"
                                         }
                                         tieKnobRequired={
                                           room?.selectedTrack
                                             ?.primary_tie_knobs_required ===
-                                          null
+                                            null
                                             ? "No"
                                             : "Yes"
                                         }
@@ -1123,14 +1188,14 @@ function EnquiryDetials() {
                                         extraBracketRequired={
                                           room?.selectedTrack
                                             ?.mock_extra_track_bracket_required ===
-                                          null
+                                            null
                                             ? "No"
                                             : "Yes"
                                         }
                                         trackStickRequired={
                                           room?.selectedTrack
                                             ?.mock_track_curatin_stick_required ===
-                                          null
+                                            null
                                             ? "No"
                                             : "Yes"
                                         }
@@ -1231,21 +1296,21 @@ function EnquiryDetials() {
                                         <div className="col-lg-9">
                                           {room?.selectedRod
                                             ?.secondary_rod_length && (
-                                            <ul className="list-group list-group-flush">
-                                              <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                                <span className="mb-0">
-                                                  Secondary Rod Length :
-                                                </span>
-                                                <strong>
-                                                  {" "}
-                                                  {
-                                                    room?.selectedRod
-                                                      ?.secondary_rod_length
-                                                  }
-                                                </strong>
-                                              </li>
-                                            </ul>
-                                          )}
+                                              <ul className="list-group list-group-flush">
+                                                <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                                  <span className="mb-0">
+                                                    Secondary Rod Length :
+                                                  </span>
+                                                  <strong>
+                                                    {" "}
+                                                    {
+                                                      room?.selectedRod
+                                                        ?.secondary_rod_length
+                                                    }
+                                                  </strong>
+                                                </li>
+                                              </ul>
+                                            )}
                                         </div>
                                       </div>
                                     </div>
@@ -1285,129 +1350,129 @@ function EnquiryDetials() {
                                             {room?.room_assets[btnIndex]
                                               ?.selectedBlind?.blindStyle
                                               ?.style && (
-                                              <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                                <span className="mb-0">
-                                                  blind style :
-                                                </span>
-                                                <strong>
-                                                  {console.log(btnIndex)}
-                                                  {
-                                                    room?.room_assets[btnIndex]
-                                                      ?.selectedBlind
-                                                      ?.blindStyle?.style
-                                                  }
-                                                </strong>
-                                                <img
-                                                  src={
-                                                    room?.room_assets[btnIndex]
-                                                      ?.selectedBlind
-                                                      ?.blindStyle?.image
-                                                  }
-                                                  alt="Belt Fabric"
-                                                  className="newimg"
-                                                />
-                                              </li>
-                                            )}
+                                                <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                                  <span className="mb-0">
+                                                    blind style :
+                                                  </span>
+                                                  <strong>
+                                                    {console.log(btnIndex)}
+                                                    {
+                                                      room?.room_assets[btnIndex]
+                                                        ?.selectedBlind
+                                                        ?.blindStyle?.style
+                                                    }
+                                                  </strong>
+                                                  <img
+                                                    src={
+                                                      room?.room_assets[btnIndex]
+                                                        ?.selectedBlind
+                                                        ?.blindStyle?.image
+                                                    }
+                                                    alt="Belt Fabric"
+                                                    className="newimg"
+                                                  />
+                                                </li>
+                                              )}
 
                                             {room?.room_assets[btnIndex]
                                               ?.selectedBlind?.blind_subtype
                                               ?.type && (
-                                              <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                                <span className="mb-0">
-                                                  blind type:
-                                                </span>
-                                                <strong>
-                                                  {
-                                                    room?.room_assets[btnIndex]
-                                                      ?.selectedBlind
-                                                      ?.blind_subtype?.type
-                                                  }
-                                                </strong>
-                                                {room?.room_assets[btnIndex]
-                                                  ?.selectedBlind?.blind_subtype
-                                                  ?.image && (
-                                                  <div className="col-lg-3">
-                                                    <img
-                                                      src={
-                                                        room?.room_assets[
-                                                          btnIndex
-                                                        ]?.selectedBlind
-                                                          ?.blind_subtype?.image
-                                                      }
-                                                      alt="Belt Fabric"
-                                                      className="newimg"
-                                                    />
-                                                  </div>
-                                                )}
-                                              </li>
-                                            )}
+                                                <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                                  <span className="mb-0">
+                                                    blind type:
+                                                  </span>
+                                                  <strong>
+                                                    {
+                                                      room?.room_assets[btnIndex]
+                                                        ?.selectedBlind
+                                                        ?.blind_subtype?.type
+                                                    }
+                                                  </strong>
+                                                  {room?.room_assets[btnIndex]
+                                                    ?.selectedBlind?.blind_subtype
+                                                    ?.image && (
+                                                      <div className="col-lg-3">
+                                                        <img
+                                                          src={
+                                                            room?.room_assets[
+                                                              btnIndex
+                                                            ]?.selectedBlind
+                                                              ?.blind_subtype?.image
+                                                          }
+                                                          alt="Belt Fabric"
+                                                          className="newimg"
+                                                        />
+                                                      </div>
+                                                    )}
+                                                </li>
+                                              )}
                                             {room?.room_assets[btnIndex]
                                               ?.selectedBlind?.blindWindow_type
                                               ?.type && (
-                                              <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                                <span className="mb-0">
-                                                  Blind window Type :
-                                                </span>
-                                                <strong>
-                                                  {
-                                                    room?.room_assets[btnIndex]
-                                                      ?.selectedBlind
-                                                      ?.blindWindow_type?.type
-                                                  }
-                                                </strong>
-                                                {room?.room_assets[btnIndex]
-                                                  ?.selectedBlind
-                                                  ?.blindWindow_type?.image && (
-                                                  <div className="col-lg-3">
-                                                    <img
-                                                      src={
-                                                        room?.room_assets[
-                                                          btnIndex
-                                                        ]?.selectedBlind
-                                                          ?.blindWindow_type
-                                                          ?.image
-                                                      }
-                                                      alt="Belt Fabric"
-                                                      className="newimg"
-                                                    />
-                                                  </div>
-                                                )}
-                                              </li>
-                                            )}
+                                                <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                                  <span className="mb-0">
+                                                    Blind window Type :
+                                                  </span>
+                                                  <strong>
+                                                    {
+                                                      room?.room_assets[btnIndex]
+                                                        ?.selectedBlind
+                                                        ?.blindWindow_type?.type
+                                                    }
+                                                  </strong>
+                                                  {room?.room_assets[btnIndex]
+                                                    ?.selectedBlind
+                                                    ?.blindWindow_type?.image && (
+                                                      <div className="col-lg-3">
+                                                        <img
+                                                          src={
+                                                            room?.room_assets[
+                                                              btnIndex
+                                                            ]?.selectedBlind
+                                                              ?.blindWindow_type
+                                                              ?.image
+                                                          }
+                                                          alt="Belt Fabric"
+                                                          className="newimg"
+                                                        />
+                                                      </div>
+                                                    )}
+                                                </li>
+                                              )}
                                             {room?.room_assets[btnIndex]
                                               ?.selectedBlind?.blindFitting_type
                                               ?.type && (
-                                              <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                                <span className="mb-0">
-                                                  blind fitting type :
-                                                </span>
-                                                <strong>
-                                                  {
-                                                    room?.room_assets[btnIndex]
-                                                      ?.selectedBlind
-                                                      ?.blindFitting_type?.type
-                                                  }
-                                                </strong>
-                                                {room?.room_assets[btnIndex]
-                                                  ?.selectedBlind
-                                                  ?.blindFitting_type
-                                                  ?.image && (
-                                                  <div className="col-lg-3">
-                                                    <img
-                                                      src={
-                                                        room?.room_assets[
-                                                          btnIndex
-                                                        ]?.selectedBlind
-                                                          ?.blindFitting_type
-                                                          ?.image
-                                                      }
-                                                      alt="Belt Fabric"
-                                                      className="newimg"
-                                                    />
-                                                  </div>
-                                                )}
-                                              </li>
-                                            )}
+                                                <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                                  <span className="mb-0">
+                                                    blind fitting type :
+                                                  </span>
+                                                  <strong>
+                                                    {
+                                                      room?.room_assets[btnIndex]
+                                                        ?.selectedBlind
+                                                        ?.blindFitting_type?.type
+                                                    }
+                                                  </strong>
+                                                  {room?.room_assets[btnIndex]
+                                                    ?.selectedBlind
+                                                    ?.blindFitting_type
+                                                    ?.image && (
+                                                      <div className="col-lg-3">
+                                                        <img
+                                                          src={
+                                                            room?.room_assets[
+                                                              btnIndex
+                                                            ]?.selectedBlind
+                                                              ?.blindFitting_type
+                                                              ?.image
+                                                          }
+                                                          alt="Belt Fabric"
+                                                          className="newimg"
+                                                        />
+                                                      </div>
+                                                    )}
+                                                </li>
+                                              )}
                                           </ul>
                                         </div>
                                       </div>
@@ -1415,173 +1480,173 @@ function EnquiryDetials() {
                                       {room?.room_assets[btnIndex]
                                         ?.selectedBlind?.blindFabric !==
                                         null && (
-                                        <div>
-                                          <h5>Blind fabric Description</h5>
-                                          <div className="border border-1 p-3 rounded-2 mb-3">
-                                            <EnquiryCustom
-                                              fabricName={
-                                                room?.room_assets[btnIndex]
-                                                  ?.selectedBlind?.blindFabric
-                                                  ?.fabric
-                                              }
-                                              width={
-                                                room?.room_assets[btnIndex]
-                                                  ?.selectedBlind?.blindFabric
-                                                  ?.width
-                                              }
-                                              repeatHorizontal={
-                                                room?.room_assets[btnIndex]
-                                                  ?.selectedBlind?.blindFabric
-                                                  ?.repeat_horizontal
-                                              }
-                                              repeatVertical={
-                                                room?.room_assets[btnIndex]
-                                                  ?.selectedBlind?.blindFabric
-                                                  ?.repeat_vertical
-                                              }
-                                              book={
-                                                room?.room_assets[btnIndex]
-                                                  ?.selectedBlind?.blindFabric
-                                                  ?.book_name
-                                              }
-                                              brandName={
-                                                room?.room_assets[btnIndex]
-                                                  ?.selectedBlind?.blindFabric
-                                                  ?.brand_name
-                                              }
-                                              panel={
-                                                room?.room_assets[btnIndex]
-                                                  ?.number_of_panel_blind_fabric
-                                              }
-                                              totalFabric={
-                                                room?.room_assets[btnIndex]
-                                                  ?.total_blind_fabric_required
-                                              }
-                                              material1={
-                                                room?.room_assets[btnIndex]
-                                                  ?.media[0]?.file
-                                              }
-                                            />
+                                          <div>
+                                            <h5>Blind fabric Description</h5>
+                                            <div className="border border-1 p-3 rounded-2 mb-3">
+                                              <EnquiryCustom
+                                                fabricName={
+                                                  room?.room_assets[btnIndex]
+                                                    ?.selectedBlind?.blindFabric
+                                                    ?.fabric
+                                                }
+                                                width={
+                                                  room?.room_assets[btnIndex]
+                                                    ?.selectedBlind?.blindFabric
+                                                    ?.width
+                                                }
+                                                repeatHorizontal={
+                                                  room?.room_assets[btnIndex]
+                                                    ?.selectedBlind?.blindFabric
+                                                    ?.repeat_horizontal
+                                                }
+                                                repeatVertical={
+                                                  room?.room_assets[btnIndex]
+                                                    ?.selectedBlind?.blindFabric
+                                                    ?.repeat_vertical
+                                                }
+                                                book={
+                                                  room?.room_assets[btnIndex]
+                                                    ?.selectedBlind?.blindFabric
+                                                    ?.book_name
+                                                }
+                                                brandName={
+                                                  room?.room_assets[btnIndex]
+                                                    ?.selectedBlind?.blindFabric
+                                                    ?.brand_name
+                                                }
+                                                panel={
+                                                  room?.room_assets[btnIndex]
+                                                    ?.number_of_panel_blind_fabric
+                                                }
+                                                totalFabric={
+                                                  room?.room_assets[btnIndex]
+                                                    ?.total_blind_fabric_required
+                                                }
+                                                material1={
+                                                  room?.room_assets[btnIndex]
+                                                    ?.media[0]?.file
+                                                }
+                                              />
+                                            </div>
                                           </div>
-                                        </div>
-                                      )}
+                                        )}
                                       {room?.room_assets[btnIndex]
                                         ?.selectedBlind?.blind_lining !==
                                         null && (
-                                        <div>
-                                          <h5>Blind lining Description</h5>
-                                          <div className="border border-1 p-3 rounded-2 mb-3">
-                                            <EnquiryCustom
-                                              image={
-                                                room?.room_assets[btnIndex]
-                                                  ?.selectedBlind?.blind_lining
-                                                  ?.image
-                                              }
-                                              style={
-                                                room?.room_assets[btnIndex]
-                                                  ?.selectedBlind?.blind_lining
-                                                  ?.type
-                                              }
-                                              note={
-                                                room?.room_assets[btnIndex]
-                                                  ?.selectedBlind?.blind_lining
-                                                  ?.note
-                                              }
-                                              width={
-                                                room?.room_assets[btnIndex]
-                                                  ?.selectedBlind
-                                                  ?.blind_lining_width
-                                              }
-                                              fabricName={
-                                                room?.room_assets[btnIndex]
-                                                  ?.selectedBlind?.BLINDLINING
-                                                  ?.fabric
-                                              }
-                                              panel={
-                                                room?.room_assets[btnIndex]
-                                                  ?.number_of_panel_blind_lining_fabric
-                                              }
-                                              totalFabric={
-                                                room?.room_assets[btnIndex]
-                                                  ?.total_blind_lining_fabric_required
-                                              }
-                                            />
+                                          <div>
+                                            <h5>Blind lining Description</h5>
+                                            <div className="border border-1 p-3 rounded-2 mb-3">
+                                              <EnquiryCustom
+                                                image={
+                                                  room?.room_assets[btnIndex]
+                                                    ?.selectedBlind?.blind_lining
+                                                    ?.image
+                                                }
+                                                style={
+                                                  room?.room_assets[btnIndex]
+                                                    ?.selectedBlind?.blind_lining
+                                                    ?.type
+                                                }
+                                                note={
+                                                  room?.room_assets[btnIndex]
+                                                    ?.selectedBlind?.blind_lining
+                                                    ?.note
+                                                }
+                                                width={
+                                                  room?.room_assets[btnIndex]
+                                                    ?.selectedBlind
+                                                    ?.blind_lining_width
+                                                }
+                                                fabricName={
+                                                  room?.room_assets[btnIndex]
+                                                    ?.selectedBlind?.BLINDLINING
+                                                    ?.fabric
+                                                }
+                                                panel={
+                                                  room?.room_assets[btnIndex]
+                                                    ?.number_of_panel_blind_lining_fabric
+                                                }
+                                                totalFabric={
+                                                  room?.room_assets[btnIndex]
+                                                    ?.total_blind_lining_fabric_required
+                                                }
+                                              />
+                                            </div>
                                           </div>
-                                        </div>
-                                      )}
+                                        )}
                                       {room?.room_assets[btnIndex]
                                         ?.selectedBlind?.blindBorder_type !==
                                         null && (
-                                        <div>
-                                          <h5>Blind border Description</h5>
-                                          <div className="border border-1 p-3 rounded-2 mb-3">
-                                            <EnquiryCustom
-                                              image={
-                                                room?.room_assets[btnIndex]
-                                                  ?.selectedBlind
-                                                  ?.blindBorder_type?.image
-                                              }
-                                              borderType={
-                                                room?.room_assets[btnIndex]
-                                                  ?.selectedBlind
-                                                  ?.blindBorder_type?.type
-                                              }
-                                            />
+                                          <div>
+                                            <h5>Blind border Description</h5>
+                                            <div className="border border-1 p-3 rounded-2 mb-3">
+                                              <EnquiryCustom
+                                                image={
+                                                  room?.room_assets[btnIndex]
+                                                    ?.selectedBlind
+                                                    ?.blindBorder_type?.image
+                                                }
+                                                borderType={
+                                                  room?.room_assets[btnIndex]
+                                                    ?.selectedBlind
+                                                    ?.blindBorder_type?.type
+                                                }
+                                              />
+                                            </div>
                                           </div>
-                                        </div>
-                                      )}
+                                        )}
 
                                       {room?.room_assets[btnIndex]
                                         ?.selectedBlind?.blindBorderFabric !==
                                         null && (
-                                        <div>
-                                          <h5>ready made border</h5>
-                                          <div className="border border-1 p-3 rounded-2 mb-3">
-                                            <EnquiryCustom
-                                              fabricName={
-                                                room?.room_assets[btnIndex]
-                                                  ?.selectedBlind
-                                                  ?.blindBorderFabric?.fabric
-                                              }
-                                              width={
-                                                room?.room_assets[btnIndex]
-                                                  ?.selectedBlind
-                                                  ?.blindBorderFabric?.width
-                                              }
-                                              repeatHorizontal={
-                                                room?.room_assets[btnIndex]
-                                                  ?.selectedBlind
-                                                  ?.blindBorderFabric
-                                                  ?.repeat_horizontal
-                                              }
-                                              repeatVertical={
-                                                room?.room_assets[btnIndex]
-                                                  ?.selectedBlind
-                                                  ?.blindBorderFabric
-                                                  ?.repeat_vertical
-                                              }
-                                              book={
-                                                room?.room_assets[btnIndex]
-                                                  ?.selectedBlind
-                                                  ?.blindBorderFabric.book_name
-                                              }
-                                              brandName={
-                                                room?.room_assets[btnIndex]
-                                                  ?.selectedBlind
-                                                  ?.blindBorderFabric.brand_name
-                                              }
-                                              totalFabric={
-                                                room?.room_assets[btnIndex]
-                                                  ?.total_blind_border_fabric_required
-                                              }
-                                              material1={
-                                                room?.room_assets[btnIndex]
-                                                  ?.media[1]?.file
-                                              }
-                                            />
+                                          <div>
+                                            <h5>ready made border</h5>
+                                            <div className="border border-1 p-3 rounded-2 mb-3">
+                                              <EnquiryCustom
+                                                fabricName={
+                                                  room?.room_assets[btnIndex]
+                                                    ?.selectedBlind
+                                                    ?.blindBorderFabric?.fabric
+                                                }
+                                                width={
+                                                  room?.room_assets[btnIndex]
+                                                    ?.selectedBlind
+                                                    ?.blindBorderFabric?.width
+                                                }
+                                                repeatHorizontal={
+                                                  room?.room_assets[btnIndex]
+                                                    ?.selectedBlind
+                                                    ?.blindBorderFabric
+                                                    ?.repeat_horizontal
+                                                }
+                                                repeatVertical={
+                                                  room?.room_assets[btnIndex]
+                                                    ?.selectedBlind
+                                                    ?.blindBorderFabric
+                                                    ?.repeat_vertical
+                                                }
+                                                book={
+                                                  room?.room_assets[btnIndex]
+                                                    ?.selectedBlind
+                                                    ?.blindBorderFabric.book_name
+                                                }
+                                                brandName={
+                                                  room?.room_assets[btnIndex]
+                                                    ?.selectedBlind
+                                                    ?.blindBorderFabric.brand_name
+                                                }
+                                                totalFabric={
+                                                  room?.room_assets[btnIndex]
+                                                    ?.total_blind_border_fabric_required
+                                                }
+                                                material1={
+                                                  room?.room_assets[btnIndex]
+                                                    ?.media[1]?.file
+                                                }
+                                              />
+                                            </div>
                                           </div>
-                                        </div>
-                                      )}
+                                        )}
 
                                       <h5>Blind hardware Description</h5>
                                       <div className="border border-1 p-3 rounded-2 mb-3">
@@ -1591,94 +1656,94 @@ function EnquiryDetials() {
                                               {room?.room_assets[btnIndex]
                                                 ?.selectedBlind?.blindTrack_type
                                                 ?.image && (
-                                                <div>
-                                                  <img
-                                                    src={
-                                                      room?.room_assets[
-                                                        btnIndex
-                                                      ]?.selectedBlind
-                                                        ?.blindTrack_type?.image
-                                                    }
-                                                    alt="fabric"
-                                                    className="newimg"
-                                                  />
-                                                </div>
-                                              )}
+                                                  <div>
+                                                    <img
+                                                      src={
+                                                        room?.room_assets[
+                                                          btnIndex
+                                                        ]?.selectedBlind
+                                                          ?.blindTrack_type?.image
+                                                      }
+                                                      alt="fabric"
+                                                      className="newimg"
+                                                    />
+                                                  </div>
+                                                )}
                                               {room?.room_assets[btnIndex]
                                                 ?.selectedBlind
                                                 ?.blindMotor_track_type
                                                 ?.image && (
-                                                <div>
-                                                  <img
-                                                    src={
-                                                      room?.room_assets[
-                                                        btnIndex
-                                                      ]?.selectedBlind
-                                                        ?.blindMotor_track_type
-                                                        ?.image
-                                                    }
-                                                    alt="fabric"
-                                                    className="newimg"
-                                                  />
-                                                </div>
-                                              )}
+                                                  <div>
+                                                    <img
+                                                      src={
+                                                        room?.room_assets[
+                                                          btnIndex
+                                                        ]?.selectedBlind
+                                                          ?.blindMotor_track_type
+                                                          ?.image
+                                                      }
+                                                      alt="fabric"
+                                                      className="newimg"
+                                                    />
+                                                  </div>
+                                                )}
                                             </li>
                                             {room?.room_assets[btnIndex]
                                               ?.selectedBlind?.blindTrack_type
                                               ?.type && (
-                                              <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                                <span className="mb-0">
-                                                  blind track type:
-                                                </span>
-                                                <strong>
-                                                  {
-                                                    room?.room_assets[btnIndex]
-                                                      ?.selectedBlind
-                                                      ?.blindTrack_type?.type
-                                                  }
-                                                </strong>
-                                              </li>
-                                            )}
+                                                <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                                  <span className="mb-0">
+                                                    blind track type:
+                                                  </span>
+                                                  <strong>
+                                                    {
+                                                      room?.room_assets[btnIndex]
+                                                        ?.selectedBlind
+                                                        ?.blindTrack_type?.type
+                                                    }
+                                                  </strong>
+                                                </li>
+                                              )}
                                             {room?.room_assets[btnIndex]
                                               ?.selectedBlind
                                               ?.blindMotor_track_type?.type && (
-                                              <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                                <span className="mb-0">
-                                                  Blind Motor Track type :
-                                                </span>
-                                                <strong>
-                                                  {
-                                                    room?.room_assets[btnIndex]
-                                                      ?.selectedBlind
-                                                      ?.blindMotor_track_type
-                                                      ?.type
-                                                  }
-                                                </strong>
-                                              </li>
-                                            )}
+                                                <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                                  <span className="mb-0">
+                                                    Blind Motor Track type :
+                                                  </span>
+                                                  <strong>
+                                                    {
+                                                      room?.room_assets[btnIndex]
+                                                        ?.selectedBlind
+                                                        ?.blindMotor_track_type
+                                                        ?.type
+                                                    }
+                                                  </strong>
+                                                </li>
+                                              )}
                                             {room?.room_assets[btnIndex]
                                               ?.selectedBlind?.blindTrack
                                               ?.fabric && (
-                                              <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                                <span className="mb-0">
-                                                  blind track :
-                                                </span>
-                                                <strong>
-                                                  {
-                                                    room?.room_assets[btnIndex]
-                                                      ?.selectedBlind
-                                                      ?.blindTrack?.fabric
-                                                  }
-                                                </strong>
-                                              </li>
-                                            )}
+                                                <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                                  <span className="mb-0">
+                                                    blind track :
+                                                  </span>
+                                                  <strong>
+                                                    {
+                                                      room?.room_assets[btnIndex]
+                                                        ?.selectedBlind
+                                                        ?.blindTrack?.fabric
+                                                    }
+                                                  </strong>
+                                                </li>
+                                              )}
                                             {room?.room_assets[btnIndex]
                                               ?.selectedBlind
                                               ?.blind_screw_required &&
                                               room?.room_assets[
                                                 btnIndex
                                               ]?.selectedBlind?.blind_screw_required.toLowerCase() ===
-                                                "yes" && (
+                                              "yes" && (
                                                 <li className="list-group-item d-flex justify-content-between border-0 py-1">
                                                   <span className="mb-0">
                                                     blind screw required
@@ -1700,7 +1765,7 @@ function EnquiryDetials() {
                                               room?.room_assets[
                                                 btnIndex
                                               ]?.selectedBlind?.blind_extra_bracket_support_required.toLowerCase() ===
-                                                "yes" && (
+                                              "yes" && (
                                                 <li className="list-group-item d-flex justify-content-between border-0 py-1">
                                                   <span className="mb-0">
                                                     blind extra bracket support
@@ -2048,9 +2113,8 @@ function EnquiryDetials() {
                   EnquiryDetials?.data?.rooms?.map((rooms, index) => (
                     <li className=" nav-item">
                       <a
-                        className={`"nav-link list-group-item ${
-                          index === 0 ? "active" : ""
-                        }`}
+                        className={`"nav-link list-group-item ${index === 0 ? "active" : ""
+                          }`}
                         data-bs-toggle="tab"
                         href={`#navpills${index}`}
                         aria-expanded="false"
@@ -2090,11 +2154,10 @@ function EnquiryDetials() {
                                 rooms?.room_assets?.map((window, index) => (
                                   <li className=" nav-item">
                                     <a
-                                      className={` "nav-link rounded-pill  px-4 py-2 me-2 border ${
-                                        index == windowBtnIndex
-                                          ? "active bg-primary text-white"
-                                          : ""
-                                      }`}
+                                      className={` "nav-link rounded-pill  px-4 py-2 me-2 border ${index == windowBtnIndex
+                                        ? "active bg-primary text-white"
+                                        : ""
+                                        }`}
                                       data-bs-toggle="tab"
                                       href={`#navpillschild${index}`}
                                       aria-expanded="false"
@@ -2111,11 +2174,10 @@ function EnquiryDetials() {
                                 rooms?.room_assets?.map((window, index) => (
                                   <li className=" nav-item">
                                     <a
-                                      className={` "nav-link rounded-pill  px-4 py-2 me-2 border ${
-                                        index == blindBtnIndex
-                                          ? "active bg-primary text-white"
-                                          : ""
-                                      }`}
+                                      className={` "nav-link rounded-pill  px-4 py-2 me-2 border ${index == blindBtnIndex
+                                        ? "active bg-primary text-white"
+                                        : ""
+                                        }`}
                                       data-bs-toggle="tab"
                                       href={`#navpillschild${index}`}
                                       aria-expanded="false"
@@ -2134,24 +2196,23 @@ function EnquiryDetials() {
                             <div className="tab-content">
                               <div
                                 id={`navpillschild${index}`}
-                                className={`tab-pane ${
-                                  index === 0 ? "active" : ""
-                                }`}
+                                className={`tab-pane ${index === 0 ? "active" : ""
+                                  }`}
                               >
                                 {rooms?.room_assets[windowBtnIndex] && (
                                   <ul className="list-group list-group-flush">
                                     {rooms?.selectedcurtain?.fabric1
                                       ?.fabric && (
-                                      <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                        <span className="mb-0">Fabric :</span>
-                                        <strong>
-                                          {
-                                            rooms?.selectedcurtain?.fabric1
-                                              ?.fabric
-                                          }
-                                        </strong>
-                                      </li>
-                                    )}
+                                        <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                          <span className="mb-0">Fabric :</span>
+                                          <strong>
+                                            {
+                                              rooms?.selectedcurtain?.fabric1
+                                                ?.fabric
+                                            }
+                                          </strong>
+                                        </li>
+                                      )}
                                     {rooms?.selectedcurtain?.fabric1?.width && (
                                       <li className="list-group-item d-flex justify-content-between border-0 py-1">
                                         <span className="mb-0">Width :</span>
@@ -2166,93 +2227,93 @@ function EnquiryDetials() {
                                     )}
                                     {rooms?.selectedcurtain?.fabric1
                                       ?.repeat_horizontal && (
-                                      <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                        <span className="mb-0">Repeat H :</span>
-                                        <strong>
-                                          {" "}
-                                          {
-                                            rooms?.selectedcurtain?.fabric1
-                                              ?.repeat_horizontal
-                                          }
-                                        </strong>
-                                      </li>
-                                    )}
+                                        <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                          <span className="mb-0">Repeat H :</span>
+                                          <strong>
+                                            {" "}
+                                            {
+                                              rooms?.selectedcurtain?.fabric1
+                                                ?.repeat_horizontal
+                                            }
+                                          </strong>
+                                        </li>
+                                      )}
                                     {rooms?.selectedcurtain?.fabric1
                                       ?.repeat_vertical && (
-                                      <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                        <span className="mb-0">Repeat V :</span>
-                                        <strong>
-                                          {" "}
-                                          {
-                                            rooms?.selectedcurtain?.fabric1
-                                              ?.repeat_vertical
-                                          }
-                                        </strong>
-                                      </li>
-                                    )}
+                                        <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                          <span className="mb-0">Repeat V :</span>
+                                          <strong>
+                                            {" "}
+                                            {
+                                              rooms?.selectedcurtain?.fabric1
+                                                ?.repeat_vertical
+                                            }
+                                          </strong>
+                                        </li>
+                                      )}
                                     {rooms?.selectedcurtain?.fabric1
                                       ?.brand_name && (
-                                      <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                        <span className="mb-0">Brand :</span>
-                                        <strong>
-                                          {" "}
-                                          {
-                                            rooms?.selectedcurtain?.fabric1
-                                              ?.brand_name
-                                          }
-                                        </strong>
-                                      </li>
-                                    )}
+                                        <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                          <span className="mb-0">Brand :</span>
+                                          <strong>
+                                            {" "}
+                                            {
+                                              rooms?.selectedcurtain?.fabric1
+                                                ?.brand_name
+                                            }
+                                          </strong>
+                                        </li>
+                                      )}
                                     {rooms?.selectedcurtain?.fabric1
                                       ?.book_name && (
-                                      <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                        <span className="mb-0">Book :</span>
-                                        <strong>
-                                          {
-                                            rooms?.selectedcurtain?.fabric1
-                                              ?.book_name
-                                          }
-                                        </strong>
-                                      </li>
-                                    )}
+                                        <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                          <span className="mb-0">Book :</span>
+                                          <strong>
+                                            {
+                                              rooms?.selectedcurtain?.fabric1
+                                                ?.book_name
+                                            }
+                                          </strong>
+                                        </li>
+                                      )}
                                     {rooms?.room_assets[windowBtnIndex]
                                       ?.number_of_panel_fabric1 && (
-                                      <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                        <span className="mb-0">
-                                          No of Panel :
-                                        </span>
-                                        <strong>
-                                          {
-                                            rooms?.room_assets[windowBtnIndex]
-                                              ?.number_of_panel_fabric1
-                                          }
-                                        </strong>
-                                      </li>
-                                    )}
+                                        <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                          <span className="mb-0">
+                                            No of Panel :
+                                          </span>
+                                          <strong>
+                                            {
+                                              rooms?.room_assets[windowBtnIndex]
+                                                ?.number_of_panel_fabric1
+                                            }
+                                          </strong>
+                                        </li>
+                                      )}
                                     {rooms?.room_assets[windowBtnIndex]
                                       ?.total_fabric1_required && (
-                                      <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                        <span className="mb-0">
-                                          Total Fabric :
-                                        </span>
-                                        <strong>
-                                          {
-                                            rooms?.room_assets[windowBtnIndex]
-                                              ?.total_fabric1_required
-                                          }
-                                        </strong>
-                                      </li>
-                                    )}
+                                        <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                          <span className="mb-0">
+                                            Total Fabric :
+                                          </span>
+                                          <strong>
+                                            {
+                                              rooms?.room_assets[windowBtnIndex]
+                                                ?.total_fabric1_required
+                                            }
+                                          </strong>
+                                        </li>
+                                      )}
                                     {rooms?.room_assets[windowBtnIndex]
                                       ?.media && (
-                                      <div className="col-lg-4">
-                                        {rooms?.room_assets[
-                                          windowBtnIndex
-                                        ]?.media?.map((data) => (
-                                          <img src={data?.file} alt="imageof" />
-                                        ))}
-                                      </div>
-                                    )}
+                                        <div className="col-lg-4">
+                                          {rooms?.room_assets[
+                                            windowBtnIndex
+                                          ]?.media?.map((data) => (
+                                            <img src={data?.file} alt="imageof" />
+                                          ))}
+                                        </div>
+                                      )}
                                   </ul>
                                 )}
                               </div>
@@ -2267,207 +2328,207 @@ function EnquiryDetials() {
                                   <>
                                     {rooms?.room_assets[blindBtnIndex]
                                       ?.blind_asset?.blind_mount_type && (
-                                      <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                        <span className="mb-0">
-                                          Mount type:
-                                        </span>
-                                        <strong>
-                                          {
-                                            rooms?.room_assets[blindBtnIndex]
-                                              ?.blind_asset?.blind_mount_type
-                                          }
-                                        </strong>
-                                      </li>
-                                    )}
+                                        <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                          <span className="mb-0">
+                                            Mount type:
+                                          </span>
+                                          <strong>
+                                            {
+                                              rooms?.room_assets[blindBtnIndex]
+                                                ?.blind_asset?.blind_mount_type
+                                            }
+                                          </strong>
+                                        </li>
+                                      )}
                                     {rooms?.room_assets[blindBtnIndex]
                                       ?.wall_type?.type && (
-                                      <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                        <span className="mb-0">
-                                          Wall type :
-                                        </span>
-                                        <strong>
-                                          {" "}
-                                          {
-                                            rooms?.room_assets[blindBtnIndex]
-                                              ?.wall_type?.type
-                                          }
-                                        </strong>
-                                      </li>
-                                    )}
+                                        <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                          <span className="mb-0">
+                                            Wall type :
+                                          </span>
+                                          <strong>
+                                            {" "}
+                                            {
+                                              rooms?.room_assets[blindBtnIndex]
+                                                ?.wall_type?.type
+                                            }
+                                          </strong>
+                                        </li>
+                                      )}
                                     {rooms?.room_assets[blindBtnIndex]
                                       ?.wall_type?.note && (
-                                      <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                        <span className="mb-0"></span>
-                                        <strong>
-                                          note:-
-                                          {
-                                            rooms?.room_assets[blindBtnIndex]
-                                              ?.wall_type?.note
-                                          }
-                                        </strong>
-                                      </li>
-                                    )}
+                                        <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                          <span className="mb-0"></span>
+                                          <strong>
+                                            note:-
+                                            {
+                                              rooms?.room_assets[blindBtnIndex]
+                                                ?.wall_type?.note
+                                            }
+                                          </strong>
+                                        </li>
+                                      )}
 
                                     {rooms?.room_assets[blindBtnIndex]?.ladder
                                       ?.ladder && (
-                                      <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                        <span className="mb-0">
-                                          Ladder type:
-                                        </span>
-                                        <strong>
-                                          {" "}
-                                          {
-                                            rooms?.room_assets[blindBtnIndex]
-                                              ?.ladder?.ladder
-                                          }
-                                        </strong>
-                                      </li>
-                                    )}
+                                        <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                          <span className="mb-0">
+                                            Ladder type:
+                                          </span>
+                                          <strong>
+                                            {" "}
+                                            {
+                                              rooms?.room_assets[blindBtnIndex]
+                                                ?.ladder?.ladder
+                                            }
+                                          </strong>
+                                        </li>
+                                      )}
                                     {rooms?.room_assets[blindBtnIndex]
                                       ?.blind_asset?.blind_width_top && (
-                                      <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                        <span className="mb-0">
-                                          Blind width top:
-                                        </span>
-                                        <strong>
-                                          {
-                                            rooms?.room_assets[blindBtnIndex]
-                                              ?.blind_asset?.blind_width_top
-                                          }
-                                        </strong>
-                                      </li>
-                                    )}
+                                        <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                          <span className="mb-0">
+                                            Blind width top:
+                                          </span>
+                                          <strong>
+                                            {
+                                              rooms?.room_assets[blindBtnIndex]
+                                                ?.blind_asset?.blind_width_top
+                                            }
+                                          </strong>
+                                        </li>
+                                      )}
 
                                     {rooms?.room_assets[blindBtnIndex]
                                       ?.blind_asset?.blind_width_bottom && (
-                                      <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                        <span className="mb-0">
-                                          Blind width bottom:
-                                        </span>
-                                        <strong>
-                                          {
-                                            rooms?.room_assets[blindBtnIndex]
-                                              ?.blind_asset?.blind_width_bottom
-                                          }
-                                        </strong>
-                                      </li>
-                                    )}
+                                        <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                          <span className="mb-0">
+                                            Blind width bottom:
+                                          </span>
+                                          <strong>
+                                            {
+                                              rooms?.room_assets[blindBtnIndex]
+                                                ?.blind_asset?.blind_width_bottom
+                                            }
+                                          </strong>
+                                        </li>
+                                      )}
                                     {rooms?.room_assets[blindBtnIndex]
                                       ?.blind_asset?.blind_width_middle && (
-                                      <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                        <span className="mb-0">
-                                          Blind width middle:
-                                        </span>
-                                        <strong>
-                                          {
-                                            rooms?.room_assets[blindBtnIndex]
-                                              ?.blind_asset?.blind_width_middle
-                                          }
-                                        </strong>
-                                      </li>
-                                    )}
+                                        <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                          <span className="mb-0">
+                                            Blind width middle:
+                                          </span>
+                                          <strong>
+                                            {
+                                              rooms?.room_assets[blindBtnIndex]
+                                                ?.blind_asset?.blind_width_middle
+                                            }
+                                          </strong>
+                                        </li>
+                                      )}
                                     {rooms?.room_assets[blindBtnIndex]
                                       ?.selectedBlind?.blind_default_width && (
-                                      <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                        <span className="mb-0">
-                                          Blind default width :
-                                        </span>
-                                        <strong>
-                                          {
-                                            rooms?.room_assets[blindBtnIndex]
-                                              ?.selectedBlind
-                                              ?.blind_default_width
-                                          }
-                                        </strong>
-                                      </li>
-                                    )}
+                                        <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                          <span className="mb-0">
+                                            Blind default width :
+                                          </span>
+                                          <strong>
+                                            {
+                                              rooms?.room_assets[blindBtnIndex]
+                                                ?.selectedBlind
+                                                ?.blind_default_width
+                                            }
+                                          </strong>
+                                        </li>
+                                      )}
 
                                     {rooms?.room_assets[blindBtnIndex]
                                       ?.blind_asset?.blind_drop_left && (
-                                      <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                        <span className="mb-0">
-                                          Blind drop left:
-                                        </span>
-                                        <strong>
-                                          {
-                                            rooms?.room_assets[blindBtnIndex]
-                                              ?.blind_asset?.blind_drop_left
-                                          }
-                                        </strong>
-                                      </li>
-                                    )}
+                                        <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                          <span className="mb-0">
+                                            Blind drop left:
+                                          </span>
+                                          <strong>
+                                            {
+                                              rooms?.room_assets[blindBtnIndex]
+                                                ?.blind_asset?.blind_drop_left
+                                            }
+                                          </strong>
+                                        </li>
+                                      )}
                                     {rooms?.room_assets[blindBtnIndex]
                                       ?.blind_asset?.blind_drop_middle && (
-                                      <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                        <span className="mb-0">
-                                          Blind drop middle:
-                                        </span>
-                                        <strong>
-                                          {
-                                            rooms?.room_assets[blindBtnIndex]
-                                              ?.blind_asset?.blind_drop_middle
-                                          }
-                                        </strong>
-                                      </li>
-                                    )}
+                                        <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                          <span className="mb-0">
+                                            Blind drop middle:
+                                          </span>
+                                          <strong>
+                                            {
+                                              rooms?.room_assets[blindBtnIndex]
+                                                ?.blind_asset?.blind_drop_middle
+                                            }
+                                          </strong>
+                                        </li>
+                                      )}
                                     {rooms?.room_assets[blindBtnIndex]
                                       ?.blind_asset?.blind_drop_right && (
-                                      <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                        <span className="mb-0">
-                                          Blind drop right:
-                                        </span>
-                                        <strong>
-                                          {
-                                            rooms?.room_assets[blindBtnIndex]
-                                              ?.blind_asset?.blind_drop_right
-                                          }
-                                        </strong>
-                                      </li>
-                                    )}
+                                        <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                          <span className="mb-0">
+                                            Blind drop right:
+                                          </span>
+                                          <strong>
+                                            {
+                                              rooms?.room_assets[blindBtnIndex]
+                                                ?.blind_asset?.blind_drop_right
+                                            }
+                                          </strong>
+                                        </li>
+                                      )}
                                     {rooms?.room_assets[blindBtnIndex]
                                       ?.blind_asset?.blind_chain_length && (
-                                      <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                        <span className="mb-0">
-                                          Blind chain length:
-                                        </span>
-                                        <strong>
-                                          {
-                                            rooms?.room_assets[blindBtnIndex]
-                                              ?.blind_asset?.blind_chain_length
-                                          }
-                                        </strong>
-                                      </li>
-                                    )}
+                                        <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                          <span className="mb-0">
+                                            Blind chain length:
+                                          </span>
+                                          <strong>
+                                            {
+                                              rooms?.room_assets[blindBtnIndex]
+                                                ?.blind_asset?.blind_chain_length
+                                            }
+                                          </strong>
+                                        </li>
+                                      )}
                                     {rooms?.room_assets[blindBtnIndex]
                                       ?.blind_asset?.curtain_operation
                                       ?.operationType && (
-                                      <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                        <span className="mb-0">
-                                          Blind operation:
-                                        </span>
-                                        <strong>
-                                          {
-                                            rooms?.room_assets[blindBtnIndex]
-                                              ?.blind_asset?.curtain_operation
-                                              ?.operationType
-                                          }
-                                        </strong>
-                                      </li>
-                                    )}
+                                        <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                          <span className="mb-0">
+                                            Blind operation:
+                                          </span>
+                                          <strong>
+                                            {
+                                              rooms?.room_assets[blindBtnIndex]
+                                                ?.blind_asset?.curtain_operation
+                                                ?.operationType
+                                            }
+                                          </strong>
+                                        </li>
+                                      )}
                                     {rooms?.room_assets[blindBtnIndex]
                                       ?.blind_asset?.blind_remark && (
-                                      <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                        <span className="mb-0">
-                                          Blind remark:
-                                        </span>
-                                        <strong>
-                                          {
-                                            rooms?.room_assets[blindBtnIndex]
-                                              ?.blind_asset?.blind_remark
-                                          }
-                                        </strong>
-                                      </li>
-                                    )}
+                                        <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                          <span className="mb-0">
+                                            Blind remark:
+                                          </span>
+                                          <strong>
+                                            {
+                                              rooms?.room_assets[blindBtnIndex]
+                                                ?.blind_asset?.blind_remark
+                                            }
+                                          </strong>
+                                        </li>
+                                      )}
                                   </>
                                 </ul>
                               </div>
@@ -2481,110 +2542,110 @@ function EnquiryDetials() {
                                 <ul className="list-group list-group-flush">
                                   {rooms?.room_assets[blindBtnIndex]
                                     ?.selectedBlind?.blindStyle?.style && (
-                                    <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                      <span className="mb-0">
-                                        blind style :
-                                      </span>
-                                      <strong>
-                                        {console.log(blindBtnIndex)}
-                                        {
-                                          rooms?.room_assets[blindBtnIndex]
-                                            ?.selectedBlind?.blindStyle?.style
-                                        }
-                                      </strong>
-                                      <img
-                                        src={
-                                          rooms?.room_assets[blindBtnIndex]
-                                            ?.selectedBlind?.blindStyle?.image
-                                        }
-                                        alt="Belt Fabric"
-                                        className="newimg"
-                                      />
-                                    </li>
-                                  )}
+                                      <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                        <span className="mb-0">
+                                          blind style :
+                                        </span>
+                                        <strong>
+                                          {console.log(blindBtnIndex)}
+                                          {
+                                            rooms?.room_assets[blindBtnIndex]
+                                              ?.selectedBlind?.blindStyle?.style
+                                          }
+                                        </strong>
+                                        <img
+                                          src={
+                                            rooms?.room_assets[blindBtnIndex]
+                                              ?.selectedBlind?.blindStyle?.image
+                                          }
+                                          alt="Belt Fabric"
+                                          className="newimg"
+                                        />
+                                      </li>
+                                    )}
 
                                   {rooms?.room_assets[blindBtnIndex]
                                     ?.selectedBlind?.blind_subtype?.type && (
-                                    <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                      <span className="mb-0">blind type:</span>
-                                      <strong>
-                                        {
-                                          rooms?.room_assets[blindBtnIndex]
-                                            ?.selectedBlind?.blind_subtype?.type
-                                        }
-                                      </strong>
-                                      {rooms?.room_assets[blindBtnIndex]
-                                        ?.selectedBlind?.blind_subtype
-                                        ?.image && (
-                                        <img
-                                          src={
+                                      <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                        <span className="mb-0">blind type:</span>
+                                        <strong>
+                                          {
                                             rooms?.room_assets[blindBtnIndex]
-                                              ?.selectedBlind?.blind_subtype
-                                              ?.image
+                                              ?.selectedBlind?.blind_subtype?.type
                                           }
-                                          alt="Belt Fabric"
-                                          className="newimg"
-                                        />
-                                      )}
-                                    </li>
-                                  )}
+                                        </strong>
+                                        {rooms?.room_assets[blindBtnIndex]
+                                          ?.selectedBlind?.blind_subtype
+                                          ?.image && (
+                                            <img
+                                              src={
+                                                rooms?.room_assets[blindBtnIndex]
+                                                  ?.selectedBlind?.blind_subtype
+                                                  ?.image
+                                              }
+                                              alt="Belt Fabric"
+                                              className="newimg"
+                                            />
+                                          )}
+                                      </li>
+                                    )}
                                   {rooms?.room_assets[blindBtnIndex]
                                     ?.selectedBlind?.blindWindow_type?.type && (
-                                    <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                      <span className="mb-0">
-                                        Blind window Type :
-                                      </span>
-                                      <strong>
-                                        {
-                                          rooms?.room_assets[blindBtnIndex]
-                                            ?.selectedBlind?.blindWindow_type
-                                            ?.type
-                                        }
-                                      </strong>
-                                      {rooms?.room_assets[blindBtnIndex]
-                                        ?.selectedBlind?.blindWindow_type
-                                        ?.image && (
-                                        <img
-                                          src={
+                                      <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                        <span className="mb-0">
+                                          Blind window Type :
+                                        </span>
+                                        <strong>
+                                          {
                                             rooms?.room_assets[blindBtnIndex]
                                               ?.selectedBlind?.blindWindow_type
-                                              ?.image
+                                              ?.type
                                           }
-                                          alt="Belt Fabric"
-                                          className="newimg"
-                                        />
-                                      )}
-                                    </li>
-                                  )}
+                                        </strong>
+                                        {rooms?.room_assets[blindBtnIndex]
+                                          ?.selectedBlind?.blindWindow_type
+                                          ?.image && (
+                                            <img
+                                              src={
+                                                rooms?.room_assets[blindBtnIndex]
+                                                  ?.selectedBlind?.blindWindow_type
+                                                  ?.image
+                                              }
+                                              alt="Belt Fabric"
+                                              className="newimg"
+                                            />
+                                          )}
+                                      </li>
+                                    )}
                                   {rooms?.room_assets[blindBtnIndex]
                                     ?.selectedBlind?.blindFitting_type
                                     ?.type && (
-                                    <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                      <span className="mb-0">
-                                        blind fitting type :
-                                      </span>
-                                      <strong>
-                                        {
-                                          rooms?.room_assets[blindBtnIndex]
-                                            ?.selectedBlind?.blindFitting_type
-                                            ?.type
-                                        }
-                                      </strong>
-                                      {rooms?.room_assets[blindBtnIndex]
-                                        ?.selectedBlind?.blindFitting_type
-                                        ?.image && (
-                                        <img
-                                          src={
+                                      <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                        <span className="mb-0">
+                                          blind fitting type :
+                                        </span>
+                                        <strong>
+                                          {
                                             rooms?.room_assets[blindBtnIndex]
                                               ?.selectedBlind?.blindFitting_type
-                                              ?.image
+                                              ?.type
                                           }
-                                          alt="Belt Fabric"
-                                          className="newimg"
-                                        />
-                                      )}
-                                    </li>
-                                  )}
+                                        </strong>
+                                        {rooms?.room_assets[blindBtnIndex]
+                                          ?.selectedBlind?.blindFitting_type
+                                          ?.image && (
+                                            <img
+                                              src={
+                                                rooms?.room_assets[blindBtnIndex]
+                                                  ?.selectedBlind?.blindFitting_type
+                                                  ?.image
+                                              }
+                                              alt="Belt Fabric"
+                                              className="newimg"
+                                            />
+                                          )}
+                                      </li>
+                                    )}
                                 </ul>
                               </div>
                             </>
@@ -2688,87 +2749,87 @@ function EnquiryDetials() {
                                       {rooms?.room_assets[blindBtnIndex]
                                         ?.selectedBlind?.blindTrack_type
                                         ?.image && (
-                                        <div>
-                                          <img
-                                            src={
-                                              rooms?.room_assets[blindBtnIndex]
-                                                ?.selectedBlind?.blindTrack_type
-                                                ?.image
-                                            }
-                                            alt="fabric"
-                                            className="newimg"
-                                          />
-                                        </div>
-                                      )}
+                                          <div>
+                                            <img
+                                              src={
+                                                rooms?.room_assets[blindBtnIndex]
+                                                  ?.selectedBlind?.blindTrack_type
+                                                  ?.image
+                                              }
+                                              alt="fabric"
+                                              className="newimg"
+                                            />
+                                          </div>
+                                        )}
                                       {rooms?.room_assets[blindBtnIndex]
                                         ?.selectedBlind?.blindMotor_track_type
                                         ?.image && (
-                                        <div>
-                                          <img
-                                            src={
-                                              rooms?.room_assets[blindBtnIndex]
-                                                ?.selectedBlind
-                                                ?.blindMotor_track_type?.image
-                                            }
-                                            alt="fabric"
-                                            className="newimg"
-                                          />
-                                        </div>
-                                      )}
+                                          <div>
+                                            <img
+                                              src={
+                                                rooms?.room_assets[blindBtnIndex]
+                                                  ?.selectedBlind
+                                                  ?.blindMotor_track_type?.image
+                                              }
+                                              alt="fabric"
+                                              className="newimg"
+                                            />
+                                          </div>
+                                        )}
                                     </li>
                                     {rooms?.room_assets[blindBtnIndex]
                                       ?.selectedBlind?.blindTrack_type
                                       ?.type && (
-                                      <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                        <span className="mb-0">
-                                          blind track type:
-                                        </span>
-                                        <strong>
-                                          {
-                                            rooms?.room_assets[blindBtnIndex]
-                                              ?.selectedBlind?.blindTrack_type
-                                              ?.type
-                                          }
-                                        </strong>
-                                      </li>
-                                    )}
+                                        <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                          <span className="mb-0">
+                                            blind track type:
+                                          </span>
+                                          <strong>
+                                            {
+                                              rooms?.room_assets[blindBtnIndex]
+                                                ?.selectedBlind?.blindTrack_type
+                                                ?.type
+                                            }
+                                          </strong>
+                                        </li>
+                                      )}
                                     {rooms?.room_assets[blindBtnIndex]
                                       ?.selectedBlind?.blindMotor_track_type
                                       ?.type && (
-                                      <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                        <span className="mb-0">
-                                          Blind Motor Track type :
-                                        </span>
-                                        <strong>
-                                          {
-                                            rooms?.room_assets[blindBtnIndex]
-                                              ?.selectedBlind
-                                              ?.blindMotor_track_type?.type
-                                          }
-                                        </strong>
-                                      </li>
-                                    )}
+                                        <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                          <span className="mb-0">
+                                            Blind Motor Track type :
+                                          </span>
+                                          <strong>
+                                            {
+                                              rooms?.room_assets[blindBtnIndex]
+                                                ?.selectedBlind
+                                                ?.blindMotor_track_type?.type
+                                            }
+                                          </strong>
+                                        </li>
+                                      )}
                                     {rooms?.room_assets[blindBtnIndex]
                                       ?.selectedBlind?.blindTrack?.fabric && (
-                                      <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                        <span className="mb-0">
-                                          blind track :
-                                        </span>
-                                        <strong>
-                                          {
-                                            rooms?.room_assets[blindBtnIndex]
-                                              ?.selectedBlind?.blindTrack
-                                              ?.fabric
-                                          }
-                                        </strong>
-                                      </li>
-                                    )}
+                                        <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                          <span className="mb-0">
+                                            blind track :
+                                          </span>
+                                          <strong>
+                                            {
+                                              rooms?.room_assets[blindBtnIndex]
+                                                ?.selectedBlind?.blindTrack
+                                                ?.fabric
+                                            }
+                                          </strong>
+                                        </li>
+                                      )}
                                     {rooms?.room_assets[blindBtnIndex]
                                       ?.selectedBlind?.blind_screw_required &&
                                       rooms?.room_assets[
                                         blindBtnIndex
                                       ]?.selectedBlind?.blind_screw_required.toLowerCase() ===
-                                        "yes" && (
+                                      "yes" && (
                                         <li className="list-group-item d-flex justify-content-between border-0 py-1">
                                           <span className="mb-0">
                                             blind screw required
@@ -2789,7 +2850,7 @@ function EnquiryDetials() {
                                       rooms?.room_assets[
                                         blindBtnIndex
                                       ]?.selectedBlind?.blind_extra_bracket_support_required.toLowerCase() ===
-                                        "yes" && (
+                                      "yes" && (
                                         <li className="list-group-item d-flex justify-content-between border-0 py-1">
                                           <span className="mb-0">
                                             blind extra bracket support required
@@ -2818,118 +2879,118 @@ function EnquiryDetials() {
                                   <>
                                     {rooms?.room_assets[windowBtnIndex]
                                       ?.width && (
-                                      <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                        <span className="mb-0">
-                                          Window width:
-                                        </span>
-                                        <strong>
-                                          {
-                                            rooms?.room_assets[windowBtnIndex]
-                                              ?.width
-                                          }
-                                        </strong>
-                                      </li>
-                                    )}
+                                        <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                          <span className="mb-0">
+                                            Window width:
+                                          </span>
+                                          <strong>
+                                            {
+                                              rooms?.room_assets[windowBtnIndex]
+                                                ?.width
+                                            }
+                                          </strong>
+                                        </li>
+                                      )}
                                     {rooms?.room_assets[windowBtnIndex]
                                       ?.height && (
-                                      <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                        <span className="mb-0">
-                                          window height :
-                                        </span>
-                                        <strong>
-                                          {" "}
-                                          {
-                                            rooms?.room_assets[windowBtnIndex]
-                                              ?.height
-                                          }
-                                        </strong>
-                                      </li>
-                                    )}
+                                        <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                          <span className="mb-0">
+                                            window height :
+                                          </span>
+                                          <strong>
+                                            {" "}
+                                            {
+                                              rooms?.room_assets[windowBtnIndex]
+                                                ?.height
+                                            }
+                                          </strong>
+                                        </li>
+                                      )}
 
                                     {rooms?.room_assets[windowBtnIndex]
                                       ?.mount_type && (
-                                      <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                        <span className="mb-0">
-                                          Mount type:
-                                        </span>
-                                        <strong>
-                                          {" "}
-                                          {
-                                            rooms?.room_assets[windowBtnIndex]
-                                              ?.mount_type
-                                          }
-                                        </strong>
-                                      </li>
-                                    )}
+                                        <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                          <span className="mb-0">
+                                            Mount type:
+                                          </span>
+                                          <strong>
+                                            {" "}
+                                            {
+                                              rooms?.room_assets[windowBtnIndex]
+                                                ?.mount_type
+                                            }
+                                          </strong>
+                                        </li>
+                                      )}
                                     {rooms?.room_assets[windowBtnIndex]
                                       ?.ceiling_type?.type && (
-                                      <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                        <span className="mb-0">Wall type:</span>
-                                        <strong>
-                                          {
-                                            rooms?.room_assets[windowBtnIndex]
-                                              ?.ceiling_type?.type
-                                          }
-                                        </strong>
-                                      </li>
-                                    )}
+                                        <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                          <span className="mb-0">Wall type:</span>
+                                          <strong>
+                                            {
+                                              rooms?.room_assets[windowBtnIndex]
+                                                ?.ceiling_type?.type
+                                            }
+                                          </strong>
+                                        </li>
+                                      )}
 
                                     {rooms?.room_assets[windowBtnIndex]
                                       ?.ceiling_type?.note && (
-                                      <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                        <span className="mb-0"></span>
-                                        <strong>
-                                          note:-
-                                          {
-                                            rooms?.room_assets[windowBtnIndex]
-                                              ?.ceiling_type?.note
-                                          }
-                                        </strong>
-                                      </li>
-                                    )}
+                                        <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                          <span className="mb-0"></span>
+                                          <strong>
+                                            note:-
+                                            {
+                                              rooms?.room_assets[windowBtnIndex]
+                                                ?.ceiling_type?.note
+                                            }
+                                          </strong>
+                                        </li>
+                                      )}
                                     {rooms?.room_assets[windowBtnIndex]?.ladder
                                       ?.ladder && (
-                                      <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                        <span className="mb-0">
-                                          Ladder type :
-                                        </span>
-                                        <strong>
-                                          {" "}
-                                          {
-                                            rooms?.room_assets[windowBtnIndex]
-                                              ?.ladder?.ladder
-                                          }
-                                        </strong>
-                                      </li>
-                                    )}
+                                        <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                          <span className="mb-0">
+                                            Ladder type :
+                                          </span>
+                                          <strong>
+                                            {" "}
+                                            {
+                                              rooms?.room_assets[windowBtnIndex]
+                                                ?.ladder?.ladder
+                                            }
+                                          </strong>
+                                        </li>
+                                      )}
                                     {rooms?.room_assets[windowBtnIndex]
                                       ?.widhtOfCove && (
-                                      <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                        <span className="mb-0">
-                                          Width of cove :
-                                        </span>
-                                        <strong>
-                                          {
-                                            rooms?.room_assets[windowBtnIndex]
-                                              ?.widhtOfCove
-                                          }
-                                        </strong>
-                                      </li>
-                                    )}
+                                        <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                          <span className="mb-0">
+                                            Width of cove :
+                                          </span>
+                                          <strong>
+                                            {
+                                              rooms?.room_assets[windowBtnIndex]
+                                                ?.widhtOfCove
+                                            }
+                                          </strong>
+                                        </li>
+                                      )}
                                     {rooms?.room_assets[windowBtnIndex]
                                       ?.curtain_operation?.operationType && (
-                                      <li className="list-group-item d-flex justify-content-between border-0 py-1">
-                                        <span className="mb-0">
-                                          Curtain operation :
-                                        </span>
-                                        <strong>
-                                          {
-                                            rooms?.room_assets[windowBtnIndex]
-                                              ?.curtain_operation?.operationType
-                                          }
-                                        </strong>
-                                      </li>
-                                    )}
+                                        <li className="list-group-item d-flex justify-content-between border-0 py-1">
+                                          <span className="mb-0">
+                                            Curtain operation :
+                                          </span>
+                                          <strong>
+                                            {
+                                              rooms?.room_assets[windowBtnIndex]
+                                                ?.curtain_operation?.operationType
+                                            }
+                                          </strong>
+                                        </li>
+                                      )}
                                   </>
                                 </ul>
                               </div>
@@ -3119,10 +3180,20 @@ function EnquiryDetials() {
         </div>
       </div>
 
+      <AdminRemarkModal
+        enquiryId={enquiryId}
+        remarkModal={remarkModal}
+        toggle={remarkToggle}
+
+      />
+
       <ReAssignmesurer
         modal={modal}
         toggle={(val) => toggle(val)}
         id={EnquiryDetials?.data?.enquiryschedules}
+      />
+      <WcrModal modalToggle={wcrModalToggle} isOpen={wcrModal}
+        data={wcrData}
       />
     </>
   );

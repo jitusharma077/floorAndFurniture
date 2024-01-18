@@ -7,16 +7,19 @@ import { Measurer } from "../../Common/RoleType";
 import UsePostCallBack from "../../Hooks/UsePostCallBack";
 import SuperAdminHeader from "./Common/SuperAdminHeader";
 import SuperAdminSidebar from "./Common/SuperAdminSidebar";
+import { useLocation } from "react-router-dom";
 
-function CreateTimeSlot() {
-  const [formValues, setformValues] = useState([{ Stime: "", Etime: "" }]);
-
+function CreateTimeSlotMeasurer() {
+  const location = useLocation();
+  
+  const [formValues, setformValues] = useState([{ Stime: "", Etime: "",type:"measurer" }]);
+  const[callApi,setCallApi] = useState(true);
   const handleChange = (i, e) => {
     let formval = [...formValues];
     formval[i][e.target.name] = e.target.value;
     setformValues(formval);
   };
-
+  console.log("locccccc", location);
   const addFormFields = () => {
     setformValues([...formValues, { Stime: "", Etime: "" }]);
   };
@@ -30,7 +33,6 @@ function CreateTimeSlot() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-
     PostDataWithToken(`superadmin/create-schedule/`, formValues).then(
       (response) => {
         if (response.status === true) {
@@ -38,26 +40,27 @@ function CreateTimeSlot() {
             position: toast.POSITION.TOP_CENTER,
           });
           setformValues([{ Stime: "", Etime: "" }]);
+          setCallApi(true);
         } else {
           toast.error(response.data.message);
         }
       }
     );
   };
-
   const [AllTimeSlot, setAllTimeSlot] = useState([]);
-  const [MeasurerTimeSlot, setMeasurerTimeSlot] = useState([]);
+  // const [MeasurerTimeSlot, setMeasurerTimeSlot] = useState([]);
   useEffect(() => {
-    GetDataWithToken(`superadmin/get-schedule/`).then((response) => {
+    GetDataWithToken(`superadmin/get-schedule?type=measurer`).then((response) => {
       setAllTimeSlot(response.data);
+      setCallApi(false);
     });
-  }, [""]);
+  }, [callApi]);
 
-  useEffect(() => {
-    GetDataWithToken(`superadmin/get-schedule/`).then((response) => {
-      setMeasurerTimeSlot(response.data);
-    });
-  }, [""]);
+  // useEffect(() => {
+  //   GetDataWithToken(`superadmin/get-schedule/`).then((response) => {
+  //     setMeasurerTimeSlot(response.data);
+  //   });
+  // }, [""]);
 
   return (
     <>
@@ -188,4 +191,4 @@ function CreateTimeSlot() {
   );
 }
 
-export default CreateTimeSlot;
+export default CreateTimeSlotMeasurer;

@@ -21,7 +21,7 @@ function CustomerDetials() {
   }, [""]);
   return (
     <>
-      {console.log("first", CustomerDetials)}
+      {/* {console.log("first", CustomerDetials)} */}
       <div
         data-typography="poppins"
         data-theme-version="light"

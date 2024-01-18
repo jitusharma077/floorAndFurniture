@@ -4,38 +4,43 @@ import SuperAdminHeader from "./Common/SuperAdminHeader";
 import SuperAdminSidebar from "./Common/SuperAdminSidebar";
 import Loader from "../../Common/Loader";
 import PaginationComponent from "../../Common/PaginationComponent";
+
 import {
     Nav,
     NavItem,
     NavLink,
     TabContent, TabPane, Row, Col
 } from 'reactstrap';
+
 import { GetDataWithToken } from "../../ApiHelper/ApiHelper";
 import OrdersModal from "../../Common/OrdersModal";
 import moment from "moment";
 import { useInView } from "react-intersection-observer";
 
-function Invoices() {
+function CustomerRequests() {
+
     const navigate = useNavigate();
     const [tabOpen, setTabOpen] = useState("1");
     const [callApi, setCallApi] = useState(true);
-    const [invoiceData, setInvoiceData] = useState([]);
+    const [installationData, setInstallationData] = useState([]);
+    const [measurementData, setMeasurementData] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPage, settotalPage] = useState(1);
-    const [invoiceType, setInvoiceType] = useState('INVOICES');
-    const [searchData, setSearchData] = useState('');
+    // const [invoiceType, setInvoiceType] = useState('INVOICES');
+    // const [searchData, setSearchData] = useState('');
     const [isLoading, setIsLoading] = useState(true);
-    const [isLoading2, setIsLoading2] = useState(true);
-    const [openModal, setOpenModal] = useState(false);
-    const [customerCode, setCustomerCode] = useState('');
-    const [deliveryName, setDeliveryName] = useState('');
-    const [date, setDate] = useState({
-        fromDate: '',
-        toDate: '',
-    });
+    // const [isLoading2, setIsLoading2] = useState(true);
+    // const [openModal, setOpenModal] = useState(false);
+    // const [customerCode, setCustomerCode] = useState('');
+    // const [deliveryName, setDeliveryName] = useState('');
+
+    // const [date, setDate] = useState({
+    //     fromDate: '',
+    //     toDate: '',
+    // });
     const { ref: myRef, inView: visibleElement } = useInView();
 
-    const modalToggle = () => setOpenModal(!openModal);
+    // const modalToggle = () => setOpenModal(!openModal);
 
     // const handlePageClick = (e, index) => {
     //     e.preventDefault();
@@ -48,51 +53,57 @@ function Invoices() {
 
     const setTabValue = (value) => {
         setTabOpen(value);
-        tabOpen === "1" ? setInvoiceType('CREDIT_NOTE') : setInvoiceType('INVOICES');
-        setCallApi(true);
-        setInvoiceData([]);
-        setIsLoading(true);
+        // tabOpen === "1" ? setInvoiceType('CREDIT_NOTE') : setInvoiceType('INVOICES');
+        // setCallApi(true);
+        // setData([]);
+        // setIsLoading(true);
         setCurrentPage(1);
     }
 
-    const searchDataHandler = () => {
-        setCurrentPage(1);
-        console.log(searchData)
-        setCallApi(true);
-        setIsLoading(true);
-        setInvoiceData([]);
-    }
-
-    let fromDate = date?.fromDate ? moment(date?.fromDate, "ddd MMM DD YYYY HH:mm:ss [GMT]ZZ")?.format("YYYY-MM-DD") : '';
-    let toDate = date?.toDate ? moment(date?.toDate, "ddd MMM DD YYYY HH:mm:ss [GMT]ZZ")?.format("YYYY-MM-DD") : '';
+    // const searchDataHandler = () => {
+    //     setCurrentPage(1);
+    //     // console.log(searchData)
+    //     setCallApi(true);
+    //     setIsLoading(true);
+    //     setInvoiceData([]);
+    // }
 
     useEffect(() => {
-        if (visibleElement) {
-            // setCallApi(true);
+        GetDataWithToken(`customer/get-installer-slot?pageNo=${currentPage}&pageSize=10`).then((response) => {
+            setInstallationData((prevData) => [...prevData, ...response.data]);
+            setIsLoading(false);
+            currentPage <= totalPage && setCurrentPage((prevPage) => prevPage + 1);
+        })
+        GetDataWithToken(`customer/get-measurer-slot?pageNo=${currentPage}`).then((response) => {
+            setMeasurementData((prevData) => [...prevData, ...response.data]);
+            currentPage <= totalPage && setCurrentPage((prevPage) => prevPage + 1);
+        })
+        // if (visibleElement) {
+        //     // setCallApi(true);
 
-            setIsLoading2(true);
-        }
-        if (callApi || visibleElement) {
-            GetDataWithToken(`superadmin/get-invoice?page=${currentPage}&pageSize=10&costumerCode=${customerCode}&typeCode=${invoiceType}&fromDate=${fromDate}&toDate=${toDate}&searchText=${searchData}&deliveryName=${deliveryName}`)
-                .then((response) => {
-                    if (response.status === true) {
-                        settotalPage(response?.data?.length > 0 && Math?.ceil(response?.total / 10));
+        //     setIsLoading2(true);
+        // }
+        // if (callApi || visibleElement) {
+        //     GetDataWithToken(`superadmin/get-invoice?page=${currentPage}&pageSize=10&costumerCode=${customerCode}&typeCode=${invoiceType}&fromDate=${fromDate}&toDate=${toDate}&searchText=${searchData}&deliveryName=${deliveryName}`)
+        //         .then((response) => {
+        //             if (response.status === true) {
+        //                 settotalPage(response?.data?.length > 0 && Math?.ceil(response?.total / 10));
 
-                        setCallApi(false);
-                        setInvoiceData(prevData => [...prevData, ...response.data]);
-                        currentPage <= totalPage && setCurrentPage((prevPage) => prevPage + 1);
-                        console.log('currennnntttttt', currentPage)
-                        setIsLoading(false);
-                        setIsLoading2(false);
+        //                 setCallApi(false);
+        //                 setInvoiceData(prevData => [...prevData, ...response.data]);
+        //                 currentPage <= totalPage && setCurrentPage((prevPage) => prevPage + 1);
+        //                 console.log('currennnntttttt', currentPage)
+        //                 setIsLoading(false);
+        //                 setIsLoading2(false);
 
-                    }
-                    setIsLoading2(false);
-                    setIsLoading(false);
-                })
-        }
+        //             }
+        //             setIsLoading2(false);
+        //             setIsLoading(false);
+        //         })
+        // }
     }, [callApi, visibleElement])
 
-    console.log('dtaaaaa', invoiceData)
+    // console.log('dtaaaaa', invoiceData)
 
     return (
         <>
@@ -120,10 +131,10 @@ function Invoices() {
                                 <div className="card">
                                     <div className="card-header">
                                         <div className="col-lg-3">
-                                            <h4 className="card-title">Invoices</h4>
+                                            <h4 className="card-title">All Requests</h4>
                                         </div>
                                         <div className="col-lg-7 d-flex">
-                                            <input
+                                            {/* <input
                                                 type="text"
                                                 className="form-control"
                                                 placeholder="Search"
@@ -131,16 +142,15 @@ function Invoices() {
                                                     setSearchData(e.target.value);
                                                 }}
                                             />
-
                                             <button className="btn btn-primary ms-2" onClick={searchDataHandler}>Search
                                             </button>
                                             <div className="col-lg-2 d-flex">
                                                 <button className="btn btn-primary ms-2" onClick={modalToggle}>
                                                     <i className="fa fa-filter"></i>
-                                                </button>
+                                                </button> 
 
 
-                                            </div>
+                                        </div>*/}
                                         </div>
 
                                     </div>
@@ -152,7 +162,7 @@ function Invoices() {
                                                     className={tabOpen === "1" ? "active" : ""}
                                                     onClick={() => setTabValue('1')}
                                                 >
-                                                    INVOICE
+                                                    Installation Request
                                                 </NavLink>
                                             </NavItem>
                                             <NavItem>
@@ -161,7 +171,7 @@ function Invoices() {
                                                     className={tabOpen === "2" ? "active" : ""}
                                                     onClick={() => setTabValue('2')}
                                                 >
-                                                    CREDIT-NOTE
+                                                    measurement Request
                                                 </NavLink>
                                             </NavItem>
                                         </Nav>
@@ -175,16 +185,17 @@ function Invoices() {
                                                     >
                                                         <thead>
                                                             <tr>
-                                                                <th>Invoice No:</th>
-                                                                <th>Invoice Date:</th>
-                                                                <th>Delivery name</th>
-                                                                <th>Invoices</th>
+                                                                <th>Enquiry Id:</th>
+                                                                <th>Requested Date/time</th>
+                                                                <th>Customer Name:</th>
+                                                                <th>IC Name:</th>
+                                                                <th>Action</th>
 
                                                             </tr>
                                                         </thead>
                                                         <tbody>
                                                             {isLoading && <Loader />}
-                                                            {invoiceData && invoiceData?.length == 0 ? (
+                                                            {installationData && installationData?.length == 0 ? (
                                                                 <h3
                                                                     style={{
                                                                         position: "absolute",
@@ -194,20 +205,21 @@ function Invoices() {
                                                                 >
                                                                     No data found
                                                                 </h3>
-                                                            ) : invoiceData?.map((data, index) =>
+                                                            ) : installationData?.map((data, index) =>
                                                                 < tr >
-                                                                    <td>{data?.Code}</td>
+                                                                    <td>{data?.enquiry?.id}</td>
                                                                     <td>{
-                                                                        moment(data?.InvoiceDate)?.format("DD/MM/YYYY")
+                                                                        moment(data?.date)?.format("DD/MM/YYYY")
 
-                                                                    }</td>
-                                                                    <td>{data?.DeliveryName}</td>
+                                                                    } ({data?.schedule?.start_time}-{data?.schedule?.end_time})</td>
+                                                                    <td>{data?.enquiry?.customer?.firstName} {data?.enquiry?.customer?.lastName}</td>
+                                                                    <td>{data?.enquiry?.user?.firstName} {data?.enquiry?.user?.lastName}</td>
                                                                     <td>
                                                                         <button className="btn btn-primary" onClick={() => {
-                                                                            navigate("/invoice-detail", {
-                                                                                state: {
-                                                                                    data: data?.Code
-                                                                                }
+                                                                            navigate("/AddInstalerSchdule", {
+                                                                                state:
+                                                                                    data
+
                                                                             })
                                                                         }}>
                                                                             View
@@ -228,15 +240,16 @@ function Invoices() {
                                                     >
                                                         <thead>
                                                             <tr>
-                                                                <th>Invoice No:</th>
-                                                                <th>Invoice Date:</th>
-                                                                <th>Delivery name</th>
+                                                                <th>Enquiry Id:</th>
+                                                                <th>Requested Date/time</th>
+                                                                <th>Customer Name:</th>
+                                                                <th>IC Name:</th>
                                                                 <th>Action</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
                                                             {isLoading && <Loader />}
-                                                            {invoiceData && invoiceData?.length == 0 ? (
+                                                            {measurementData && measurementData?.length == 0 ? (
                                                                 <h3
                                                                     style={{
                                                                         position: "absolute",
@@ -246,24 +259,24 @@ function Invoices() {
                                                                 >
                                                                     No data found
                                                                 </h3>
-                                                            ) : invoiceData?.map((data) =>
+                                                            ) : measurementData?.map((data) =>
                                                                 < tr >
-                                                                    <td>{data?.Code}</td>
+                                                                    <td>{data?.enquiry?.id}</td>
                                                                     <td>{
-                                                                        moment(data?.InvoiceDate)?.format("DD/MM/YYYY")
+                                                                        moment(data?.date)?.format("DD/MM/YYYY")
 
-                                                                    }</td>
-                                                                    <td>{data?.DeliveryName}</td>
+                                                                    } ({data?.schedule?.start_time}-{data?.schedule?.end_time})</td>
+                                                                    <td>{data?.enquiry?.customer?.firstName} {data?.enquiry?.customer?.lastName}</td>
+                                                                    <td>{data?.enquiry?.user?.firstName} {data?.enquiry?.user?.lastName}</td>
                                                                     <td>
-                                                                        <button className="btn btn-primary"
-                                                                            onClick={() => {
-                                                                                navigate("/invoice-detail", {
-                                                                                    state: {
-                                                                                        data: data?.Code
-                                                                                    }
-                                                                                })
-                                                                            }}>
-                                                                            view
+                                                                        <button className="btn btn-primary" onClick={() => {
+                                                                            navigate("/add-schedule", {
+                                                                                state:
+                                                                                    data
+
+                                                                            })
+                                                                        }}>
+                                                                            View
                                                                         </button>
                                                                     </td>
                                                                 </tr>
@@ -274,8 +287,8 @@ function Invoices() {
                                             </TabPane>
                                         </TabContent>
                                     </div>
-                                    {invoiceData?.length > 0 && currentPage <= totalPage && <div ref={myRef} id="scroll"></div>}
-                                    {isLoading2 && currentPage > 1 && <h3 style={{ textAlign: 'center' }}>Loading...</h3>}
+                                    {installationData?.length > 0 && currentPage <= totalPage && <div ref={myRef} id="scroll"></div>}
+                                    {isLoading && currentPage > 1 && <h3 style={{ textAlign: 'center' }}>Loading...</h3>}
                                 </div>
                             </div>
 
@@ -290,8 +303,8 @@ function Invoices() {
                         </div>
                     </div>
                 </div>
-            </div>
-            <OrdersModal
+            </div >
+            {/* <OrdersModal
                 openModal={openModal}
                 modalToggle={modalToggle}
                 setCustomerCode={setCustomerCode}
@@ -304,8 +317,8 @@ function Invoices() {
                 setIsLoading={setIsLoading}
                 setMainData={setInvoiceData}
                 setCurrentPage={setCurrentPage}
-            />
+            /> */}
         </>
     );
 }
-export default Invoices;
+export default CustomerRequests;

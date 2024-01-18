@@ -53,7 +53,7 @@ function SuperAdminSidebar() {
                 <span className="nav-text">Enquiry</span>
               </Link>
             </li>
-             <li>
+            <li>
               <Link to={"/search-stock"} className aria-expanded="false">
                 <i className="fa fa-search fw-bold" aria-hidden="true" />
                 <span className="nav-text">search stock</span>
@@ -63,6 +63,12 @@ function SuperAdminSidebar() {
               <Link to={"/orders"} className aria-expanded="false">
                 <i className="fa fa-list fw-bold" aria-hidden="true" />
                 <span className="nav-text">orders</span>
+              </Link>
+            </li>
+            <li>
+              <Link to={"/customer-requests"} className aria-expanded="false">
+                <i className="fa fa-list fw-bold" aria-hidden="true" />
+                <span className="nav-text">Customer Requests</span>
               </Link>
             </li>
             <li>
@@ -77,11 +83,42 @@ function SuperAdminSidebar() {
                 <span className="nav-text">customer ledger</span>
               </Link>
             </li>
-              <li>
+            <li>
               <Link to={"/searh-enquiry"} className aria-expanded="false">
                 <i className="fa fa-book-open fw-bold" aria-hidden="true" />
                 <span className="nav-text">Search enquiry</span>
               </Link>
+            </li>
+
+            <li>
+              <a
+                className="has-arrow"
+                href="javascript:void()"
+                aria-expanded="false"
+              >
+                <i className="fas fa-exclamation fa-3x" data-fa-mask="fa-comment"
+                  data-fa-transform="shrink-7 up-.5" aria-hidden="true" />
+                <span className="nav-text">Complaint/Feedback</span>
+              </a>
+              <ul aria-expanded="false">
+                <li>
+                  <Link to={"/add-complaint"}>Add Complaints</Link>
+                </li>
+                <li>
+                  <Link to={"/complaint-list"}>
+                    Customer complaints and feedbacks
+                  </Link>
+                </li>
+                {/* <li>
+                  <Link to={"/all-schedule"}>All Schedules</Link>
+                </li> */}
+                {/* <li>
+                  <Link to={"/add-schedule"}>Schedule Enquiry</Link>
+                </li> */}
+
+                {/* <li><a href="Schedule.html">Schedule a Installer</a></li>
+                      <li><a href="Schedule.html">Schedule a Tailer</a></li> */}
+              </ul>
             </li>
             {/* <li>
               <Link to={"/all-invoice"} className aria-expanded="false">
@@ -96,11 +133,11 @@ function SuperAdminSidebar() {
                 aria-expanded="false"
               >
                 <i className="fa fa-calendar" aria-hidden="true" />
-                <span className="nav-text">Schedule</span>
+                <span className="nav-text">Measurer Schedule</span>
               </a>
               <ul aria-expanded="false">
                 <li>
-                  <Link to={"/create-time-slot"}>Add Time Slot</Link>
+                  <Link to={"/create-time-slot-measurer"}>Add Time Slot</Link>
                 </li>
                 <li>
                   <Link to={"/Customer-requested-time-slot"}>
@@ -129,7 +166,7 @@ function SuperAdminSidebar() {
               </a>
               <ul aria-expanded="false">
                 <li>
-                  <Link to={"/create-time-slot"}>Add Time Slot</Link>
+                  <Link to={"/create-time-slot-installer"}>Add Time Slot</Link>
                 </li>
                 <li>
                   <Link to={"/Customer-requested-time-slot"}>

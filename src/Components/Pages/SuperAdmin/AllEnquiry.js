@@ -8,35 +8,54 @@ import PaginationComponent from "../../Common/PaginationComponent";
 import useFetch from "../../Hooks/CallBack";
 import SuperAdminHeader from "./Common/SuperAdminHeader";
 import SuperAdminSidebar from "./Common/SuperAdminSidebar";
+import { useInView } from "react-intersection-observer";
+import DateModal from "../../Common/DateModal";
+import OrdersModal from "../../Common/OrdersModal";
 
 function AllEnquiry() {
   const navigate = useNavigate();
-  const [callApi, setCallApi] = useState(false);
+  const [callApi, setCallApi] = useState(true);
   // const { data, Error, isLoading } = useFetch("superadmin/get/enquiries");
-  const [totalPage, settotalPage] = useState(0);
+  // const [totalPage, settotalPage] = useState(0);
   const [data, setdata] = useState([]);
-  const [isLoading, setisLoading] = useState(false);
+  const [isLoading, setisLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [SearchValue, setSearchValue] = useState("");
+  const { ref: myRef, inView: visibleElement } = useInView();
+  const [openModal, setOpenModal] = useState(false);
+  const modalToggle = () => { setOpenModal(!openModal) };
+   const [date, setDate] = useState({
+    fromDate: '',
+    toDate: '',
+    });
+  // const [showDay,setShowDay]=useState(false);
 
-  const handlePageClick = (e, index) => {
-    e.preventDefault();
-    setCurrentPage(index + 1);
-    setCallApi(true);
-  };
+  // const handlePageClick = (e, index) => {
+  //   e.preventDefault();
+  //   setCurrentPage(index + 1);
+  //   setCallApi(true);
+  // };
+
+   let fromDate = date?.fromDate ?moment(date?.fromDate, "ddd MMM DD YYYY HH:mm:ss [GMT]ZZ")?.format("YYYY-MM-DD"):'';
+   let toDate = date?.toDate ? moment(date?.toDate, "ddd MMM DD YYYY HH:mm:ss [GMT]ZZ")?.format("YYYY-MM-DD"):'';
 
   useEffect(() => {
-    setisLoading(true);
-    GetDataWithToken(`superadmin/get/enquiries?page=${currentPage}`).then(
+    if (visibleElement||callApi) {
+      setCurrentPage((prevData => prevData + 1));
+//  http://203.115.102.6:6696/api/v1/superadmin/get/enquiries?page=1     
+      GetDataWithToken(`superadmin/get/enquiries?page=${currentPage}&dateFrom=${fromDate}&dateTo=${toDate}`).then(
       (response) => {
-        if (response.status === true) {
-          setdata(response.data);
+          if (response.status === true) {
+          setCallApi(false);  
+          setdata(prevData=>[...prevData, ...response.data]);
+          // setdata(response.data);
           setisLoading(false);
-          settotalPage(response.pages);
+          // settotalPage(response.pages);
         }
       }
-    );
-  }, [currentPage]);
+      );
+    }
+  }, [visibleElement,callApi]);
 
   const getSearchValue = (val) => {
     setisLoading(true);
@@ -46,7 +65,7 @@ function AllEnquiry() {
       if (response.status === true) {
         setdata(response.data);
         setisLoading(false);
-        settotalPage(response.pages);
+        // settotalPage(response.pages);
         setisLoading(false);
       }
       setisLoading(false);
@@ -100,14 +119,20 @@ function AllEnquiry() {
                       >
                         Search
                       </button>
+                       <button
+                        className="btn btn-primary ms-2"
+                        onClick={modalToggle}
+                      >
+                        Filter
+                      </button>
                     </div>
                   </div>
                   <div className="card-body">
                     <div className="table-responsive">
                       <table
                         id="example4"
-                        className="table card-table display mb-4 shadow-hover table-responsive-lg"
-                        style={{ minWidth: "845px" }}
+                        className = "table card-table display mb-4 shadow-hover table-responsive-lg"
+                        style={{ minWidth: "845px",textAlign: "center" }}
                       >
                         <thead>
                           <tr>
@@ -116,8 +141,9 @@ function AllEnquiry() {
                             <th>Mobile No.</th>
                             <th>Status</th>
                             <th>Category</th>
-                            <th>IC </th>
+                            <th>IC</th>
                             <th>Date</th>
+                            <th>Overdue</th>
                             <th>Action</th>
                           </tr>
                         </thead>
@@ -173,9 +199,13 @@ function AllEnquiry() {
                                     {data?.user?.firstName}
                                     {data?.user?.lastName}
                                   </td>
+                                  
                                   <td>
-                                    {moment(data?.createdAt).format("ll")}
+                                    {moment(data?.createdAt).format("DD/MM/YYYY")}
                                   </td>
+                                    {/* <td>{moment(data?.overdueDate)?.format('DD/MM/YYYY') === 'Invalid date' ? data?.overdueDate : moment(data?.overdueDate)?.format('DD/MM/YYYY')}</td> */}
+                                  
+                                   <td>{data?.overdue} {data?.overdue && typeof data?.overdue=== 'number' && "days" }</td> 
                                   <td>
                                     <button
                                       onClick={() => {
@@ -205,13 +235,14 @@ function AllEnquiry() {
                         </tbody>
                       </table>
                     </div>
-                    <PaginationComponent
+                     <div ref={myRef}id="scroll"></div>
+                    {/* <PaginationComponent
                       totalPage={totalPage}
                       currentPage={currentPage}
                       setCallApi={(val) => setCallApi(val)}
                       setCurrentPage={(val) => setCurrentPage(val)}
                       handlePageClick={handlePageClick}
-                    />
+                    /> */}
                   </div>
                 </div>
               </div>
@@ -219,6 +250,17 @@ function AllEnquiry() {
           </div>
         </div>
       </div>
+      <OrdersModal
+        openModal={openModal}
+        modalToggle={modalToggle}
+        date={date}
+        setDate={setDate}
+        enquiryFilter="enquiryFilter"
+        setMainData={setdata}
+        setIsLoading={setisLoading}
+        setMainCallApi={setCallApi}
+        setCurrentPage={setCurrentPage}
+      /> 
     </>
   );
 }

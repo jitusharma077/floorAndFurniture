@@ -81,8 +81,6 @@ function AllQcChecks() {
       id="main-wrapper"
       className="show"
     >
-      {console.log("firstQcCheck", firstQcCheck)}
-      {console.log("SecQcCheck", SecQcCheck)}
       <SuperAdminHeader />
       <SuperAdminSidebar />
       <div className="content-body">
