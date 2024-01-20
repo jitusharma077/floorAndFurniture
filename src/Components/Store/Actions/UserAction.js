@@ -2,7 +2,8 @@ import {
   CHECK_USER_LOGGED_IN,
   FETCH_USER_REQUEST,
   USER_LOGGED_IN_DETAILS,
-} from "../types";
+} from "../Types";
+
 
 export const fetchUserRequest = () => {
   return {

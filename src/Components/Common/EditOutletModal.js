@@ -3,8 +3,8 @@ import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Modal, ModalBody, ModalHeader } from "reactstrap";
 import { PostDataWithToken } from "../ApiHelper/ApiHelper";
-import { setLoggedInUserDetails } from "../Store/Actions/userAction";
-
+// import { setLoggedInUserDetails } from "../Store/Actions/userAction";
+import { setLoggedInUserDetails } from "../Store/Actions/UserAction";
 function EditOutletModal({ modal, toggle, OutletData }) {
   const {
     register,

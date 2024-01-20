@@ -321,7 +321,7 @@ function StaffDetials() {
                                   <tbody>
                                     {/* {console.log("length", StaffDetials)} */}
                                     {StaffDetials?.Enquiry &&
-                                    StaffDetials?.Enquiry.length < 0 ? (
+                                      StaffDetials?.Enquiry.length < 0 ? (
                                       <p>No Enquiry Found</p>
                                     ) : (
                                       StaffDetials?.Enquiry?.map(
@@ -647,7 +647,7 @@ function StaffDetials() {
                           <tbody>
                             {/* {console.log("length", StaffDetials)} */}
                             {StaffDetials?.Enquiry &&
-                            StaffDetials?.Enquiry.length < 0 ? (
+                              StaffDetials?.Enquiry.length < 0 ? (
                               <p>No Enquiry Found</p>
                             ) : (
                               StaffDetials?.Enquiry?.map((data, index) => (

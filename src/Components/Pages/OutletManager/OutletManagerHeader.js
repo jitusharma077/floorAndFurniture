@@ -3,7 +3,8 @@ import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { GetDataWithToken } from "../../ApiHelper/ApiHelper";
 import Cookies from "js-cookie";
-import { setLoggedInUserDetails } from "../../Store/Actions/userAction";
+// import { setLoggedInUserDetails } from "../../Store/Actions/userAction";
+import { setLoggedInUserDetails } from "../../Store/Actions/UserAction";
 import { toast } from "material-react-toastify";
 
 function OutletManagerHeader() {

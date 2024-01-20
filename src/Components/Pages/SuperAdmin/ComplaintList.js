@@ -135,6 +135,7 @@ const ComplaintList = () => {
                 <div className="card">
                   <div className="card-header">
                     <h4 className="card-title">Complaints</h4>
+                    <Link to="/all-customer" className="btn btn-primary" >Add Complaint</Link>
                   </div>
                   <div className="card-body">
                     <Nav tabs>

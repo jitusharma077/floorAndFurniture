@@ -514,76 +514,15 @@ function ViewEstimate() {
     );
   };
 
-  // const renderRoomCurtain = (
-  //   window = {},
-  //   windowIndex,
-  //   tax = 0,
-  //   colspan = 16
-  // ) => {
-  //   const fabrics = window?.fabricList ?? [];
-  //   console.log("windowIndex", window);
-
-  //   const totalAmount = fabrics?.reduce((sum, fabric) => {
-  //     return (sum = +sum + +fabric?.grandTotal);
-  //   }, 0);
-
-  //   if (fabrics.length === 0) return "";
-  //   return (
-  //     <>
-  //       <tr>
-  //         <th colSpan={colspan}>Window - {windowIndex + 1} </th>
-  //       </tr>
-  //       <tr>
-  //         <th colSpan={16 / 2}>Width - {window?.width} cm</th>
-  //         <th colSpan={16 / 2}>Height / Drop - {window?.height} cm</th>
-  //       </tr>
-  //       {fabrics?.map((fabric, fabricIndex) => {
-  //         return (
-  //           <>
-  //             {fabricIndex === 0 ? (
-  //               <tr>
-  //                 <th>Sno</th>
-  //                 <th>Item</th>
-  //                 <th colSpan="4">Item name</th>
-  //                 <th colSpan="3">Curtain style</th>
-  //                 <th>No of panel</th>
-  //                 <th>Total Quantity</th>
-  //                 <th>MRP per meter including taxes</th>
-  //                 <th>Gross amount</th>
-  //                 <th>Dis</th>
-  //                 <th>Net amount including taxes</th>
-  //               </tr>
-  //             ) : (
-  //               ``
-  //             )}
-  //             <tr>
-  //               <td>{fabricIndex + 1}</td>
-  //               <td>{fabric?.title}</td>
-  //               <td colSpan="4">{fabric?.value}</td>
-  //               <td colSpan="3">{fabric?.curtainStyle}</td>
-  //               <td>{fabric?.noOfPanel}</td>
-  //               <td>{fabric?.totalFabricInM}</td>
-  //               <td>{fabric?.mrp}</td>
-  //               <td>{fabric?.totalPrice}</td>
-  //               <td>{`${fabric?.dis} %`}</td>
-  //               <td>{fabric?.grandTotal}</td>
-  //             </tr>
-  //           </>
-  //         );
-  //       })}
-  //       {renderTotalRoomAmount(totalAmount, colspan)}
-  //     </>
-  //   );
-  // };
-
   const renderRoomCurtain = (
     window = {},
     windowIndex,
+    room,
     tax = 0,
     colspan = 16
   ) => {
     const fabrics = window?.fabricList ?? [];
-
+    console.log("windowww...", window, windowIndex, room,);
     const totalAmount = fabrics?.reduce((sum, fabric) => {
       return (sum = +sum + +fabric?.grandTotal);
     }, 0);
@@ -595,8 +534,13 @@ function ViewEstimate() {
           <th colSpan={colspan}>Window - {windowIndex + 1} </th>
         </tr>
         <tr>
-          <th colSpan={16 / 2}>Width - {window?.width} cm</th>
-          <th colSpan={16 / 2}>Height / Drop - {window?.height} cm</th>
+          <th colSpan={16 / 3}>Width - {window?.width} cm</th>
+          <th colSpan={16 / 3}>Height / Drop - {window?.height} cm</th>
+          <th colSpan={16 / 3}>Curtain Operation - {room?.roomInfo?.room_assets?.[windowIndex]?.curtain_operation?.operationType} </th>
+        </tr>
+        <tr>
+          <th colSpan={16 / 2}>Pelmet Width - {room?.curtain?.pelmet?.[windowIndex]?.pelmetRequired?.pelmetWidth} cm</th>
+          <th colSpan={16 / 2}>Pelmet Height / Drop - {room?.curtain?.pelmet?.[windowIndex]?.pelmetRequired?.pelmetDrop} cm</th>
         </tr>
         {fabrics?.map((fabric, fabricIndex) => {
           return (
@@ -636,7 +580,6 @@ function ViewEstimate() {
       </>
     );
   };
-
   const renderSofa = (sofa = [], colspan = 16) => {
     const fabrics = sofa?.sofaList ?? [];
     console.log("ress", sofa);
@@ -1325,7 +1268,7 @@ function ViewEstimate() {
       }
       console.log("windo listtt", windowList);
       // {
-      // windowList.length === 0 && windowList.length === 1;
+      //   windowList.length === 0 && windowList.length === 1;
       // }
       windowList.map((_, index) => {
         const assetId = _["assetId"] ? _["assetId"] : undefined;
@@ -2639,9 +2582,18 @@ function ViewEstimate() {
     return (
       <>
         <tr>
-          <th colSpan={2}>Sub Total</th>
+          <th colSpan={2}>Total Room amount</th>
           <th colSpan={1}>{getPriceFormate(amount)}</th>
         </tr>
+
+        {+deposit > 0 ? (
+          <tr>
+            <th colSpan={2}>Deposit amount</th>
+            <th colSpan={1}>{deposit}</th>
+          </tr>
+        ) : (
+          ``
+        )}
 
         {ladder?.name ? (
           <tr>
@@ -2664,14 +2616,6 @@ function ViewEstimate() {
           <th colSpan={2}>Service amount</th>
           <th colSpan={1}>{serviceAmount}</th>
         </tr>
-        {+deposit > 0 ? (
-          <tr>
-            <th colSpan={2}>Deposit amount</th>
-            <th colSpan={1}>{`(-) ${deposit}`}</th>
-          </tr>
-        ) : (
-          ``
-        )}
         <tr>
           <th colSpan={2}>Grand total</th>
           <th colSpan={1}>{getPriceFormate(getGrandTotal())}</th>
@@ -2910,7 +2854,6 @@ function ViewEstimate() {
                       {roomIndex === 0 ? (
                         <tr>
                           <th>Room name</th>
-
                           <th>Category</th>
                           <th>Room description</th>
                         </tr>
@@ -2925,9 +2868,10 @@ function ViewEstimate() {
                           {styles?.map((roomStyle, styleIndex) => {
                             const totalRoom = getTotalWindowPrice(roomStyle);
 
+
                             return (
                               <table class="table">
-                                {renderRoomCurtain(roomStyle, styleIndex)}
+                                {renderRoomCurtain(roomStyle, styleIndex, room)}
                                 {renderStitchingCost(roomStyle)}
                                 {renderRoomHardware(roomStyle, styleIndex)}
                                 {renderRoomBlind(roomStyle, styleIndex)}

@@ -115,7 +115,7 @@ const CommonRoutes = () => {
               path="add-complaint-desription"
               element={<AddComplaintMain />}
             />
-            <Route path="complaint-list" element={<ComplaintList />} />
+            <Route path="/complaint-list" element={<ComplaintList />} />
             <Route path="add-complaint" element={<AddComplaint />} />
             <Route path="/searh-enquiry" element={<SearchEnquiry />} />
             <Route

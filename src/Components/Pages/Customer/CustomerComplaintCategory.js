@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { GetData, GetDataWithToken } from "../../ApiHelper/ApiHelper";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import SuperAdminHeader from "../SuperAdmin/Common/SuperAdminHeader";
+import SuperAdminSidebar from "../SuperAdmin/Common/SuperAdminSidebar";
 
 const CustomerComplaintCategory = () => {
   const navigate = useNavigate();
@@ -67,41 +69,58 @@ const CustomerComplaintCategory = () => {
   }, [])
 
   return (<>
-    <div className="authincation h-100">
-      <div className="container h-100vh">
-        <div className="row justify-content-center h-100 align-items-center">
-          <div className="col-xl-6">
-            <div className="authincation-content">
-              <div className="row no-gutters">
-                <div className="col-xl-12">
-                  <div className="card-header">
-                    <h4>Select category </h4>
-                    <span onClick={() => { navigate(-1) }} style={{ cursor: "pointer" }}><i className="fas fa-arrow-left" style={{ fontSize: "20px" }}></i></span>
-                  </div>
-                  <div className="container-fluid">
-                    <div className="row flex-item-center">
-                      <div className="col-xl-12">
-                        <div className="p-5 mx-2">
-                          <form onSubmit={handleSubmit(onSubmit)}>
-                            <div className="row">
-                              {materialList?.map((data, index) => {
-                                return (
-                                  <div key={data?.material?.id}>
-                                    <input
-                                      type="checkbox"
-                                      className="form-check-input mx-2"
-                                      value={data?.material?.id}
-                                      {...register(`category`, {
-                                        required: true,
-                                        maxLength: 80,
-                                      })}
-                                    />
-                                    <label>{data?.material?.name}</label>
-                                  </div>
-                                )
-                              }
-                              )}
-                              {/* {materialList?.map((data, index) => {
+    <div
+      data-typography="poppins"
+      data-theme-version="light"
+      data-layout="vertical"
+      data-nav-headerbg="color_1"
+      data-headerbg="color_1"
+      data-sidebar-style="full"
+      data-sibebarbg="color_1"
+      data-sidebar-position="fixed"
+      data-header-position="fixed"
+      data-container="wide"
+      direction="ltr"
+      data-primary="color_1"
+      id="main-wrapper"
+      className="show"
+    >
+      <SuperAdminHeader />
+      <SuperAdminSidebar />
+      <div className="content-body">
+        {/*--- row ---*/}
+        <div className="container-fluid">
+          <div className="row">
+            <div className="col-xl-12">
+              <div className="card">
+                <div className="card-header">
+                  <h4>Select category </h4>
+                  {/* <span onClick={() => { navigate(-1) }} style={{ cursor: "pointer" }}><i className="fas fa-arrow-left" style={{ fontSize: "20px" }}></i></span> */}
+                </div>
+                <div className="container-fluid">
+                  <div className="row flex-item-center">
+                    <div className="col-xl-12">
+                      <div className="p-5 mx-2">
+                        <form onSubmit={handleSubmit(onSubmit)}>
+                          <div className="row">
+                            {materialList?.map((data, index) => {
+                              return (
+                                <div key={data?.material?.id}>
+                                  <input
+                                    type="checkbox"
+                                    className="form-check-input mx-2"
+                                    value={data?.material?.id}
+                                    {...register(`category`, {
+                                      required: true,
+                                      maxLength: 80,
+                                    })}
+                                  />
+                                  <label>{data?.material?.name}</label>
+                                </div>
+                              )
+                            }
+                            )}
+                            {/* {materialList?.map((data, index) => {
                                 console.log("matttt...", data);
                                 // Use a Set to store unique material IDs
                                 const uniqueMaterialIds = new Set();
@@ -136,7 +155,7 @@ const CustomerComplaintCategory = () => {
 
 
 
-                              {/* {materialList?.map((data, index) => {
+                            {/* {materialList?.map((data, index) => {
 
                                 const uniqueMaterialIds = new Set();
 
@@ -161,13 +180,12 @@ const CustomerComplaintCategory = () => {
                                 })
                               }
                               )} */}
-                              <div>
+                            <div>
 
-                              </div>
-                              <button className="btn btn-primary mt-4" type="submit">Next</button>
                             </div>
-                          </form>
-                        </div>
+                            <button className="btn btn-primary mt-4" type="submit">Next</button>
+                          </div>
+                        </form>
                       </div>
                     </div>
                   </div>

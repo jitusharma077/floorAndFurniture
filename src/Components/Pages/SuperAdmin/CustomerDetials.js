@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { GetDataWithToken } from "../../ApiHelper/ApiHelper";
 import SuperAdminHeader from "./Common/SuperAdminHeader";
 import SuperAdminSidebar from "./Common/SuperAdminSidebar";
@@ -115,8 +115,13 @@ function CustomerDetials() {
                               <div className="mt-4">
                                 <span className="d-block mb-2">Address</span>
                                 <span className="font-w500 fs-16">
-                                  B-48 Hariyana bhawan road in front of malaviya
-                                  public school patel nagar bikaner
+                                  {CustomerDetials?.addresses?.map((data) => {
+                                    return (<div>
+                                      {data?.address}
+                                    </div>)
+                                  })}
+                                  {/* B-48 Hariyana bhawan road in front of malaviya
+                                  public school patel nagar bikaner */}
                                 </span>
                               </div>
                               <div className="mt-4">
@@ -159,6 +164,7 @@ function CustomerDetials() {
                           <th>Category's</th>
                           <th>Status</th>
                           <th>Action</th>
+                          <th>Add Complaint</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -168,8 +174,9 @@ function CustomerDetials() {
                               <td>{item.id}</td>
                               <td>{item.createdAt}</td>
                               <td>
-                                N/A
-                                {/* {item?.enquirystatuses.map((res, item) => res.)} */}
+                                {item?.products?.map((data) =>
+                                  <span>{`${data} `}</span>
+                                )}
                               </td>
 
                               <td>
@@ -191,6 +198,7 @@ function CustomerDetials() {
                                 >
                                   View
                                 </button>
+
                                 {/* <a
                                     href="Schedule.html"
                                     className="btn btn-primary btn-sm"
@@ -198,6 +206,11 @@ function CustomerDetials() {
                                     Enquiry Assignment
                                   </a> */}
                               </td>
+                              <td> <Link
+                                className="btn btn-primary btn-sm"
+                                to="/customer-complaint-category"
+                                state={{ data: { id: item.id } }}
+                              >Add</Link></td>
                             </tr>
                           ))}
                       </tbody>

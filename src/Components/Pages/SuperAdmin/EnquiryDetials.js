@@ -2170,7 +2170,7 @@ function EnquiryDetials() {
                                     </a>
                                   </li>
                                 ))}
-                              {rooms?.room_assets &&
+                              {/* {rooms?.room_assets &&
                                 rooms?.room_assets?.map((window, index) => (
                                   <li className=" nav-item">
                                     <a
@@ -2189,7 +2189,7 @@ function EnquiryDetials() {
                                       {`Blind-${index + 1}`}
                                     </a>
                                   </li>
-                                ))}
+                                ))} */}
                             </ul>
                           </div>
                           <div className="col-lg-12">

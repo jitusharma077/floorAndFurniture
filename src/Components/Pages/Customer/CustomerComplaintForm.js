@@ -1,20 +1,34 @@
+// import { useEffect, useState } from "react";
+// import { useLocation, useNavigate } from "react-router-dom";
+// // import { GetDataWithToken, PostData } from "../../ApiHelper/ApiHelper";
+// import { useForm } from "react-hook-form";
+// import { GetData, PostData } from "../../ApiHelper/ApiHelper";
+// import { toast } from "react-toastify";
+// import SuperAdminHeader from "./Common/SuperAdminHeader";
+// import SuperAdminSidebar from "./Common/SuperAdminSidebar";
+
+import { Link, useLocation, useNavigate } from "react-router-dom";
+// import SuperAdminHeader from "./Common/SuperAdminHeader";
+// import SuperAdminSidebar from "./Common/SuperAdminSidebar";
+import { GetDataWithToken, PostData, PostDataWithToken } from "../../ApiHelper/ApiHelper";
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { GetDataWithToken, PostData } from "../../ApiHelper/ApiHelper";
-import { useForm } from "react-hook-form";
 import { toast } from "material-react-toastify";
+import { useForm } from "react-hook-form";
+import SuperAdminHeader from "../SuperAdmin/Common/SuperAdminHeader";
+import SuperAdminSidebar from "../SuperAdmin/Common/SuperAdminSidebar";
 
 const CustomerComplaintForm = () => {
   const navigate = useNavigate(-1);
   const [selectedComplaint, setSelectedComplaint] = useState([]);
   const [timeSlotList, setTimeSlotList] = useState([]);
   const [timeSlotValue, setTimeSlotValue] = useState("");
-  // const [warehouseList, setWarehouseList] = useState([]);
+  const [warehouseList, setWarehouseList] = useState([]);
   const location = useLocation();
   console.log("locaattee", location);
   const [callApi, setCallApi] = useState(true);
   const [installerCallApi, setInstallerCallApi] = useState(false);
   const [installerList, setInstallerList] = useState([]);
+
   const {
     register,
     handleSubmit,
@@ -30,21 +44,21 @@ const CustomerComplaintForm = () => {
       status: location?.state?.enquiry?.status,
       installerId: data?.installer,
       date: data?.date,
+      remark: data?.remark,
       complaintId: selectedComplaint,
       warehouseId: data?.warehouse
     };
 
-    PostData(`customer/make-a-complaint`, submitData).then((response) => {
+    PostDataWithToken(`customer/make-a-complaint`, submitData).then((response) => {
       if (response.status === true) {
-        toast.success("complaint filed successfully we will get back to you as soon as possible");
-        navigate(-1);
+        toast.success("complaint filed successfully");
+        navigate("/complaint-list");
+        // navigate(-1);
       } else {
         // console.log(response);
         toast.error(response.data.message);
       }
     });
-
-
   }
 
   const timeSlotChangeHandler = (event) => {
@@ -53,13 +67,13 @@ const CustomerComplaintForm = () => {
   }
 
   useEffect(() => {
-    // if (callApi) {
-    //   GetDataWithToken(`customer/get-all-warehouse`).then(response => {
-    //     if (response.status === true) {
-    //       setWarehouseList(response.data);
-    //     }
-    //   })
-    // }
+    if (callApi) {
+      GetDataWithToken(`customer/get-all-warehouse`).then(response => {
+        if (response.status === true) {
+          setWarehouseList(response.data);
+        }
+      })
+    }
     if (callApi) {
       GetDataWithToken(`superadmin/get-schedule?type=installer`).then(response => {
         if (response.status === true) {
@@ -71,7 +85,7 @@ const CustomerComplaintForm = () => {
     if (installerCallApi) {
       GetDataWithToken(`installer/get-unassign-installer/${timeSlotValue}`).then(response => {
         if (response.status === true) {
-          setInstallerList(response.data);
+          setInstallerList(response?.data);
           setInstallerCallApi(false);
         }
       })
@@ -79,22 +93,42 @@ const CustomerComplaintForm = () => {
   }, [callApi, installerCallApi])
 
   return (
-    <div className="authincation h-100">
-      <div className="container h-100vh">
-        <div className="row justify-content-center h-100 align-items-center">
-          <div className="col-xl-12">
+    <div
+      data-typography="poppins"
+      data-theme-version="light"
+      data-layout="vertical"
+      data-nav-headerbg="color_1"
+      data-headerbg="color_1"
+      data-sidebar-style="full"
+      data-sibebarbg="color_1"
+      data-sidebar-position="fixed"
+      data-header-position="fixed"
+      data-container="wide"
+      direction="ltr"
+      data-primary="color_1"
+      id="main-wrapper"
+      className="show"
+    >
+      <SuperAdminHeader />
 
-            <div className="authincation-content">
-              <div className="row no-gutters">
-                <div className="col-xl-12 px-4 py-2">
-                  <div className="card-header">
-                    <h4>Complaint form</h4>
-                    <span onClick={() => { navigate(-1) }} style={{ cursor: "pointer" }}><i className="fas fa-arrow-left" style={{ fontSize: "20px" }}></i></span>
-                  </div>
+      <SuperAdminSidebar />
+      <div className="content-body">
+        {/*--- row ---*/}
+        <div className="container-fluid">
+          <div className="row">
+            <div className="col-xl-12">
+              <div className="card">
+                <div className="card-header">
+                  <h4 className="card-title">Complaints</h4>
+                  {/* <Link to="/all-customer" className="btn btn-primary" >Add Complaint</Link> */}
+                </div>
+                <div className="card-body">
                   <div className="basic-form p-3">
-                    <form onSubmit={handleSubmit(onSubmit)}>
+                    <form
+                      onSubmit={handleSubmit(onSubmit)}
+                    >
                       <div class="row align-items-center">
-                        {location.state.data.map((data, index) =>
+                        {location?.state?.data?.map((data, index) =>
                           < div class="col-lg-12 my-1">
                             <label class="me-sm-2">Select Complaint for {data?.name}</label>
                             <select class="me-sm-2  form-control"
@@ -105,7 +139,8 @@ const CustomerComplaintForm = () => {
                                   updatedValues[index] = {
                                     type: e.target.value?.split("/?#/?")?.[1],
                                     description: e.target.value?.split("/?#/?")?.[2],
-                                    complaintId: e.target.value?.split("/?#/?")?.[0]
+                                    complaintId: e.target.value?.split("/?#/?")?.[0],
+                                    purchase_complaint: e.target.value?.split("/?#/?")?.[3],
                                   }; // Use index to store values in the correct position
                                   console.log("selected..", updatedValues);
                                   return updatedValues;
@@ -113,24 +148,19 @@ const CustomerComplaintForm = () => {
                               }}
                             >
                               <option>Choose...</option>
-                              {data?.complaints?.map((data) => <option value={`${data?.id}/?#/?${data?.type}/?#/?${data?.description}`}>{data?.type}</option>)}
+                              {data?.complaints?.map((data) => <option value={`${data?.id}/?#/?${data?.type}/?#/?${data?.description}/?#/?${data?.purchase_complaint === true ? "1" : "0"}`}>{data?.type}</option>)}
                             </select>
                             <div>
-                              {data?.complaints?.map((data, index2) => data?.id == selectedComplaint[index]?.complaintId && <p>{data?.description}</p>)}
+                              {data?.complaints?.map((data, index2) => data?.id == selectedComplaint[index]?.complaintId &&
+                                <>
+                                  <div className="mx-2">
+                                    <div><span className="text-red">*</span>{data?.description}</div>
+                                    <div><strong>Approx Resolve Time: </strong>{data?.tat}</div>
+                                  </div>
+                                </>)}
                             </div>
                           </div>
                         )}
-
-                        {/* <div class="col-lg-12 my-1">
-                          <label class="me-sm-2">Select Warehouse</label>
-                          <select class="me-sm-2  form-control"  {...register(`warehouse`, {
-                            required: true,
-                            maxLength: 80,
-                          })} >
-                            <option>Choose...</option>
-                            {warehouseList.map((data) => <option value={data?.id}>{data?.firstName}</option>)}
-                          </select>
-                        </div> */}
                         <div class="col-lg-12 my-1">
                           <label class="me-sm-2">Select Date For installer</label>
                           <input type="date"
@@ -147,17 +177,25 @@ const CustomerComplaintForm = () => {
                             {timeSlotList?.map((data) => <option value={data?.id}>{data?.start_time}-{data?.end_time}</option>)}
                           </select></div>
                         <div class="col-lg-12 my-1">
-                          <label class="me-sm-2">Select installer For Your Installation</label>
-                          <select class="me-sm-2  form-control"  {...register(`installer`, {
-                            required: true,
-                            maxLength: 80,
-                          })}>
-                            <option>Choose...</option>
-                            {installerList?.map((data) => <option value={data?.id}>{data?.firstName} {data?.lastName}</option>)}
-                          </select>
+                          <label class="me-sm-2">Remarks:</label>
+                          <textarea
+                            // min={new Date(new Date().setDate(new Date().getDate() + 1)).toISOString().split('T')[0]}
+                            class="form-control"
+                            {...register(`remark`, {
+                            })} />
                         </div>
+                        <div className="row">
+                          <button className="btn btn-primary">submit</button>
+                        </div>
+
+
+                        {/* <div class="col-lg-12 my-1">
+                          <label class="me-sm-2">Select Time Slot For Your Installer</label>
+                          <select class="me-sm-2  form-control" onChange={timeSlotChangeHandler}>
+                            <option>Choose...</option>
+                            {timeSlotList?.map((data) => <option value={data?.id}>{data?.start_time}-{data?.end_time}</option>)}
+                          </select></div> */}
                       </div>
-                      <button className="btn btn-primary">submit</button>
                     </form>
                   </div>
                 </div>
@@ -165,9 +203,8 @@ const CustomerComplaintForm = () => {
             </div>
           </div>
         </div>
-      </div >
+      </div>
     </div >
   )
 }
-
 export default CustomerComplaintForm;
