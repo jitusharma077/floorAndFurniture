@@ -264,6 +264,7 @@ function EnquiryDetials() {
                           state: {
                             enquiryId: enquiryId,
                             customerId: CustomerId,
+                            date: EnquiryDetials?.data?.expected_installation_date
                           },
                         });
                       }}
