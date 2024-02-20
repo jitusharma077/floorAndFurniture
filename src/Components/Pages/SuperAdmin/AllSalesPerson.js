@@ -5,6 +5,7 @@ import { SalesPerson } from "../../Common/RoleType";
 import useFetch from "../../Hooks/CallBack";
 import SuperAdminHeader from "./Common/SuperAdminHeader";
 import SuperAdminSidebar from "./Common/SuperAdminSidebar";
+import moment from "moment";
 
 function AllSalesPerson() {
   const navigate = useNavigate();
@@ -58,6 +59,8 @@ function AllSalesPerson() {
                             <th>User Id</th>
                             <th>Phone Number</th>
                             <th>Email</th>
+                            {/* <th>Login Time</th> */}
+                            {/* <th>Logout Time</th> */}
                             <th>Action</th>
                           </tr>
                         </thead>
@@ -80,11 +83,14 @@ function AllSalesPerson() {
                                 <td>{outletManager.userId}</td>
                                 <td>{outletManager.phone}</td>
                                 <td>{outletManager.email}</td>
+                                {/* <td>{outletManager?.login_time && moment(outletManager?.login_time).format("DD/MM/YYYY")}</td> */}
+                                {/* <td>{outletManager?.logout_time && moment(outletManager?.logout_time).format("DD/MM/YYYY")}</td> */}
+
                                 <td>
                                   <button
                                     onClick={() => {
                                       navigate("/staff-detials", {
-                                        state: { data: outletManager.id },
+                                        state: { data: outletManager },
                                       });
                                     }}
                                     className="btn btn-primary"

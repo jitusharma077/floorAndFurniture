@@ -202,7 +202,7 @@ function AddInstalerSchdule() {
                             <input
                               type={"date"}
                               // defaultValue={location?.state?.date}
-                              defaultValue={location?.state?.date ? moment(location?.state?.date).format("YYYY-MM-DD") : null}
+                              defaultValue={location?.state?.date ? moment(location?.state?.date).format("DD-MM-YYYY") : null}
                               min={moment().add(0, "days").format("YYYY-MM-DD")}
                               className="form-control"
                             // onChange={getSelectedDate}
