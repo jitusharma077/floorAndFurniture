@@ -21,6 +21,7 @@ import { toast } from "material-react-toastify";
 import Swal from "sweetalert2";
 
 const ComplaintList = () => {
+
   const [data, setData] = useState([]);
   const [complaintDetail, setComplaintDetail] = useState([]);
 
@@ -107,6 +108,7 @@ const ComplaintList = () => {
       setFeedbackData(response.data);
     });
   }, []);
+
   return (
     <>
       <div

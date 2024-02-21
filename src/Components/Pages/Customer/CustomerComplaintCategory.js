@@ -6,6 +6,7 @@ import SuperAdminHeader from "../SuperAdmin/Common/SuperAdminHeader";
 import SuperAdminSidebar from "../SuperAdmin/Common/SuperAdminSidebar";
 
 const CustomerComplaintCategory = () => {
+
   const navigate = useNavigate();
   const location = useLocation();
   // console.log("locationnn...", location.state?.data);

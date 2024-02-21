@@ -52,7 +52,7 @@ const CustomerComplaintForm = () => {
     PostDataWithToken(`customer/make-a-complaint`, submitData).then((response) => {
       if (response.status === true) {
         toast.success("complaint filed successfully");
-        navigate("/complaint-list");
+        navigate("/outletComplaintList");
         // navigate(-1);
       } else {
         // console.log(response);

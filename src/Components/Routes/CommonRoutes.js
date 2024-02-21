@@ -93,6 +93,13 @@ import CustomerComplaintDetail from "../Pages/SuperAdmin/CustomerComplaintDetail
 import CustomerViewEstimate from "../Pages/Customer/CustomerViewEstimate";
 import CustomerRequests from "../Pages/SuperAdmin/CustomerRequests";
 import ComplaintDetials from "../Pages/SuperAdmin/ComplaintDetials";
+import AllUserActivity from "../Pages/SuperAdmin/AllUserActivity";
+import OutletViewAsstimate from "../Pages/OutletManager/OutletViewAsstimate";
+import OutletComplaintList from "../Pages/OutletManager/outletComplaint";
+import OutletComplaintDetail from "../Pages/OutletManager/OutletComplaintDetail";
+import OutletCustomerComplaintCategory from "../Pages/OutletManager/OutletCustomerComplaintCategory";
+import OutletCustomerComplaintForm from "../Pages/OutletManager/OutletCustomerComplaintForm";
+
 const CommonRoutes = () => {
   // const [type, setType] = useState({});
   const userDetails = useSelector((store) => store?.user?.userDetails?.type);
@@ -189,6 +196,7 @@ const CommonRoutes = () => {
             />
             <Route path="EnquiryProductList" element={<EnquiryProductList />} />
             <Route path="ComplaintDetials" element={<ComplaintDetials />} />
+            <Route path="AllUserActivity" element={<AllUserActivity />} />
           </>
         )}
 
@@ -216,6 +224,22 @@ const CommonRoutes = () => {
         {userDetails === OutletManager && (
           <>
             <Route
+              path="/outletComplaintDetail"
+              element={<OutletComplaintDetail />}
+            />
+            <Route
+              path="/outlet-customer-complaint-form"
+              element={<OutletCustomerComplaintForm />}
+            />
+            <Route
+              path="/outlet-customer-complaint-category"
+              element={<OutletCustomerComplaintCategory />}
+            />
+            <Route
+              path="/outletComplaintList"
+              element={<OutletComplaintList />}
+            />
+            <Route
               path="/OutletManagerDashboard"
               element={<OutletMangerDashboard />}
             />
@@ -233,6 +257,7 @@ const CommonRoutes = () => {
             />
             <Route path="OutletStaffDetials" element={<OutletStaffDetials />} />
             <Route path="OutletSearch" element={<OutletSearch />} />
+            <Route path="outletAsstimate" element={<OutletViewAsstimate />} />
           </>
         )}
 

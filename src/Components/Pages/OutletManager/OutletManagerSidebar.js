@@ -39,6 +39,12 @@ function OutletManagerSidebar() {
               </Link>
             </li>
             <li>
+              <Link to={"/outletComplaintList"} className="" aria-expanded="false">
+                <i className="icon-people icons" />
+                <span className="nav-text">Complaints</span>
+              </Link>
+            </li>
+            <li>
               <Link to={"/outletEnquiry"} className="" aria-expanded="false">
                 <i className="fa fa-info-circle fw-bold" aria-hidden="true" />
                 <span className="nav-text">Enquiry</span>

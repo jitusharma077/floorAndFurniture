@@ -2,11 +2,15 @@ import { toast } from "material-react-toastify";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { GetDataWithToken } from "../../ApiHelper/ApiHelper";
+import { GetDataWithToken, PostDataWithToken } from "../../ApiHelper/ApiHelper";
 import { confirm } from "../../Common/ConfirmModal";
 import OutletManagerHeader from "./OutletManagerHeader";
 import OutletManagerSidebar from "./OutletManagerSidebar";
 import EnquiryCustom from "../SuperAdmin/Common/EnquiryCustom";
+import Swal from "sweetalert2";
+import AdminRemarkModal from "../../Common/AdminRemarkModal";
+import ReAssignmesurer from "../../Common/ReAssignmesurer";
+import WcrModal from "../../Common/WcrModal";
 
 function EnquiryDetials() {
   const location = useLocation();
@@ -23,6 +27,18 @@ function EnquiryDetials() {
   const [blindBtnIndex, setBlindBtnIndex] = useState(4);
   const [Category, setCategory] = useState([]);
   const [IcName, setIcName] = useState("");
+  const [modal, setModal] = useState(false);
+  const [remarkModal, setRemarkModal] = useState(false);
+  const remarkToggle = () => {
+    setRemarkModal(!remarkModal);
+  };
+  const toggle = () => setModal(!modal);
+  const [modal1, setModal1] = useState(false);
+  const toggle1 = () => setModal1(!modal1);
+  const [SelectedValue, setSelectedValue] = useState("");
+  const [wcrModal, setWcrModal] = useState(false);
+  const wcrModalToggle = () => setWcrModal(!wcrModal);
+  const [wcrData, setWcrData] = useState();
 
   useEffect(() => {
     console.log("location", location);
@@ -74,6 +90,90 @@ function EnquiryDetials() {
     }
   };
 
+  const customMessageHandler = () => {
+    Swal.fire({
+      title: "Do you want to send feedback message?",
+      showDenyButton: true,
+      showCancelButton: true,
+      confirmButtonText: "Send",
+      // denyButtonText: `Don't dont send`,
+    }).then((result) => {
+      /* Read more about isConfirmed, isDenied below */
+      if (result.isConfirmed) {
+        GetDataWithToken(`customer/send-message?enquiryId=${enquiryId}`).then(
+          (response) => {
+            if (response.status === true) {
+              console.log(response);
+              toast.success(response.message);
+            } else {
+              toast.error(response.message);
+            }
+          }
+        );
+        // Swal.fire('Saved!', '', 'success')
+      }
+    });
+  };
+
+  useEffect(() => {
+    console.log("location", location);
+    setEnquiryId(location.state.data);
+    setCategory(location.state.category);
+    setIcName(location.state.icPerson);
+
+    GetDataWithToken(`installer/get-wcr/${location?.state?.data}`).then(
+      (response) => {
+        if (response.status === true) {
+          setWcrData(response.data);
+        }
+      }
+    );
+
+    GetDataWithToken(`sales/get-enquiry/${location?.state?.data}`).then(
+      (response) => {
+        if (response.status === true) {
+          setEnquiryDetials(response);
+          setCustomerId(response?.data?.customer?.id);
+          if (response.data.rooms.length > 0) {
+            setIsRoomData(true);
+            setIcName(
+              `${response?.data?.user?.firstName} ${response?.data?.user?.lastName}`
+            );
+          }
+        }
+      }
+    );
+  }, []);
+
+  const PostponeInstaller = async () => {
+    const data = {
+      id: EnquiryDetials?.data?.installer_tasks[
+        EnquiryDetials?.data?.installer_tasks.length - 1
+      ]?.id,
+      status: "postponed",
+      remark: SelectedValue,
+    };
+    PostDataWithToken(`installer/update-schedule/`, data).then((response) => {
+      if (response.status === true) {
+        console.log("response", response);
+        toast.success("Installer Postpone Successfully", {
+          position: toast.POSITION.TOP_CENTER,
+        });
+        window.location.reload(true);
+      } else {
+        toast.error(response.data.message);
+      }
+    });
+  };
+
+  const printPageArea = (areaID) => {
+    var printContent = document.getElementById(areaID).innerHTML;
+    var originalContent = document.body.innerHTML;
+    document.body.innerHTML = printContent;
+    window.print();
+    document.body.innerHTML = originalContent;
+  };
+
   return (
     <>
       <div
@@ -93,22 +193,71 @@ function EnquiryDetials() {
       >
         <OutletManagerHeader />
         <OutletManagerSidebar />
-        <div className="content-body">
+        <div className="Buttons">
+          <div className="d-flex">
+            <button
+              data-bs-toggle="modal"
+              data-bs-target="#exampleModalCenter"
+              className="btn btn-mybutton"
+            >
+              View Status
+            </button>
+            <button
+              className="btn btn-mybutton"
+              onClick={() => printPageArea("printableArea")}
+            >
+              Print page
+            </button>
+            <button
+              // onClick={() => setModal1(!modal1)}
+              className="btn btn-mybutton"
+              data-bs-toggle="modal"
+              data-bs-target=".bd-example-modal-lg-2"
+            >
+              Cancel Enquiry
+            </button>
+
+            {isRoomData === true ? (
+              <>
+                {EnquiryDetials?.data?.status !== "fresh" &&
+                  EnquiryDetials?.data?.status !== "inprogess" && (
+                    <button
+                      className="btn btn-mybutton"
+                      data-bs-toggle="modal"
+                      data-bs-target=".bd-example-modal-lg"
+                    >
+                      View Measurements
+                    </button>
+                  )}
+                <button
+                  onClick={() => sendEmail()}
+                  className="btn btn-mybutton"
+                >
+                  Send Email
+                </button>
+                {EnquiryDetials?.data?.status !== "fresh" && (
+                  <button
+                    onClick={() => {
+                      navigate("/outletAsstimate", {
+                        state: {
+                          EnquiryDetials: EnquiryDetials.data,
+                        },
+                      });
+                    }}
+                    className="btn btn-mybutton"
+                  >
+                    View Estimate
+                  </button>
+                )}
+              </>
+            ) : null}
+          </div>
+        </div>
+        <div className="content-body" id="printableArea">
           {/* row */}
           <div className="container-fluid">
             <div className="row">
               <div className="col-xl-11">
-                <div className="Buttons">
-                  <div className="d-flex">
-                    <button
-                      data-bs-toggle="modal"
-                      data-bs-target="#exampleModalCenter"
-                      className="btn btn-mybutton"
-                    >
-                      View Status
-                    </button>
-                  </div>
-                </div>
                 <div className="card">
                   <div
                     className={
@@ -120,6 +269,14 @@ function EnquiryDetials() {
                     <h4 className="card-title">
                       Enquiry No: {EnquiryDetials?.data?.id}
                     </h4>
+                    <p>
+                      <strong>Remark :</strong> {EnquiryDetials?.data?.remark}{" "}
+                    </p>
+                    <p>
+                      <strong>Admin Remarks : </strong>
+                      {EnquiryDetials?.data?.admin_remark}
+                    </p>
+                    {/* <h3></h3> */}
                     <div style={{ display: "flex" }}>
                       <p>Selected Category: </p>
                       {Category?.map((i, index) => {
@@ -133,9 +290,7 @@ function EnquiryDetials() {
                         );
                       })}
                     </div>
-                    <p></p>
                     {/* {let measurerName=`${EnquiryDetials?.data?.enquiryschedules[EnquiryDetials?.data.enquiryschedules.length - 1]?EnquiryDetials?.data?.enquiryschedules[EnquiryDetials?.data.enquiryschedules.length - 1].user.firstName:'' EnquiryDetials?.data?.enquiryschedules[EnquiryDetials?.data.enquiryschedules.length - 1]?.user.lastName?EnquiryDetials?.data?.enquiryschedules[EnquiryDetials?.data.enquiryschedules.length - 1]?.user.lastName:''}` */}
-                    <p></p>
                   </div>
                   <div className="card-body">
                     <div className="row">
@@ -339,7 +494,7 @@ function EnquiryDetials() {
                       role="tablist"
                     >
                       {EnquiryDetials?.data &&
-                        EnquiryDetials?.data?.rooms.map((rooms, index) => (
+                        EnquiryDetials?.data?.rooms?.map((rooms, index) => (
                           <a
                             className={`list-group-item list-group-item-action text-white ${
                               index === 0 ? "active" : ""
@@ -370,7 +525,7 @@ function EnquiryDetials() {
                     </div>
                     <div className="tab-content" id="nav-tabContent1">
                       {EnquiryDetials?.data &&
-                        EnquiryDetials?.data?.rooms.map((room, index) => {
+                        EnquiryDetials?.data?.rooms?.map((room, index) => {
                           console.log("fabric", room?.selectedcurtain);
                           return (
                             <>
@@ -1089,7 +1244,7 @@ function EnquiryDetials() {
                                     <h5>Blind Description</h5>
                                     <div className="border border-1 p-3 rounded-2 mb-3">
                                       {room?.room_assets.length > 0 &&
-                                        room?.room_assets.map((arr, index) => {
+                                        room?.room_assets?.map((arr, index) => {
                                           return (
                                             <button
                                               class="rounded-pill  px-4 py-2 me-2 border active bg-primary text-white"
@@ -1641,7 +1796,7 @@ function EnquiryDetials() {
                                   <>
                                     <h5>Wallpaper Description</h5>
                                     <div className="border border-1 p-3 rounded-2 mb-3">
-                                      {room?.selectedWallpaper.map(
+                                      {room?.selectedWallpaper?.map(
                                         (arr, index) => {
                                           return (
                                             <button
@@ -1818,7 +1973,7 @@ function EnquiryDetials() {
                   >
                     <ul className="timeline">
                       {EnquiryDetials?.data?.enquirystatuses &&
-                        EnquiryDetials?.data?.enquirystatuses.map(
+                        EnquiryDetials?.data?.enquirystatuses?.map(
                           (item, index) => {
                             return (
                               <li>
@@ -1878,7 +2033,7 @@ function EnquiryDetials() {
               <span>Measurer Name: {EnquiryDetials?.data?.contactPerson}</span>
               <ul className="nav nav-pills justify-content-start mb-4">
                 {EnquiryDetials?.data &&
-                  EnquiryDetials?.data?.rooms.map((rooms, index) => (
+                  EnquiryDetials?.data?.rooms?.map((rooms, index) => (
                     <li className=" nav-item">
                       <a
                         className={`"nav-link list-group-item ${
@@ -1895,7 +2050,7 @@ function EnquiryDetials() {
               </ul>
               <div className="tab-content">
                 {EnquiryDetials?.data &&
-                  EnquiryDetials?.data?.rooms.map((rooms, index) => (
+                  EnquiryDetials?.data?.rooms?.map((rooms, index) => (
                     <>
                       <div
                         id={`navpills${index}`}
@@ -1920,7 +2075,7 @@ function EnquiryDetials() {
                           <div className="col-lg-12">
                             <ul className="nav nav-pills justify-content-start mb-4">
                               {rooms?.room_assets &&
-                                rooms?.room_assets.map((window, index) => (
+                                rooms?.room_assets?.map((window, index) => (
                                   <li className=" nav-item">
                                     <a
                                       className={` "nav-link rounded-pill  px-4 py-2 me-2 border ${
@@ -1940,15 +2095,14 @@ function EnquiryDetials() {
                                     </a>
                                   </li>
                                 ))}
-                              {rooms?.room_assets &&
-                                rooms?.room_assets.map((window, index) => (
+                              {/* {rooms?.room_assets &&
+                                rooms?.room_assets?.map((window, index) => (
                                   <li className=" nav-item">
                                     <a
-                                      className={` "nav-link rounded-pill  px-4 py-2 me-2 border ${
-                                        index == blindBtnIndex
-                                          ? "active bg-primary text-white"
-                                          : ""
-                                      }`}
+                                      className={` "nav-link rounded-pill  px-4 py-2 me-2 border ${index == blindBtnIndex
+                                        ? "active bg-primary text-white"
+                                        : ""
+                                        }`}
                                       data-bs-toggle="tab"
                                       href={`#navpillschild${index}`}
                                       aria-expanded="false"
@@ -1960,7 +2114,7 @@ function EnquiryDetials() {
                                       {`Blind-${index + 1}`}
                                     </a>
                                   </li>
-                                ))}
+                                ))} */}
                             </ul>
                           </div>
                           <div className="col-lg-12">
@@ -2081,7 +2235,7 @@ function EnquiryDetials() {
                                       <div className="col-lg-4">
                                         {rooms?.room_assets[
                                           windowBtnIndex
-                                        ]?.media.map((data) => (
+                                        ]?.media?.map((data) => (
                                           <img src={data?.file} alt="imageof" />
                                         ))}
                                       </div>
@@ -2493,11 +2647,11 @@ function EnquiryDetials() {
                                   }
                                   book={
                                     rooms?.room_assets[btnIndex]?.selectedBlind
-                                      ?.blindBorderFabric.book_name
+                                      ?.blindBorderFabric?.book_name
                                   }
                                   brandName={
                                     rooms?.room_assets[btnIndex]?.selectedBlind
-                                      ?.blindBorderFabric.brand_name
+                                      ?.blindBorderFabric?.brand_name
                                   }
                                   totalFabric={
                                     rooms?.room_assets[btnIndex]
@@ -2786,6 +2940,184 @@ function EnquiryDetials() {
           </div>
         </div>
       </div>
+
+      <div
+        class="modal fade bd-example-modal-lg-2"
+        tabindex="-1"
+        role="dialog"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Why you want to cancel inquiry</h5>
+
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <div className="mb-3 row align-items-center">
+                <div className="col-lg-12 my-1">
+                  <label className="me-sm-2">
+                    Select Reason for cancel Enquiry
+                  </label>
+                  <select
+                    className="me-sm-2 form-control"
+                    onChange={(e) => setSelectedValue(e.target.value)}
+                  >
+                    <option selected>Choose...</option>
+
+                    <option value={"Testing Enquiry"}>Testing Enquiry</option>
+                    <option value={"Cancel from client End"}>
+                      Cancel from client End
+                    </option>
+                    <option value={"Duplicate Enquiry"}>
+                      Duplicate Enquiry
+                    </option>
+                    <option value={" Incomplete Details"}>
+                      Incomplete Details
+                    </option>
+                  </select>
+                </div>
+                <div className="mb-3 row align-items-center">
+                  <label className="col-sm-12 col-form-label" htmlFor="fnf2">
+                    ID
+                  </label>
+                  <div className="col-sm-12">
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="fnf2"
+                      placeholder="outlet Password"
+                      readOnly="true"
+                      value={EnquiryDetials?.data?.id}
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="form-buttons text-end">
+                <button
+                  onClick={() => toggle1()}
+                  className="btn btn-secondary me-3"
+                  data-bs-dismiss="modal"
+                >
+                  Cancel
+                </button>
+
+                <button
+                  className="btn btn-primary"
+                  onClick={() => cancelEnquiry()}
+                >
+                  Submit
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="modal fade bd-example-modal-lg-3"
+        tabindex="-1"
+        role="dialog"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Why you want to postpone Installation</h5>
+
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <div className="mb-3 row align-items-center">
+                <div className="col-lg-12 my-1">
+                  <label className="me-sm-2">
+                    Select Reason for cancel Enquiry
+                  </label>
+                  <select
+                    className="me-sm-2 form-control"
+                    onChange={(e) => setSelectedValue(e.target.value)}
+                  >
+                    <option selected>Choose...</option>
+
+                    <option value={"Manpower Shortage"}>
+                      Manpower Shortage
+                    </option>
+                    <option value={" Material not ready"}>
+                      Material not ready
+                    </option>
+                    <option value={"Material delay from warehouse"}>
+                      Material delay from warehouse
+                    </option>
+                    <option value={"Site not ready"}>Site not ready</option>
+                    <option value={"Client not available "}>
+                      Client not available
+                    </option>
+                    <option value={"Payment outstanding "}>
+                      Payment outstanding
+                    </option>
+                    <option value={"Wooden plank not installed"}>
+                      Wooden plank not installed
+                    </option>
+                  </select>
+                </div>
+                <div className="mb-3 row align-items-center">
+                  <label className="col-sm-12 col-form-label" htmlFor="fnf2">
+                    ID
+                  </label>
+                  <div className="col-sm-12">
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="fnf2"
+                      placeholder="outlet Password"
+                      readOnly="true"
+                      value={EnquiryDetials?.data?.id}
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="form-buttons text-end">
+                <button
+                  // onClick={() => toggle1()}
+                  className="btn btn-secondary me-3"
+                  data-bs-dismiss="modal"
+                >
+                  Cancel
+                </button>
+
+                <button
+                  className="btn btn-primary"
+                  onClick={() => PostponeInstaller()}
+                >
+                  Submit
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <AdminRemarkModal
+        enquiryId={enquiryId}
+        remarkModal={remarkModal}
+        toggle={remarkToggle}
+      />
+
+      <ReAssignmesurer
+        modal={modal}
+        toggle={(val) => toggle(val)}
+        id={EnquiryDetials?.data?.enquiryschedules}
+      />
+      <WcrModal modalToggle={wcrModalToggle} isOpen={wcrModal} data={wcrData} />
     </>
   );
 }
