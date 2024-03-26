@@ -27,7 +27,7 @@ function StaffDetials() {
   } = useForm();
   useEffect(() => {
     console.log("first iddddd", location.state.data.id);
-    setUserId(location.state.data);
+    setUserId(location.state.data?.id);
     GetDataWithToken(`superadmin/get-user/${location.state.data.id}`).then(
       (response) => {
         if (response.status === true) {
@@ -38,7 +38,7 @@ function StaffDetials() {
             firstName: response?.data?.user?.firstName,
             lastName: response?.data?.user?.lastName,
             email: response?.data?.user?.email,
-            password: response?.data?.user?.password,
+            // password: response?.data?.user?.password,
             phone: response?.data?.user?.phone,
             userId: response?.data?.user?.userId,
           });
@@ -425,6 +425,7 @@ function StaffDetials() {
                                   </Link>
                                 </div>
                               </div>
+
                               {/* <div className="row mb-2">
                               <div className="col-sm-3 col-5">
                                 <h5 className="f-w-500">
@@ -435,6 +436,7 @@ function StaffDetials() {
                                 <span>27</span>
                               </div>
                             </div> */}
+
                               {/* <div className="row mb-2">
                               <div className="col-sm-3 col-5">
                                 <h5 className="f-w-500">
@@ -445,6 +447,7 @@ function StaffDetials() {
                                 <span>Rosemont Avenue Melbourne, Florida</span>
                               </div>
                             </div> */}
+
                               {/* <div className="row mb-2">
                               <div className="col-sm-3 col-5">
                                 <h5 className="f-w-500">

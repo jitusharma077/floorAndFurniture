@@ -85,32 +85,28 @@ function AllUserActivity() {
                                   <td>
                                     <ul>
                                       {activity &&
-                                        activity
-                                          .slice(0, -3)
-                                          .map((entry, index) => (
-                                            <li key={index}>
-                                              <strong>Login Time:</strong>{" "}
-                                              {moment(entry.login_time).format(
-                                                "MMMM Do YYYY"
-                                              )}
-                                            </li>
-                                          ))}
+                                        activity.map((entry, index) => (
+                                          <li key={index}>
+                                            <strong>Login Time:</strong>{" "}
+                                            {moment(entry.login_time).format(
+                                              "MMMM Do YYYY HH:mm:ss"
+                                            )}
+                                          </li>
+                                        ))}
                                     </ul>
                                   </td>
 
                                   <td>
                                     <ul>
                                       {activity &&
-                                        activity
-                                          .slice(0, -3)
-                                          .map((entry, index) => (
-                                            <li key={index}>
-                                              <strong>Logout Time:</strong>{" "}
-                                              {moment(entry.logout_time).format(
-                                                "MMMM Do YYYY"
-                                              )}
-                                            </li>
-                                          ))}
+                                        activity.map((entry, index) => (
+                                          <li key={index}>
+                                            <strong>Logout Time:</strong>{" "}
+                                            {moment(entry.logout_time).format(
+                                              "MMMM Do YYYY HH:mm:ss"
+                                            )}
+                                          </li>
+                                        ))}
                                     </ul>
 
                                     {/* {outletManager?.login_time &&

@@ -50,13 +50,6 @@ function AddSchedule() {
     }
   }, [callApi, callApi2]);
 
-  // const getAssignedPerson = (e) => {
-  //   setAssignedPerson(e.target.value);
-  // };
-  // const getSelectedDate = (e) => {
-  //   console.log("date", e.target.value);
-  //   setGetDate(e.target.value);
-  // };
 
   const getTimeSlot = (timeSlot) => {
     // console.log("timeSlot", timeSlot.target.value);

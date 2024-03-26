@@ -1,5 +1,7 @@
 import axios from "axios";
 import Cookies from "js-cookie";
+import { useNavigate } from "react-router-dom";
+// import { Navigate } from "react-router-dom";
 
 // Api Url's for the API's
 export const serverUrl = "http://203.115.102.6:6696/api/v1/";
@@ -63,7 +65,11 @@ export const PostDataWithToken = (url, data) => {
     });
 };
 
+
+
 export const GetDataWithToken = (url) => {
+
+  // const history = unstable_HistoryRouter();
   const cancelToken = axios.CancelToken.source();
   let tokens = "";
   if (Cookies.get("FandFToken")) {
@@ -86,6 +92,10 @@ export const GetDataWithToken = (url) => {
         console.log("Request canceled", error.message);
       } else {
         let errorStatus = JSON.parse(JSON.stringify(error.response));
+        console.log(errorStatus?.data?.message);
+        if (errorStatus?.data?.message === "matching token failed") {
+          window.location.href = "/";
+        }
         return errorStatus;
       }
     });
@@ -175,3 +185,4 @@ export const GetData = (url) => {
       }
     });
 };
+

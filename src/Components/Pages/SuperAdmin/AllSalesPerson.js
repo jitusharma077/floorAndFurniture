@@ -6,13 +6,45 @@ import useFetch from "../../Hooks/CallBack";
 import SuperAdminHeader from "./Common/SuperAdminHeader";
 import SuperAdminSidebar from "./Common/SuperAdminSidebar";
 import moment from "moment";
+import { GetDataWithToken, PutDataWithToken } from "../../ApiHelper/ApiHelper";
+import { toast } from "material-react-toastify";
 
 function AllSalesPerson() {
   const navigate = useNavigate();
+  const [userData, SetUserData] = useState([]);
 
-  const { data, Error, isLoading } = useFetch(
-    `superadmin/get-users?type=${SalesPerson}`
-  );
+  useEffect(() => {
+    GetDataWithToken(`superadmin/get-users?type=${SalesPerson}`).then((response) => {
+      if (response.status == true) {
+        SetUserData(response.data);
+      }
+    })
+  }, [])
+
+
+  const UserBlockHandler = (data, status) => {
+    PutDataWithToken("auth/block-user", {
+      id: data?.id,
+      is_block: status,
+    }).then((response) => {
+      if (response.status === true) {
+        const updatedUserData = userData.map((userObj) => {
+          if (userObj.id === data.id) {
+            return { ...userObj, isblocked: status };
+          }
+          return userObj;
+        });
+        SetUserData(updatedUserData)
+        toast.success(response.message, {
+          position: toast.POSITION.TOP_CENTER,
+        });
+      } else {
+        toast.error(response.message, {
+          position: toast.POSITION.TOP_CENTER,
+        });
+      }
+    })
+  }
 
   return (
     <>
@@ -65,16 +97,16 @@ function AllSalesPerson() {
                           </tr>
                         </thead>
                         <tbody>
-                          {Error && <div>Error</div>}
-                          {isLoading && <Loader />}
-                          {data && data.length === 0 ? (
+                          {/* {Error && <div>Error</div>} */}
+                          {/* {isLoading && <Loader />} */}
+                          {userData && userData.length === 0 ? (
                             <div>
                               <h4 className="text-center d-block w-100 position-absolute">
                                 No Data Found
                               </h4>
                             </div>
                           ) : (
-                            data.map((outletManager, index) => (
+                            userData.map((outletManager, index) => (
                               <tr key={index}>
                                 <td>
                                   {outletManager.firstName}{" "}
@@ -97,6 +129,15 @@ function AllSalesPerson() {
                                   >
                                     View
                                   </button>
+                                  {outletManager?.isblocked ? <button
+                                    onClick={() => UserBlockHandler(outletManager, false)}
+                                    className="btn btn-secondary ms-1">Unblock</button>
+                                    : <button
+                                      onClick={() => UserBlockHandler(outletManager, true)}
+                                      className="btn btn-secondary ms-1">Block</button>
+                                  }
+
+
                                 </td>
                               </tr>
                             ))

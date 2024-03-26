@@ -12,6 +12,7 @@ import ReAssignmesurer from "../../Common/ReAssignmesurer";
 import WcrModal from "../../Common/WcrModal";
 import AdminRemarkModal from "../../Common/AdminRemarkModal";
 import Swal from "sweetalert2";
+import CompleteEnquiry from "../../Common/CompleteEnquiry";
 
 function EnquiryDetials() {
   const location = useLocation();
@@ -20,6 +21,9 @@ function EnquiryDetials() {
   const [CustomerId, setCustomerId] = useState("");
   const [modal, setModal] = useState(false);
   const [remarkModal, setRemarkModal] = useState(false);
+
+  const [completeEnquiryModal, setCompleteEnquiryModal] = useState(false);
+  const completeEnquiryModalToggle = () => setCompleteEnquiryModal(!completeEnquiryModal);
 
   const remarkToggle = () => { setRemarkModal(!remarkModal) };
   const toggle = () => setModal(!modal);
@@ -311,6 +315,13 @@ function EnquiryDetials() {
                     View Estimate
                   </button>
                 )}
+                <button
+                  className="btn btn-mybutton"
+                  onClick={customMessageHandler}
+
+                >
+                  Ask Feedback
+                </button>
                 {wcrData?.id && <button
                   onClick={wcrModalToggle}
                   className="btn btn-mybutton"
@@ -324,6 +335,12 @@ function EnquiryDetials() {
 
                   >
                     Admin Remarks
+                  </button>
+                  <button
+                    className="btn btn-mybutton"
+                    onClick={completeEnquiryModalToggle}
+                  >
+                    Close Enquiry
                   </button>
                   <button
                     className="btn btn-mybutton"
@@ -3186,6 +3203,11 @@ function EnquiryDetials() {
         remarkModal={remarkModal}
         toggle={remarkToggle}
 
+      />
+      <CompleteEnquiry
+        enquiryId={enquiryId}
+        modal1={completeEnquiryModal}
+        toggle1={completeEnquiryModalToggle}
       />
 
       <ReAssignmesurer

@@ -35,6 +35,12 @@ function SuperAdminSidebar() {
                 <span className="nav-text">Warehouse</span>
               </Link>
             </li>
+            <li>
+              <Link to={"/footfall-list"} className aria-expanded="false">
+                <i className="fa fa-ship fw-bold" aria-hidden="true" />
+                <span className="nav-text">Footfall</span>
+              </Link>
+            </li>
             {/* <li>
               <Link to={"/allWarehouse"} className aria-expanded="false">
                 <i className="fa fa-ship fw-bold" aria-hidden="true" />

@@ -11,6 +11,7 @@ function DashboardFilterModal({ openModal, modalToggle,
     deliveryName, ledger, setIsLoading,
     setMainData, setCurrentPage, enquiryFilter, setSalesPersonId,
     setStoreId, setModalCallApi, manager, IcList }) {
+
     const [nextPage, setNextPage] = useState(0);
     const [searchValue, setSearchValue] = useState('');
     const [customerList, setCustomerList] = useState([]);
@@ -42,7 +43,7 @@ function DashboardFilterModal({ openModal, modalToggle,
     }
 
     const submitSearchData = () => {
-        setMainData([]);
+        // setMainData([]);
         setCurrentPage && setCurrentPage(1);
         setIsLoading && setIsLoading(true);
         toggle();
@@ -73,8 +74,16 @@ function DashboardFilterModal({ openModal, modalToggle,
         let date = new Date();
         if (value == "today") {
             setDate({
+                // date: date,
                 fromDate: date,
                 toDate: date,
+            });
+            setNextPage(0);
+        }
+        if (value == "yesterday") {
+            setDate({
+                fromDate: moment().subtract(1, 'days'),
+                toDate: moment().subtract(1, 'days'),
             });
             setNextPage(0);
         }
@@ -92,7 +101,6 @@ function DashboardFilterModal({ openModal, modalToggle,
                 toDate: date,
             });
             setNextPage(0);
-
         }
         if (value == "last30days") {
             setDate({
@@ -168,17 +176,7 @@ function DashboardFilterModal({ openModal, modalToggle,
                 setCallApi(false);
             })
         }
-        // if (callApi2) {
-        //     GetDataWithToken(`superadmin/delivery-names?customerCode=${customerCode}&searchText=${deliverNameValue}`)
-        //         .then(response => {
-        //             if (response.status === true) {
-        //                 setDeliveryNameList(response.data);
-        //                 // console.log(response.data);
-        //                 setCallApi2(false);
-        //             }
-        //             setCallApi2(false);
-        //         })
-        // }
+
         if (callApi3) {
             GetDataWithToken(`superadmin/get-users?type=sales-person`)
                 .then(response => {
@@ -230,13 +228,13 @@ function DashboardFilterModal({ openModal, modalToggle,
                         <hr></hr>
                     </>
 
-                    {!manager && <p className="d-flex align-items-center justify-content-between">
+                    {/* {!manager && <p className="d-flex align-items-center justify-content-between">
                         <button className="btn btn-link d-block w-100 text-start" onClick={() => { setNextPage(5); setCallApi4(true); }}>Store Name</button>
                         <div className="d-flex text-nowrap align-items-center">
                             {storeName && `${storeName}`}
                             {storeName && <button className="btn btn-primary mx-2" onClick={() => { setStoreName(); setStoreId("") }}>X</button>}
                         </div>
-                    </p>}
+                    </p>} */}
                     <div>
                         <button className="btn btn-primary ms-2"
                             onClick={submitSearchData}
@@ -254,6 +252,8 @@ function DashboardFilterModal({ openModal, modalToggle,
                         <hr />
                         <p role="button" onClick={() => currentDateChangeHandler("tomorrow")}> Tomorrow</p>
                         <hr />
+                        <p role="button" onClick={() => currentDateChangeHandler("yesterday")}> Yesterday</p>
+                        <hr />
                         <p role="button" onClick={() => currentDateChangeHandler("last7days")}>Last 7 days</p>
                         <hr />
                         <p role="button" onClick={() => currentDateChangeHandler("last30days")}>Last 30 days </p>
@@ -268,7 +268,7 @@ function DashboardFilterModal({ openModal, modalToggle,
                             <label style={{ marginRight: "5px" }}>select date from:</label>
                             <DatePicker className="form-control"
                                 onChange={(value) => dateChange(value, 'fromDate')}
-                                selected={date?.fromDate}
+                                selected={date?.fromDate ? new Date(date?.fromDate) : new Date()}
                                 required
                                 maxDate={new Date()?.setDate(new Date()?.getDate() - 1)}
                             />
@@ -279,7 +279,7 @@ function DashboardFilterModal({ openModal, modalToggle,
                             <DatePicker className="form-control d-block"
 
                                 onChange={(value) => dateChange(value, 'toDate')}
-                                selected={date?.toDate}
+                                selected={date?.toDate ? new Date(date?.toDate) : new Date()}
                                 required
                                 maxDate={new Date()}
                             />
