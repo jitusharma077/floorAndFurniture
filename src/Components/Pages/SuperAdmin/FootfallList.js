@@ -1,11 +1,17 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import SuperAdminHeader from "./Common/SuperAdminHeader";
 import SuperAdminSidebar from "./Common/SuperAdminSidebar";
+import { GetDataWithToken } from "../../ApiHelper/ApiHelper";
 
 const FootfallList = () => {
-
+    const [clientList, setClientList] = useState([]);
+    const ListHeading = ["Client Name", "category", "Customer Group", "Customer Type", "Mobile Number", "Query Register", "Action"]
     useEffect(() => {
-
+        GetDataWithToken("customer/get-client").then((response) => {
+            if (response.status === true) {
+                setClientList(response.data);
+            }
+        })
     }, [])
 
 
@@ -49,17 +55,20 @@ const FootfallList = () => {
                                             >
                                                 <thead>
                                                     <tr>
-                                                        <th>Date of Purchase</th>
-                                                        <th>Item Id</th>
-                                                        <th>Fabric</th>
-                                                        <th>Type</th>
-                                                        <th>Quantity</th>
-                                                        <th>Net Amount</th>
-                                                        <th>Refund Amount</th>
+                                                        {ListHeading?.map((data) => <th>{data}</th>)}
                                                     </tr>
                                                 </thead>
                                                 <tbody>
+                                                    {clientList?.map((data) => <tr>
 
+                                                        <td>{data?.clientName}</td>
+                                                        <td>{data?.category}</td>
+                                                        <td>{data?.customerGroup}</td>
+                                                        <td>{data?.customerType}</td>
+                                                        <td>{data?.mobileNo}</td>
+                                                        <td>{data?.query_register}</td>
+                                                        <td><button className="btn btn-primary">View</button></td>
+                                                    </tr>)}
                                                 </tbody>
                                             </table>
                                         </div>
