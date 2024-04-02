@@ -31,6 +31,7 @@ function ViewEstimate() {
       }
     });
   }, [""]);
+
   const customer = EnquiryDetials?.customer ?? "";
   const id = EnquiryDetials?.id;
   const cartageAmount = EnquiryDetials?.cartage ? EnquiryDetials?.cartage : 0;
@@ -171,6 +172,7 @@ function ViewEstimate() {
     tax = 0,
     colspan = 16
   ) => {
+    console.log("window hardware listttt", window, tax);
     const hardwareList = window?.hardwareList ?? [];
 
     const totalAmount = hardwareList?.reduce((sum, fabric) => {
@@ -197,6 +199,7 @@ function ViewEstimate() {
           <th>Dis</th>
           <th>Net amount including taxes</th>
         </tr>
+        {console.log("hardwareeeeeee..... listtttt...", hardwareList)}
         {hardwareList?.map((item, index) => {
           return (
             <>
@@ -1204,6 +1207,7 @@ function ViewEstimate() {
 
     const getAssetDataByKey = (assets = [], index, key) => {
       if (assets && assets.length > 0 && assets[index] && assets[index][key]) {
+        console.log("assetttt keyyyy..... ", assets[index][key]);
         return assets[index][key];
       }
       return "";
@@ -1266,10 +1270,13 @@ function ViewEstimate() {
       if (Helper.isHaveCategory(roomCategory, "Wallpaper")) {
         wallpaperStyle = roomDetail?.selectedWallpaper;
       }
+
       console.log("windo listtt", windowList);
+
       // {
       //   windowList.length === 0 && windowList.length === 1;
       // }
+
       windowList.map((_, index) => {
         const assetId = _["assetId"] ? _["assetId"] : undefined;
         const window_width = getAssetDataByKey(room_assets, index, "width");
@@ -1300,7 +1307,7 @@ function ViewEstimate() {
         const sofa = getDataFromRoomByKey("sofa");
         const flooring = getDataFromRoomByKey("flooring");
         const wallpaper = getDataFromRoomByKey("Wallpaper");
-
+        // console.log("alll dataaaasdfjkasdfjasdf ajaja a", curtain, rod, track, sheer, blind, extraHardware, sofa, flooring, wallpaper);
         const getWallBreadthAndLength = (index) => {
           const obj = {
             breadth: 0,
@@ -1531,7 +1538,7 @@ function ViewEstimate() {
             }
           }
         }
-        if (true && index === 0) {
+        if (true) {
           if (rod) {
             if (rod?.primary_rod && rod?.primary_rod[index]) {
               const fabric = rod?.primary_rod[index];
@@ -2846,7 +2853,7 @@ function ViewEstimate() {
               {console.log("rooms", rooms)}
               {rooms?.length > 0
                 ? rooms?.map((room, roomIndex) => {
-                  // console.log("riooooommm", room);
+                  console.log("rooooooommmMMM", room);
                   const styles = getRoomStyles(room);
 
                   return (
@@ -2867,8 +2874,6 @@ function ViewEstimate() {
                         <td>
                           {styles?.map((roomStyle, styleIndex) => {
                             const totalRoom = getTotalWindowPrice(roomStyle);
-
-
                             return (
                               <table class="table">
                                 {renderRoomCurtain(roomStyle, styleIndex, room)}

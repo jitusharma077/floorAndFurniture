@@ -101,6 +101,7 @@ import OutletCustomerComplaintCategory from "../Pages/OutletManager/OutletCustom
 import OutletCustomerComplaintForm from "../Pages/OutletManager/OutletCustomerComplaintForm";
 import DashboardSummary from "../Pages/SuperAdmin/DashboardSummary";
 import FootfallList from "../Pages/SuperAdmin/FootfallList";
+import FootfallDetail from "../Pages/SuperAdmin/FootfallDetail";
 
 const CommonRoutes = () => {
   // const [type, setType] = useState({});
@@ -115,6 +116,7 @@ const CommonRoutes = () => {
         <Route path="/" element={<Login />} />
         {userDetails === superAdmin && (
           <>
+            <Route path="/footfall-detail" element={<FootfallDetail />} />
             <Route path="/customer-requests" element={<CustomerRequests />} />
             <Route path="/footfall-list" element={<FootfallList />} />
             <Route
