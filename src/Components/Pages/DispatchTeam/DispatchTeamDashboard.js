@@ -40,7 +40,11 @@ function DispatchTeamDashboard() {
                           <div className="card-body">
                             <div className="booking-status d-flex align-items-center">
                               <span>
-                                <img src="./images/🦆 icon _measure meter_30px.svg" />
+
+                                <img
+                                  src={`${process.env.PUBLIC_URL}/images/🦆 icon _measure meter_30px.svg`}
+                                // src="./images/"
+                                />
                               </span>
                               <div className="ms-4">
                                 <h2 className="mb-0 font-w600">8,461</h2>
@@ -55,7 +59,10 @@ function DispatchTeamDashboard() {
                           <div className="card-body">
                             <div className="booking-status d-flex align-items-center">
                               <span>
-                                <img src="./images/Group 81.svg" />
+                                <img
+                                  src={`${process.env.PUBLIC_URL}/images/Group 81.svg`}
+                                // src="./images/"
+                                />
                               </span>
                               <div className="ms-4">
                                 <h2 className="mb-0 font-w600">234m</h2>
@@ -72,7 +79,10 @@ function DispatchTeamDashboard() {
                           <div className="card-body">
                             <div className="booking-status d-flex align-items-center">
                               <span>
-                                <img src="./images/Group 81.svg" />
+                                <img
+                                  src={`${process.env.PUBLIC_URL}/images/Group 81.svg`}
+                                // src="./images/"
+                                />
                               </span>
                               <div className="ms-4">
                                 <h2 className="mb-0 font-w600">753</h2>

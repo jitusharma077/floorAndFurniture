@@ -35,6 +35,12 @@ function SuperAdminSidebar() {
                 <span className="nav-text">Warehouse</span>
               </Link>
             </li>
+            <li>
+              <Link to={"/footfall-list"} className aria-expanded="false">
+                <i className="fa fa-ship fw-bold" aria-hidden="true" />
+                <span className="nav-text">Footfall</span>
+              </Link>
+            </li>
             {/* <li>
               <Link to={"/allWarehouse"} className aria-expanded="false">
                 <i className="fa fa-ship fw-bold" aria-hidden="true" />
@@ -45,6 +51,12 @@ function SuperAdminSidebar() {
               <Link to={"/all-customer"} className aria-expanded="false">
                 <i className="icon-people icons" />
                 <span className="nav-text">Customers</span>
+              </Link>
+            </li>
+            <li>
+              <Link to={"/order-bill"} className aria-expanded="false">
+                <i className="icon-people icons" />
+                <span className="nav-text">Order Bills</span>
               </Link>
             </li>
             <li>
@@ -96,8 +108,12 @@ function SuperAdminSidebar() {
                 href="javascript:void()"
                 aria-expanded="false"
               >
-                <i className="fas fa-exclamation fa-3x" data-fa-mask="fa-comment"
-                  data-fa-transform="shrink-7 up-.5" aria-hidden="true" />
+                <i
+                  className="fas fa-exclamation fa-3x"
+                  data-fa-mask="fa-comment"
+                  data-fa-transform="shrink-7 up-.5"
+                  aria-hidden="true"
+                />
                 <span className="nav-text">Complaint/Feedback</span>
               </a>
               <ul aria-expanded="false">
@@ -216,9 +232,9 @@ function SuperAdminSidebar() {
                 <span className="nav-text">Users</span>
               </a>
               <ul aria-expanded="false">
-                {/* <li>
-                  <Link to={"/all-outlet-manager"}>All Outlet Manager</Link>
-                </li> */}
+                <li>
+                  <Link to={"/AllUserActivity"}>All User Activity</Link>
+                </li>
                 <li>
                   <Link to={"/all-sales-person"}>All Sales Person </Link>
                 </li>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { GetDataWithToken } from "../../ApiHelper/ApiHelper";
 import OutletManagerHeader from "./OutletManagerHeader";
 import OutletManagerSidebar from "./OutletManagerSidebar";
@@ -48,7 +48,10 @@ function OutletCustomerDetials() {
                       <div className="card-body">
                         <div className="guest-profile">
                           <div className="d-flex">
-                            <img src="./images/user.png" alt="" />
+                            <img
+                              src={`${process.env.PUBLIC_URL}/images/user.png`}
+                              // src="./images/"
+                              alt="" />
                             <div>
                               <h2 className="font-w600 ">
                                 {CustomerDetials?.firstName}{" "}
@@ -144,6 +147,7 @@ function OutletCustomerDetials() {
                           <th>Category's</th>
                           <th>Status</th>
                           <th>Action</th>
+                          <th>Add Complaint</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -177,6 +181,11 @@ function OutletCustomerDetials() {
                                     Enquiry Assignment
                                   </a> */}
                               </td>
+                              <td> <Link
+                                className="btn btn-primary btn-sm"
+                                to="/outlet-customer-complaint-category"
+                                state={{ data: { id: item.id } }}
+                              >Add</Link></td>
                             </tr>
                           ))}
                       </tbody>

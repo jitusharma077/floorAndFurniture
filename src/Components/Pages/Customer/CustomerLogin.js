@@ -6,26 +6,26 @@ import { toast } from "material-react-toastify";
 import { GetData, PostData } from "../../ApiHelper/ApiHelper";
 
 const CustomerLogin = () => {
-     const navigation = useNavigate();
-    const [isLoading, setIsLoading] = useState(false);
-      const {
+  const navigation = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
+  const {
     register,
     handleSubmit,
     formState: { errors },
-    } = useForm();
-    
+  } = useForm();
+
   const onSubmit = (data) => {
     setIsLoading(true);
     console.log("errorrs", errors);
     let loginData = {
-       
+
     };
     console.log(loginData);
-      
+
     GetData(`customer/get-my-enquiry?phone=${data?.mobile}`).then((response) => {
-        if (response.status === true) {
+      if (response.status === true) {
         toast.success("Logged in successfully");
-        navigation("/customer-Enquiries", { state: { data: response.data } });   
+        navigation("/customer-Enquiries", { state: { data: response.data } });
         // console.log(response);
         // Cookies.set("FandFToken", response.data.accessToken);
         // Cookies.set("userType", response.data.type);
@@ -40,9 +40,9 @@ const CustomerLogin = () => {
       }
     });
   };
-    
-    return (
-         <>
+
+  return (
+    <>
       <div className="authincation h-100">
         <div className="container h-100vh">
           <div className="row justify-content-center h-100 align-items-center">
@@ -57,16 +57,17 @@ const CustomerLogin = () => {
                           className="d-inline-block mb-5"
                         >
                           <img
-                            src="./images/loginLogo.png"
+                            src={`${process.env.PUBLIC_URL}/images/loginLogo.png`}
+                            // src="./images/loginLogo.png"
                             style={{ width: "200px" }}
                             alt="test"
                           />
                         </a>
                       </div>
                       <h4 className="text-center mb-4">Sign in your account</h4>
-                                            <form
-                                            onSubmit={handleSubmit(onSubmit)}
-                                            >
+                      <form
+                        onSubmit={handleSubmit(onSubmit)}
+                      >
                         <div className="mb-3">
                           <label className="mb-1">
                             <strong>Mobile No.</strong>
@@ -153,6 +154,6 @@ const CustomerLogin = () => {
         </div>
       </div>
     </>
-    )
+  )
 }
 export default CustomerLogin;

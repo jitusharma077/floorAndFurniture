@@ -93,6 +93,20 @@ import CustomerComplaintDetail from "../Pages/SuperAdmin/CustomerComplaintDetail
 import CustomerViewEstimate from "../Pages/Customer/CustomerViewEstimate";
 import CustomerRequests from "../Pages/SuperAdmin/CustomerRequests";
 import ComplaintDetials from "../Pages/SuperAdmin/ComplaintDetials";
+import AllUserActivity from "../Pages/SuperAdmin/AllUserActivity";
+import OutletViewAsstimate from "../Pages/OutletManager/OutletViewAsstimate";
+import OutletComplaintList from "../Pages/OutletManager/outletComplaint";
+import OutletComplaintDetail from "../Pages/OutletManager/OutletComplaintDetail";
+import OutletCustomerComplaintCategory from "../Pages/OutletManager/OutletCustomerComplaintCategory";
+import OutletCustomerComplaintForm from "../Pages/OutletManager/OutletCustomerComplaintForm";
+import DashboardSummary from "../Pages/SuperAdmin/DashboardSummary";
+import FootfallList from "../Pages/SuperAdmin/FootfallList";
+import FootfallDetail from "../Pages/SuperAdmin/FootfallDetail";
+import OutletFootfallList from "../Pages/OutletManager/OutletFootfall";
+import OutletFootfallDetail from "../Pages/OutletManager/OutletFootfallDetail";
+import OrderBill from "../Pages/SuperAdmin/OrderBill";
+import OrderBillDetail from "../Pages/SuperAdmin/OrderBillDetail";
+
 const CommonRoutes = () => {
   // const [type, setType] = useState({});
   const userDetails = useSelector((store) => store?.user?.userDetails?.type);
@@ -106,7 +120,9 @@ const CommonRoutes = () => {
         <Route path="/" element={<Login />} />
         {userDetails === superAdmin && (
           <>
+            <Route path="/footfall-detail" element={<FootfallDetail />} />
             <Route path="/customer-requests" element={<CustomerRequests />} />
+            <Route path="/footfall-list" element={<FootfallList />} />
             <Route
               path="/customer-feedback&complaint-detail"
               element={<CustomerComplaintDetail />}
@@ -189,6 +205,9 @@ const CommonRoutes = () => {
             />
             <Route path="EnquiryProductList" element={<EnquiryProductList />} />
             <Route path="ComplaintDetials" element={<ComplaintDetials />} />
+            <Route path="AllUserActivity" element={<AllUserActivity />} />
+            <Route path="/order-bill" element={<OrderBill />} />
+            <Route path="/order-bill-detail" element={<OrderBillDetail />} />
           </>
         )}
 
@@ -215,6 +234,24 @@ const CommonRoutes = () => {
 
         {userDetails === OutletManager && (
           <>
+            <Route path="/outlet-footfall-list" element={<OutletFootfallList />} />
+            <Route path="/outlet-footfall-detail" element={<OutletFootfallDetail />} />
+            <Route
+              path="/outletComplaintDetail"
+              element={<OutletComplaintDetail />}
+            />
+            <Route
+              path="/outlet-customer-complaint-form"
+              element={<OutletCustomerComplaintForm />}
+            />
+            <Route
+              path="/outlet-customer-complaint-category"
+              element={<OutletCustomerComplaintCategory />}
+            />
+            <Route
+              path="/outletComplaintList"
+              element={<OutletComplaintList />}
+            />
             <Route
               path="/OutletManagerDashboard"
               element={<OutletMangerDashboard />}
@@ -233,6 +270,7 @@ const CommonRoutes = () => {
             />
             <Route path="OutletStaffDetials" element={<OutletStaffDetials />} />
             <Route path="OutletSearch" element={<OutletSearch />} />
+            <Route path="outletAsstimate" element={<OutletViewAsstimate />} />
           </>
         )}
 
@@ -276,6 +314,7 @@ const CommonRoutes = () => {
           element={<CustomerComplaintForm />}
         />
         <Route path="customer-feedback" element={<CustomerFeedback />} />
+        <Route path="/dashboard-summary" element={<DashboardSummary />} />
       </Routes>
     </BrowserRouter>
   );

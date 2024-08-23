@@ -3,8 +3,9 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Modal, ModalBody, ModalHeader } from "reactstrap";
 import { PostDataWithToken } from "../ApiHelper/ApiHelper";
+import moment from "moment";
 
-function ReAssignmesurer({ modal, toggle, id }) {
+function ReAssignmesurer({ modal, toggle, id, isreassign }) {
   console.log("idddd", id);
   const {
     register,
@@ -20,10 +21,13 @@ function ReAssignmesurer({ modal, toggle, id }) {
   const lastId = id && id[id?.length - 1]?.id;
 
   const CreateNewOutlet = (data) => {
+    let date;
+    date = isreassign === "measurement" ? { postpone_date: moment(data?.postpone_date).format("DD-MM-YYYY") } : { postponeDate: moment(data?.postponeDate).format("DD-MM-YYYY"), };
     const val = {
       id: lastId,
-      status: "accepted",
+      status: "postponed",
       remark: SelectedValue.target.value,
+      date,
     };
 
     PostDataWithToken("measurer/update-schedule", val).then((response) => {
@@ -43,13 +47,13 @@ function ReAssignmesurer({ modal, toggle, id }) {
 
   return (
     <Modal isOpen={modal} toggle={toggle}>
-      <ModalHeader toggle={toggle}>Add New Outlet</ModalHeader>
+      <ModalHeader toggle={toggle}>Postpone {isreassign === "measurement" ? "Measurement" : "Installation"}</ModalHeader>
       <ModalBody>
         <form onSubmit={handleSubmit(CreateNewOutlet)}>
           <div className="mb-3 row align-items-center">
             <div className="col-lg-12 my-1">
               <label className="me-sm-2">
-                Select Reason for cancel Measurements
+                Select Reason for Postpone {isreassign === "measurement" ? "Measurement" : "Installation"}
               </label>
               <select
                 className="me-sm-2  form-control"
@@ -85,6 +89,29 @@ function ReAssignmesurer({ modal, toggle, id }) {
                 />
                 <span className="text-danger">
                   {errors.outlet_password && errors.outlet_password.message}
+                </span>
+              </div>
+            </div>
+            <div className="mb-3 row align-items-center">
+              <label className="col-sm-12 col-form-label" htmlFor="fnf2">
+                Date
+              </label>
+              <div className="col-sm-12">
+                <input
+                  {...register("postpone_date", {
+                    required: "please enter date",
+                  })}
+                  type="date"
+                  className="form-control"
+                  id="fnf2"
+                  placeholder="outlet Password"
+                  // readOnly="true"
+                  // value={lastId}
+                  min={moment().add(1, "days").format("YYYY-MM-DD")}
+                // minDate={new Date()}
+                />
+                <span className="text-danger">
+                  {errors.postpone_date && errors.postpone_date.message}
                 </span>
               </div>
             </div>

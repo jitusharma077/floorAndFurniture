@@ -9,7 +9,7 @@ import SuperAdminSidebar from "./Common/SuperAdminSidebar";
 
 function StaffDetials() {
   const location = useLocation();
-  console.log("dfdlococo", location?.state)
+  console.log("dfdlococo", location?.state);
   const navigate = useNavigate();
   const [StaffDetials, setStaffDetials] = useState(null);
   const [userId, setUserId] = useState(null);
@@ -26,9 +26,9 @@ function StaffDetials() {
     reset,
   } = useForm();
   useEffect(() => {
-    console.log("first iddddd", location.state);
-    setUserId(location.state.data);
-    GetDataWithToken(`superadmin/get-user/${location.state.data}`).then(
+    console.log("first iddddd", location.state.data.id);
+    setUserId(location.state.data?.id);
+    GetDataWithToken(`superadmin/get-user/${location.state.data.id}`).then(
       (response) => {
         if (response.status === true) {
           // console.log("responce data =======>", response.data);
@@ -38,7 +38,7 @@ function StaffDetials() {
             firstName: response?.data?.user?.firstName,
             lastName: response?.data?.user?.lastName,
             email: response?.data?.user?.email,
-            password: response?.data?.user?.password,
+            // password: response?.data?.user?.password,
             phone: response?.data?.user?.phone,
             userId: response?.data?.user?.userId,
           });
@@ -425,6 +425,7 @@ function StaffDetials() {
                                   </Link>
                                 </div>
                               </div>
+
                               {/* <div className="row mb-2">
                               <div className="col-sm-3 col-5">
                                 <h5 className="f-w-500">
@@ -435,6 +436,7 @@ function StaffDetials() {
                                 <span>27</span>
                               </div>
                             </div> */}
+
                               {/* <div className="row mb-2">
                               <div className="col-sm-3 col-5">
                                 <h5 className="f-w-500">
@@ -445,6 +447,7 @@ function StaffDetials() {
                                 <span>Rosemont Avenue Melbourne, Florida</span>
                               </div>
                             </div> */}
+
                               {/* <div className="row mb-2">
                               <div className="col-sm-3 col-5">
                                 <h5 className="f-w-500">
@@ -601,34 +604,37 @@ function StaffDetials() {
                                       <tr>
                                         <th>Login Time</th>
                                         <th>Logout Time</th>
-
                                       </tr>
                                     </thead>
                                     <tbody>
-                                      {/* {Error && <div>Error</div>} */}
-                                      {/* {isLoading && <Loader />} */}
-                                      {location?.state?.data?.activity && JSON.parse(location?.state?.data?.activity).length === 0 ? (
-                                        <div>
-                                          <h4 className="text-center d-block w-100 position-absolute">
-                                            No Data Found
-                                          </h4>
-                                        </div>
-                                      ) : (
-                                        location?.state?.data?.activity && JSON.parse(location?.state?.data?.activity).map((data, index) => (
-                                          <tr key={index}>
-                                            <td>
-                                              {data?.login_time && moment(data?.login_time).format("DD/MM/YYYY HH:mm")}
-                                            </td>
-                                            <td>{data?.logout_time && moment(data?.logout_time).format("DD/MM/YYYY HH:mm")}</td>
-                                            {/* <td>{outletManager.phone}</td>
-                                            <td>{outletManager.email}</td> */}
-                                            {/* <td>{outletManager?.login_time && moment(outletManager?.login_time).format("DD/MM/YYYY")}</td> */}
-                                            {/* <td>{outletManager?.logout_time && moment(outletManager?.logout_time).format("DD/MM/YYYY")}</td> */}
-
-
-                                          </tr>
-                                        ))
+                                      {location?.state?.data?.activity && JSON.parse(location?.state?.data?.activity).map(
+                                        (data, index) => {
+                                          // const activity = JSON.parse(
+                                          //   data.activity
+                                          // );
+                                          return (
+                                            <tr key={index}>
+                                              <td>
+                                                {data?.login_time &&
+                                                  moment(
+                                                    data?.login_time
+                                                  ).format("DD/MM/YYYY HH:mm")}
+                                              </td>
+                                              <td>
+                                                {data?.logout_time &&
+                                                  moment(
+                                                    data?.logout_time
+                                                  ).format("DD/MM/YYYY HH:mm")}
+                                              </td>
+                                              {/* <td>{outletManager.phone}</td>
+                                        <td>{outletManager.email}</td> */}
+                                              {/* <td>{outletManager?.login_time && moment(outletManager?.login_time).format("DD/MM/YYYY")}</td> */}
+                                              {/* <td>{outletManager?.logout_time && moment(outletManager?.logout_time).format("DD/MM/YYYY")}</td> */}
+                                            </tr>
+                                          );
+                                        }
                                       )}
+                                      {/* {Error && <div>Error</div>} */}
                                     </tbody>
                                   </table>
                                 </div>

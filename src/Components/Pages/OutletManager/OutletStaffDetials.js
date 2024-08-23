@@ -311,7 +311,7 @@ function OutletStaffDetials() {
                                   <tbody>
                                     {/* {console.log("length", StaffDetials)} */}
                                     {StaffDetials?.Enquiry &&
-                                    StaffDetials?.Enquiry.length < 0 ? (
+                                      StaffDetials?.Enquiry.length < 0 ? (
                                       <p>No Enquiry Found</p>
                                     ) : (
                                       StaffDetials?.Enquiry.map(
@@ -342,7 +342,7 @@ function OutletStaffDetials() {
                                                 <button
                                                   onClick={() => {
                                                     navigate(
-                                                      "/EnquiryDetials",
+                                                      "/OutletEnquiryDetials",
                                                       {
                                                         state: {
                                                           data: data.id,
@@ -606,7 +606,7 @@ function OutletStaffDetials() {
                           <tbody>
                             {/* {console.log("length", StaffDetials)} */}
                             {StaffDetials?.Enquiry &&
-                            StaffDetials?.Enquiry.length < 0 ? (
+                              StaffDetials?.Enquiry.length < 0 ? (
                               <p>No Enquiry Found</p>
                             ) : (
                               StaffDetials?.Enquiry.map((data, index) => (

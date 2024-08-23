@@ -34,6 +34,7 @@ function AddInstalerSchdule() {
       console.log("Idddddd====>>>>>", location.state);
       setEnquiryId(location?.state?.enquiryId);
       setCoustomerId(location.state.customerId);
+
       GetDataWithToken("superadmin/get-outlet").then((response) => {
         if (response.status === true) {
           setCallApi(false);
@@ -65,6 +66,23 @@ function AddInstalerSchdule() {
 
   }, [callApi, callApi2]);
 
+  const correctDate = () => {
+    if (location?.state?.date) {
+      let dateString = location?.state?.date;
+      const parts = dateString.split("-"); // Split the date string by "-"
+      const year = parts[2].slice(-4); // Extract the last four digits of the year
+
+      // Create a new date string with the corrected year format
+      let correctedDateString = `${parts[0]}-${parts[1]}-${year}`;
+      // console.log("correctedDate dateee date te rer", correctedDateString, moment(correctedDateString, "DD-MM-YYYY").format("YYYY-MM-DD"));
+      return moment(correctedDateString, "DD-MM-YYYY").format("YYYY-MM-DD");
+    } else {
+      return null;
+    }
+
+
+    // return date;
+  }
   // const getAssignedPerson = (e) => {
   //   setAssignedPerson(e.target.value);
   // };
@@ -199,10 +217,13 @@ function AddInstalerSchdule() {
                             <label className="me-sm-2">
                               Select Date For installation
                             </label>
+                            {console.log("Selecteddddd..... Date For installation", location?.state?.date)}
                             <input
                               type={"date"}
                               // defaultValue={location?.state?.date}
-                              defaultValue={location?.state?.date ? moment(location?.state?.date).format("DD-MM-YYYY") : null}
+                              // defaultValue={
+                              //   moment(new Date(location?.state?.date)).format("YYYY-MM-DD")}
+                              defaultValue={correctDate()}
                               min={moment().add(0, "days").format("YYYY-MM-DD")}
                               className="form-control"
                             // onChange={getSelectedDate}

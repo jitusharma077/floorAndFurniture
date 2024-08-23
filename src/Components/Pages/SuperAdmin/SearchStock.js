@@ -72,7 +72,7 @@ function SearchStock() {
 
     // http://203.115.102.6:6696/api/v1/superadmin/items-excel
     axios({
-      url: `http://203.115.102.6:6696/api/v1/superadmin/items-excel?name=${searchData}&brandCode=${searchBrandData}&categoryCode=${categoryCode}&collectionCode=${searchCollectionData}`,
+      url: `${serverUrl}superadmin/items-excel?name=${searchData}&brandCode=${searchBrandData}&categoryCode=${categoryCode}&collectionCode=${searchCollectionData}`,
       method: "GET",
       responseType: "blob", // important
     }).then((response) => {

@@ -11,9 +11,9 @@ import { useLocation } from "react-router-dom";
 
 function CreateTimeSlotMeasurer() {
   const location = useLocation();
-  
-  const [formValues, setformValues] = useState([{ Stime: "", Etime: "",type:"measurer" }]);
-  const[callApi,setCallApi] = useState(true);
+
+  const [formValues, setformValues] = useState([{ Stime: "", Etime: "", type: "measurer" }]);
+  const [callApi, setCallApi] = useState(true);
   const handleChange = (i, e) => {
     let formval = [...formValues];
     formval[i][e.target.name] = e.target.value;
@@ -21,7 +21,7 @@ function CreateTimeSlotMeasurer() {
   };
   console.log("locccccc", location);
   const addFormFields = () => {
-    setformValues([...formValues, { Stime: "", Etime: "" }]);
+    setformValues([...formValues, { Stime: "", Etime: "", type: "measurer" }]);
   };
 
   const removeFormFields = (index) => {
@@ -39,7 +39,7 @@ function CreateTimeSlotMeasurer() {
           toast.success(response.message, {
             position: toast.POSITION.TOP_CENTER,
           });
-          setformValues([{ Stime: "", Etime: "" }]);
+          setformValues([{ Stime: "", Etime: "", type: "measurer" }]);
           setCallApi(true);
         } else {
           toast.error(response.data.message);
