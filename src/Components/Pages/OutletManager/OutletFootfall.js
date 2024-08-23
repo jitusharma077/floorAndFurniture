@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
-import SuperAdminHeader from "./Common/SuperAdminHeader";
-import SuperAdminSidebar from "./Common/SuperAdminSidebar";
-import { GetDataWithToken, serverUrl } from "../../ApiHelper/ApiHelper";
+import { GetDataWithToken } from "../../ApiHelper/ApiHelper";
 import { Link } from "react-router-dom";
 import DashboardFilterModal from "../../Common/DashboardFilterModal";
 import moment from "moment";
-import axios from "axios";
-const FootfallList = () => {
+import OutletManagerHeader from "./OutletManagerHeader";
+import OutletManagerSidebar from "./OutletManagerSidebar";
+const OutletFootfallList = () => {
   const [clientList, setClientList] = useState([]);
   const [footfallDashboard, setFootfallDashboard] = useState({});
   const ListHeading = ["Client Name", "category", "Customer Group", "Customer Type", "Mobile Number", "Query Register", "Action"];
@@ -43,22 +42,6 @@ const FootfallList = () => {
     getFootfallDashboard();
   }, [storeId])
 
-  const downloadReportHandler = () => {
-    axios({
-      url: `${serverUrl}customer/walkin-report?storeId=${storeId}`,
-      method: "GET",
-      responseType: "blob", // important
-    }).then((response) => {
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement("a");
-      link.href = url;
-      link.setAttribute("download", "FootfallReport.xls"); //or any other extension
-      document.body.appendChild(link);
-      link.click();
-      // setLoadingData(false);
-    });
-  }
-
   const getFootfallDashboard = () => {
 
     let startDate = date?.fromDate?.startOf('day').format('YYYY-MM-DD HH:mm:ss');
@@ -89,8 +72,8 @@ const FootfallList = () => {
         id="main-wrapper"
         className="show"
       >
-        <SuperAdminHeader />
-        <SuperAdminSidebar />
+        <OutletManagerHeader />
+        <OutletManagerSidebar />
 
         <div className="content-body">
           <div className="container-fluid">
@@ -99,9 +82,6 @@ const FootfallList = () => {
                 <div className="card">
                   <div className="card-header" >
                     <h4 className="fs-20">Footfall Dashboard</h4>
-                    <div>
-                      <button className="btn btn-primary" onClick={downloadReportHandler}>Download</button>
-                    </div>
                   </div>
                   <div className="card-header border-0 d-flex">
                     <div>
@@ -202,7 +182,7 @@ const FootfallList = () => {
                             <td>{data?.mobileNo}</td>
                             <td>{data?.query_register}</td>
                             <td><Link
-                              to="/footfall-detail"
+                              to="/outlet-footfall-detail"
                               state={data}
                               className="btn btn-primary">View</Link
                             ></td>
@@ -238,4 +218,4 @@ const FootfallList = () => {
     </>
   )
 }
-export default FootfallList;
+export default OutletFootfallList;

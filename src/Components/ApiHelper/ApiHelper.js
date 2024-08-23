@@ -4,7 +4,8 @@ import { useNavigate } from "react-router-dom";
 // import { Navigate } from "react-router-dom";
 
 // Api Url's for the API's
-export const serverUrl = "http://203.115.102.6:6696/api/v1/";
+
+export const serverUrl = "https://tailoringnew.fandf.in/api/v1/";
 
 
 // export const serverUrl = "http://0.tcp.in.ngrok.io:10849/api/v1/";

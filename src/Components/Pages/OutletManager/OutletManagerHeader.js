@@ -35,14 +35,16 @@ function OutletManagerHeader() {
         <Link to={"/OutletManagerDashboard"} className="brand-logo">
           <img
             alt="tesr"
-            src="./images/f&f-logo.png"
+            src={`${process.env.PUBLIC_URL}/images/f&f-logo.png`}
+            // src="./images/"
             className="d-xl-block d-none"
             id="img_lg"
             style={{ width: "140px", padding: "11px", margin: "auto" }}
           />
           <img
             alt="test"
-            src="./images/f&_smLogo.png"
+            src={`${process.env.PUBLIC_URL}/images/f&_smLogo.png`}
+            // src="./images/f&_smLogo.png"
             className="d-xl-none d-block"
             style={{ padding: "11px", margin: "auto", width: "70px" }}
           />

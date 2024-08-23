@@ -3,7 +3,7 @@ import SuperAdminSidebar from "./Common/SuperAdminSidebar";
 import { Table } from "reactstrap";
 import { useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { GetDataWithToken } from "../../ApiHelper/ApiHelper";
+import { GetDataWithToken, serverUrl } from "../../ApiHelper/ApiHelper";
 import moment from "moment";
 import axios from "axios";
 
@@ -17,7 +17,7 @@ function CustomerLedgerDetails() {
 
     const downloadHandler = () => {
         axios({
-            url: `http://203.115.102.6:6696/api/v1/superadmin/customer-ledger-excel?customerCode=${location?.state?.customerId}&fromDate=${location?.state?.startDate}&toDate=${location?.state?.endDate}`,
+            url: `${serverUrl}superadmin/customer-ledger-excel?customerCode=${location?.state?.customerId}&fromDate=${location?.state?.startDate}&toDate=${location?.state?.endDate}`,
             method: "GET",
             responseType: "blob", // important
         }).then((response) => {

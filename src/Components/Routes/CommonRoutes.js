@@ -102,6 +102,10 @@ import OutletCustomerComplaintForm from "../Pages/OutletManager/OutletCustomerCo
 import DashboardSummary from "../Pages/SuperAdmin/DashboardSummary";
 import FootfallList from "../Pages/SuperAdmin/FootfallList";
 import FootfallDetail from "../Pages/SuperAdmin/FootfallDetail";
+import OutletFootfallList from "../Pages/OutletManager/OutletFootfall";
+import OutletFootfallDetail from "../Pages/OutletManager/OutletFootfallDetail";
+import OrderBill from "../Pages/SuperAdmin/OrderBill";
+import OrderBillDetail from "../Pages/SuperAdmin/OrderBillDetail";
 
 const CommonRoutes = () => {
   // const [type, setType] = useState({});
@@ -202,6 +206,8 @@ const CommonRoutes = () => {
             <Route path="EnquiryProductList" element={<EnquiryProductList />} />
             <Route path="ComplaintDetials" element={<ComplaintDetials />} />
             <Route path="AllUserActivity" element={<AllUserActivity />} />
+            <Route path="/order-bill" element={<OrderBill />} />
+            <Route path="/order-bill-detail" element={<OrderBillDetail />} />
           </>
         )}
 
@@ -228,6 +234,8 @@ const CommonRoutes = () => {
 
         {userDetails === OutletManager && (
           <>
+            <Route path="/outlet-footfall-list" element={<OutletFootfallList />} />
+            <Route path="/outlet-footfall-detail" element={<OutletFootfallDetail />} />
             <Route
               path="/outletComplaintDetail"
               element={<OutletComplaintDetail />}

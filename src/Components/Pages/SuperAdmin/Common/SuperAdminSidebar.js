@@ -54,6 +54,12 @@ function SuperAdminSidebar() {
               </Link>
             </li>
             <li>
+              <Link to={"/order-bill"} className aria-expanded="false">
+                <i className="icon-people icons" />
+                <span className="nav-text">Order Bills</span>
+              </Link>
+            </li>
+            <li>
               <Link to={"/all-Enquiry"} className aria-expanded="false">
                 <i className="fa fa-info-circle fw-bold" aria-hidden="true" />
                 <span className="nav-text">Enquiry</span>

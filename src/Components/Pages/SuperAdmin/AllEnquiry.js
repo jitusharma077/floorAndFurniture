@@ -13,6 +13,7 @@ import DateModal from "../../Common/DateModal";
 import OrdersModal from "../../Common/OrdersModal";
 
 function AllEnquiry() {
+
   const navigate = useNavigate();
   const [callApi, setCallApi] = useState(true);
   // const { data, Error, isLoading } = useFetch("superadmin/get/enquiries");
@@ -24,10 +25,11 @@ function AllEnquiry() {
   const { ref: myRef, inView: visibleElement } = useInView();
   const [openModal, setOpenModal] = useState(false);
   const modalToggle = () => { setOpenModal(!openModal) };
-   const [date, setDate] = useState({
+  const [date, setDate] = useState({
     fromDate: '',
     toDate: '',
-    });
+  });
+  const [showStatus, setShowStatus] = useState("");
   // const [showDay,setShowDay]=useState(false);
 
   // const handlePageClick = (e, index) => {
@@ -36,26 +38,47 @@ function AllEnquiry() {
   //   setCallApi(true);
   // };
 
-   let fromDate = date?.fromDate ?moment(date?.fromDate, "ddd MMM DD YYYY HH:mm:ss [GMT]ZZ")?.format("YYYY-MM-DD"):'';
-   let toDate = date?.toDate ? moment(date?.toDate, "ddd MMM DD YYYY HH:mm:ss [GMT]ZZ")?.format("YYYY-MM-DD"):'';
+  const options = [
+    { label: "Select status", value: "" },
+    { label: "in progress", value: "inprogess" },
+    { label: "completed", value: "completed" },
+    { label: "fresh", value: "fresh" },
+    { label: "measurement complete", value: "measurement-complete" },
+    { label: "estimate created", value: "estimate-created" },
+    { label: "order confirmed", value: "order-confirmed" },
+    { label: "qc complete", value: "qc-complete" },
+    { label: "installer assigned", value: "installer-assigned" },
+    { label: "installation started", value: "installation-started" },
+    { label: "cancelled", value: "cancelled" }
+  ];
+
+  let fromDate = date?.fromDate ? moment(date?.fromDate, "ddd MMM DD YYYY HH:mm:ss [GMT]ZZ")?.format("YYYY-MM-DD") : '';
+  let toDate = date?.toDate ? moment(date?.toDate, "ddd MMM DD YYYY HH:mm:ss [GMT]ZZ")?.format("YYYY-MM-DD") : '';
 
   useEffect(() => {
-    if (visibleElement||callApi) {
+    if (visibleElement || callApi || showStatus) {
       setCurrentPage((prevData => prevData + 1));
-//  http://203.115.102.6:6696/api/v1/superadmin/get/enquiries?page=1     
-      GetDataWithToken(`superadmin/get/enquiries?page=${currentPage}&dateFrom=${fromDate}&dateTo=${toDate}`).then(
-      (response) => {
+      //  http://203.115.102.6:6696/api/v1/superadmin/get/enquiries?page=1     
+      GetDataWithToken(`superadmin/get/enquiries?page=${currentPage}&dateFrom=${fromDate}&dateTo=${toDate}&status=${showStatus}`).then(
+        (response) => {
           if (response.status === true) {
-          setCallApi(false);  
-          setdata(prevData=>[...prevData, ...response.data]);
-          // setdata(response.data);
-          setisLoading(false);
-          // settotalPage(response.pages);
+            setCallApi(false);
+            setdata(prevData => [...prevData, ...response.data]);
+            // setdata(response.data);
+            setisLoading(false);
+            // settotalPage(response.pages);
+          }
         }
-      }
       );
     }
-  }, [visibleElement,callApi]);
+  }, [visibleElement, callApi, showStatus]);
+
+  const showListByStatusHandler = (e) => {
+    console.log("show statusss...", e.target.value);
+    setCurrentPage(1);
+    setdata([]);
+    setShowStatus(e.target.value);
+  }
 
   const getSearchValue = (val) => {
     setisLoading(true);
@@ -100,8 +123,13 @@ function AllEnquiry() {
               <div className="col-12">
                 <div className="card">
                   <div className="card-header">
-                    <div className="col-lg-3">
+                    <div className="col-lg-5 d-flex align-items-center gap-1">
                       <h4 className="card-title">All Enquiry</h4>
+                      <select className="form-control" onChange={showListByStatusHandler}>
+                        {options.map((option, index) => (
+                          <option key={index} value={option?.value}>{option?.label}</option>
+                        ))}
+                      </select>
                     </div>
                     <div className="col-lg-5 d-flex">
                       <input
@@ -119,7 +147,7 @@ function AllEnquiry() {
                       >
                         Search
                       </button>
-                       <button
+                      <button
                         className="btn btn-primary ms-2"
                         onClick={modalToggle}
                       >
@@ -131,8 +159,8 @@ function AllEnquiry() {
                     <div className="table-responsive">
                       <table
                         id="example4"
-                        className = "table card-table display mb-4 shadow-hover table-responsive-lg"
-                        style={{ minWidth: "845px",textAlign: "center" }}
+                        className="table card-table display mb-4 shadow-hover table-responsive-lg"
+                        style={{ minWidth: "845px", textAlign: "center" }}
                       >
                         <thead>
                           <tr>
@@ -199,13 +227,13 @@ function AllEnquiry() {
                                     {data?.user?.firstName}
                                     {data?.user?.lastName}
                                   </td>
-                                  
+
                                   <td>
                                     {moment(data?.createdAt).format("DD/MM/YYYY")}
                                   </td>
-                                    {/* <td>{moment(data?.overdueDate)?.format('DD/MM/YYYY') === 'Invalid date' ? data?.overdueDate : moment(data?.overdueDate)?.format('DD/MM/YYYY')}</td> */}
-                                  
-                                   <td>{data?.overdue} {data?.overdue && typeof data?.overdue=== 'number' && "days" }</td> 
+                                  {/* <td>{moment(data?.overdueDate)?.format('DD/MM/YYYY') === 'Invalid date' ? data?.overdueDate : moment(data?.overdueDate)?.format('DD/MM/YYYY')}</td> */}
+
+                                  <td>{data?.overdue} {data?.overdue && typeof data?.overdue === 'number' && "days"}</td>
                                   <td>
                                     <button
                                       onClick={() => {
@@ -235,7 +263,7 @@ function AllEnquiry() {
                         </tbody>
                       </table>
                     </div>
-                     <div ref={myRef}id="scroll"></div>
+                    <div ref={myRef} id="scroll"></div>
                     {/* <PaginationComponent
                       totalPage={totalPage}
                       currentPage={currentPage}
@@ -260,7 +288,7 @@ function AllEnquiry() {
         setIsLoading={setisLoading}
         setMainCallApi={setCallApi}
         setCurrentPage={setCurrentPage}
-      /> 
+      />
     </>
   );
 }

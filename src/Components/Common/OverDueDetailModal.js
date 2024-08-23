@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Modal, ModalBody, ModalHeader, Spinner, Table } from "reactstrap";
 import { GetDataWithToken } from "../ApiHelper/ApiHelper";
 import moment from "moment";
+import { Link } from "react-router-dom";
 
 function OverdueDetails({ openModal, toggle,
   rowName, columnName, mainCallApi,
@@ -87,8 +88,17 @@ function OverdueDetails({ openModal, toggle,
               {data?.map((data) =>
                 <tr>
                   <td>{data?.createdAt && moment(data?.createdAt)?.format("DD/MM/YYYY")}</td>
-                  <td>{data?.enquiryId}</td>
-
+                  <td>
+                    <Link
+                      to="/EnquiryDetials"
+                      state={
+                        {
+                          data: data.id,
+                          category: data?.products,
+                          icPerson: `${data?.user?.firstName} ${data?.user?.lastName}`,
+                        }}
+                    >{data?.enquiryId}</Link>
+                  </td>
                   <td>{data?.customer?.firstName} {data?.customer?.lastName}</td>
                   <td>{data?.user?.firstName} {data?.user?.lastName}</td>
                   <td>{data?.products}</td>

@@ -48,7 +48,10 @@ function OutletCustomerDetials() {
                       <div className="card-body">
                         <div className="guest-profile">
                           <div className="d-flex">
-                            <img src="./images/user.png" alt="" />
+                            <img
+                              src={`${process.env.PUBLIC_URL}/images/user.png`}
+                              // src="./images/"
+                              alt="" />
                             <div>
                               <h2 className="font-w600 ">
                                 {CustomerDetials?.firstName}{" "}

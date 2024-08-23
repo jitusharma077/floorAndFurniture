@@ -65,6 +65,12 @@ function OutletManagerSidebar() {
                 </li>
               </ul>
             </li>
+            <li>
+              <Link to={"/outlet-footfall-list"} className="" aria-expanded="false">
+                <i className="icon-people icons" />
+                <span className="nav-text">Footfall</span>
+              </Link>
+            </li>
           </ul>
         </div>
       </div>

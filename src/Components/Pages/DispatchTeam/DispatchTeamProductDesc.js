@@ -58,7 +58,8 @@ function DispatchTeamProductDesc() {
                     <div className="row">
                       <div className="col-12 col-md-6 col-xl-4">
                         <img
-                          src="./images/Rectangle 249.jpg"
+                          src={`${process.env.PUBLIC_URL}/images/Rectangle 249.jpg`}
+                          // src="./images/"
                           className="order-img"
                           alt=""
                         />
@@ -105,7 +106,8 @@ function DispatchTeamProductDesc() {
                 <div className="row">
                   <div className="col-12 col-md-6 col-xl-4">
                     <img
-                      src="./images/Rectangle 249.jpg"
+                      src={`${process.env.PUBLIC_URL}/images/Rectangle 249.jpg`}
+                      // src="./images/"
                       className="order-img"
                       alt=""
                     />

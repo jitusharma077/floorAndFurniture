@@ -13,6 +13,7 @@ import WcrModal from "../../Common/WcrModal";
 import AdminRemarkModal from "../../Common/AdminRemarkModal";
 import Swal from "sweetalert2";
 import CompleteEnquiry from "../../Common/CompleteEnquiry";
+import { isArray } from "lodash";
 
 function EnquiryDetials() {
   const location = useLocation();
@@ -71,7 +72,7 @@ function EnquiryDetials() {
   useEffect(() => {
     console.log("location", location);
     setEnquiryId(location.state.data);
-    setCategory(location.state.category);
+    setCategory(location?.state?.category);
     setIcName(location.state.icPerson);
 
     GetDataWithToken(`installer/get-wcr/${location?.state?.data}`).then((response) => {
@@ -186,20 +187,20 @@ function EnquiryDetials() {
             >
               View Status
             </button>
-            <button
+            {/* <button
               className="btn btn-mybutton"
               onClick={() => printPageArea("printableArea")}
             >
               Print page
-            </button>
-            <button
+            </button> */}
+            {EnquiryDetials?.data?.status !== "cancelled" && <button
               // onClick={() => setModal1(!modal1)}
               className="btn btn-mybutton"
               data-bs-toggle="modal"
               data-bs-target=".bd-example-modal-lg-2"
             >
               Cancel Enquiry
-            </button>
+            </button>}
 
             {isRoomData === true ? (
               <>
@@ -214,17 +215,18 @@ function EnquiryDetials() {
                     </button>
                   )}
 
-                <button
+                {EnquiryDetials?.data?.status !== "cancelled" && <button
                   onClick={() => sendEmail()}
                   className="btn btn-mybutton"
                 >
                   Send Email
-                </button>
+                </button>}
 
                 {EnquiryDetials?.data?.enquiryschedules[0]?.status &&
                   EnquiryDetials?.data?.enquiryschedules[
                     EnquiryDetials?.data?.enquiryschedules.length - 1
-                  ]?.status === "pending" && (
+                  ]?.status === "pending" &&
+                  EnquiryDetials?.data?.status !== "inprogess" && EnquiryDetials?.data?.status !== "cancelled" && (
                     <>
                       <button
                         className="btn btn-mybutton"
@@ -234,21 +236,24 @@ function EnquiryDetials() {
                       </button>
                     </>
                   )}
-                <button
-                  onClick={() => {
-                    navigate("/add-schedule", {
-                      state: { enquiryId: enquiryId },
-                    });
-                  }}
-                  className="btn btn-mybutton"
-                >
-                  Assign Measurer
-                </button>
+                {EnquiryDetials?.data?.status !== "cancelled" && EnquiryDetials?.data?.status !== "measurement-complete" &&
+                  EnquiryDetials?.data?.status !== "estimate-created" &&
+                  EnquiryDetials?.data?.status !== "order-confirmed" &&
+                  <button
+                    onClick={() => {
+                      navigate("/add-schedule", {
+                        state: { enquiryId: enquiryId },
+                      });
+                    }}
+                    className="btn btn-mybutton"
+                  >
+                    Assign Measurer
+                  </button>}
 
                 {EnquiryDetials?.data?.installer_tasks[0]?.status &&
                   EnquiryDetials?.data?.installer_tasks[
                     EnquiryDetials?.data?.installer_tasks.length - 1
-                  ]?.status === "pending" ? (
+                  ]?.status === "pending" && EnquiryDetials?.data?.status !== "cancelled" ? (
                   <>
                     <button
                       className="btn btn-mybutton"
@@ -261,7 +266,10 @@ function EnquiryDetials() {
                   </>
                 ) : (
                   EnquiryDetials?.data?.status !== "inprogess" &&
-                  EnquiryDetials?.data?.status !== "fresh" && (
+                  EnquiryDetials?.data?.status !== "fresh" && EnquiryDetials?.data?.status !== "cancelled" && EnquiryDetials?.data?.status !== "measurement-complete" &&
+                  EnquiryDetials?.data?.status !== "estimate-created" &&
+                  EnquiryDetials?.data?.status !== "order-confirmed" &&
+                  (
                     <button
                       onClick={() => {
                         navigate("/AddInstalerSchdule", {
@@ -284,8 +292,11 @@ function EnquiryDetials() {
                 )}
 
                 {EnquiryDetials?.data?.status !== "inprogess" &&
-                  EnquiryDetials?.data?.status !== "fresh" &&
-                  EnquiryDetials?.data?.orders?.length === 0 && (
+                  EnquiryDetials?.data?.status !== "fresh" && EnquiryDetials?.data?.status !== "cancelled" &&
+                  EnquiryDetials?.data?.orders?.length === 0 &&
+                  EnquiryDetials?.data?.status !== "measurement-complete" &&
+                  EnquiryDetials?.data?.status !== "estimate-created" &&
+                  (
                     <button
                       onClick={() => {
                         navigate("/CreateOrder", {
@@ -301,27 +312,33 @@ function EnquiryDetials() {
                     </button>
                   )}
 
-                {EnquiryDetials?.data?.status !== "fresh" && (
+                {EnquiryDetials?.data?.status !== "fresh" &&
+                  EnquiryDetials?.data?.status !== "inprogess" &&
+                  EnquiryDetials?.data?.status !== "measurement-complete" &&
+                  (
+                    <button
+                      onClick={() => {
+                        navigate("/ViewEstimate", {
+                          state: {
+                            EnquiryDetials: EnquiryDetials.data,
+                          },
+                        });
+                      }}
+                      className="btn btn-mybutton"
+                    >
+                      View Estimate
+                    </button>
+                  )}
+                {EnquiryDetials?.data?.status !== "inprogess" &&
+                  EnquiryDetials?.data?.status !== "measurement-complete" &&
+                  EnquiryDetials?.data?.status !== "estimate-created" &&
                   <button
-                    onClick={() => {
-                      navigate("/ViewEstimate", {
-                        state: {
-                          EnquiryDetials: EnquiryDetials.data,
-                        },
-                      });
-                    }}
                     className="btn btn-mybutton"
-                  >
-                    View Estimate
-                  </button>
-                )}
-                <button
-                  className="btn btn-mybutton"
-                  onClick={customMessageHandler}
+                    onClick={customMessageHandler}
 
-                >
-                  Ask Feedback
-                </button>
+                  >
+                    Ask Feedback
+                  </button>}
                 {wcrData?.id && <button
                   onClick={wcrModalToggle}
                   className="btn btn-mybutton"
@@ -336,12 +353,14 @@ function EnquiryDetials() {
                   >
                     Admin Remarks
                   </button>
-                  <button
-                    className="btn btn-mybutton"
-                    onClick={completeEnquiryModalToggle}
-                  >
-                    Close Enquiry
-                  </button>
+                  {EnquiryDetials?.data?.status !== "cancelled" &&
+                    EnquiryDetials?.data?.status !== "order-confirmed" &&
+                    <button
+                      className="btn btn-mybutton"
+                      onClick={completeEnquiryModalToggle}
+                    >
+                      Close Enquiry
+                    </button>}
                   <button
                     className="btn btn-mybutton"
                     onClick={customMessageHandler}
@@ -378,16 +397,18 @@ function EnquiryDetials() {
                     {/* <h3></h3> */}
                     <div style={{ display: "flex" }}>
                       <p>Selected Category: </p>
-                      {Category?.map((i, index) => {
-                        return (
-                          <p
-                            style={{
-                              padding: 0,
-                              marginBottom: 2,
-                            }}
-                          >{`${i},`}</p>
-                        );
-                      })}
+                      {Category && isArray(Category) ?
+                        (Category?.length > 0 &&
+                          Category?.map((i, index) => {
+                            return (
+                              <p
+                                style={{
+                                  padding: 0,
+                                  marginBottom: 2,
+                                }}
+                              >{`${i},`}</p>
+                            );
+                          })) : Category}
                     </div>
                     {/* {let measurerName=`${EnquiryDetials?.data?.enquiryschedules[EnquiryDetials?.data.enquiryschedules.length - 1]?EnquiryDetials?.data?.enquiryschedules[EnquiryDetials?.data.enquiryschedules.length - 1].user.firstName:'' EnquiryDetials?.data?.enquiryschedules[EnquiryDetials?.data.enquiryschedules.length - 1]?.user.lastName?EnquiryDetials?.data?.enquiryschedules[EnquiryDetials?.data.enquiryschedules.length - 1]?.user.lastName:''}` */}
                   </div>

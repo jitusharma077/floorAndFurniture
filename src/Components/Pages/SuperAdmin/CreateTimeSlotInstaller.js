@@ -11,14 +11,14 @@ import { useLocation } from "react-router-dom";
 
 function CreateTimeSlotInstaller() {
   const location = useLocation();
-//   let scheduleType;
-//     if (location.pathname === '/create-time-slot-measurer') {
-//     scheduleType = "measurer";
-//   } else if (location.pathname === '/create-time-slot-installer') {
-//     scheduleType = "installer";
-//   }
-  const [formValues, setformValues] = useState([{ Stime: "", Etime: "",type:"installer" }]);
-  const[callApi,setCallApi] = useState(true);
+  //   let scheduleType;
+  //     if (location.pathname === '/create-time-slot-measurer') {
+  //     scheduleType = "measurer";
+  //   } else if (location.pathname === '/create-time-slot-installer') {
+  //     scheduleType = "installer";
+  //   }
+  const [formValues, setformValues] = useState([{ Stime: "", Etime: "", type: "installer" }]);
+  const [callApi, setCallApi] = useState(true);
   const handleChange = (i, e) => {
     let formval = [...formValues];
     formval[i][e.target.name] = e.target.value;

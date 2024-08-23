@@ -123,7 +123,8 @@ const Login = () => {
                           className="d-inline-block mb-5"
                         >
                           <img
-                            src="./images/loginLogo.png"
+                            src={`${process.env.PUBLIC_URL}/images/loginLogo.png`}
+                            // src="./images/loginLogo.png"
                             style={{ width: "200px" }}
                             alt="test"
                           />

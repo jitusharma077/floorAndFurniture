@@ -65,8 +65,8 @@ function OutletMangerDashboard() {
   let tomorrowDate = moment().add(1, 'day').format('YYYY-MM-DD');
 
   const [mainDashboarddate, setMainDashboardDate] = useState({
-    fromDate: new Date(),
-    toDate: new Date(),
+    fromDate: "",
+    toDate: "",
   });
 
   useEffect(() => {
@@ -99,18 +99,18 @@ function OutletMangerDashboard() {
   useEffect(() => {
 
     let apiLink;
-    let fromDate = date?.fromDate ? `${moment(date?.fromDate)?.format("YYYY-MM-DD")} 00:00:00` : ``;
-    let toDate = date?.toDate ? `${moment(date?.toDate)?.format("YYYY-MM-DD")} 00:00:00` : ``;
-    if (todayDate === moment(date?.fromDate).format('YYYY-MM-DD') && todayDate === moment(date?.fromDate).format('YYYY-MM-DD')) {
-      apiLink = `outlet/dashboard/${Cookies.get("userID")}?date=${todayDate}&fromDate=${fromDate}&toDate=${toDate}&salesId=${salesPersonId}`;
+    let fromDate = mainDashboarddate?.fromDate ? `${moment(mainDashboarddate?.fromDate)?.format("YYYY-MM-DD")} 00:00:00` : ``;
+    let toDate = mainDashboarddate?.toDate ? `${moment(mainDashboarddate?.toDate)?.format("YYYY-MM-DD")} 00:00:00` : ``;
+    if (todayDate === moment(mainDashboarddate?.fromDate).format('YYYY-MM-DD') && todayDate === moment(mainDashboarddate?.fromDate).format('YYYY-MM-DD')) {
+      apiLink = `outlet/dashboard/${Cookies.get("userID")}?date=${todayDate}&fromDate=${fromDate}&toDate=${toDate}&salesId=${dashboardSalesPersonId}`;
       // `superadmin/new-dashboard?today=${todayDate}&fromDate=${fromDate}&toDate=${toDate}&salesId=${salesPersonId}&storeId=${Cookies.get("userID")}`;
-    } else if (yesterdayDate === moment(date?.fromDate).format('YYYY-MM-DD') && yesterdayDate === moment(date?.fromDate).format('YYYY-MM-DD')) {
-      apiLink = `outlet/dashboard/${Cookies.get("userID")}?date=${yesterdayDate}&fromDate=${fromDate}&toDate=${toDate}&salesId=${salesPersonId}`;
-    } else if (tomorrowDate === moment(date?.fromDate).format('YYYY-MM-DD') && tomorrowDate === moment(date?.fromDate).format('YYYY-MM-DD')) {
-      apiLink = `outlet/dashboard/${Cookies.get("userID")}?date=${tomorrowDate}&fromDate=${fromDate}&toDate=${toDate}&salesId=${salesPersonId}`;
+    } else if (yesterdayDate === moment(mainDashboarddate?.fromDate).format('YYYY-MM-DD') && yesterdayDate === moment(mainDashboarddate?.fromDate).format('YYYY-MM-DD')) {
+      apiLink = `outlet/dashboard/${Cookies.get("userID")}?date=${yesterdayDate}&fromDate=${fromDate}&toDate=${toDate}&salesId=${dashboardSalesPersonId}`;
+    } else if (tomorrowDate === moment(mainDashboarddate?.fromDate).format('YYYY-MM-DD') && tomorrowDate === moment(mainDashboarddate?.fromDate).format('YYYY-MM-DD')) {
+      apiLink = `outlet/dashboard/${Cookies.get("userID")}?date=${tomorrowDate}&fromDate=${fromDate}&toDate=${toDate}&salesId=${dashboardSalesPersonId}`;
     }
     else {
-      apiLink = `outlet/dashboard/${Cookies.get("userID")}?fromDate=${fromDate}&toDate=${toDate}&salesId=${salesPersonId}`;
+      apiLink = `outlet/dashboard/${Cookies.get("userID")}?fromDate=${fromDate}&toDate=${toDate}&salesId=${dashboardSalesPersonId}`;
     }
 
     // let fromDate = mainDashboarddate?.fromDate ? `${moment(mainDashboarddate?.fromDate)?.format("YYYY-MM-DD")} 0:00:00` : ``;

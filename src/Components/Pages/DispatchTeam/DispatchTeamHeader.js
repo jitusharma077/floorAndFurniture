@@ -36,20 +36,23 @@ function DispatchTeamHeader() {
         <Link to={"/DispatchTeamDashboard"} className="brand-logo">
           <img
             alt="tesr"
-            src="./images/f&f-logo.png"
+            src={`${process.env.PUBLIC_URL}/images/f&f-logo.png`}
+            // src="./images/"
             className="d-xl-block d-none"
             id="img_lg"
             style={{ width: "140px", padding: "11px", margin: "auto" }}
           />
           <img
             alt="test"
-            src="./images/f&_smLogo.png"
+            src={`${process.env.PUBLIC_URL}/images/f&_smLogo.png`}
+            // src="./images/"
             className="d-xl-none d-block"
             style={{ padding: "11px", margin: "auto", width: "70px" }}
           />
           <img
             alt="test"
-            src="./images/f&_smLogo.png"
+            src={`${process.env.PUBLIC_URL}/images/f&_smLogo.png`}
+            // src="./images/"
             className="d-none"
             id="img_sm"
             style={{ padding: "11px", margin: "auto", width: "85px" }}
@@ -129,6 +132,7 @@ function DispatchTeamHeader() {
                                       alt="test"
                                       width={50}
                                       src="./images/logo.png"
+                                      src={`${process.env.PUBLIC_URL}/images/logo.png`}
                                     />
                                   </div>
                                   <div className="media-body">
@@ -175,7 +179,10 @@ function DispatchTeamHeader() {
                     role="button"
                     data-bs-toggle="dropdown"
                   >
-                    <img src="./images/logo.png" width={20} />
+                    <img
+                      src={`${process.env.PUBLIC_URL}/images/logo.png`}
+                      // src="./images/logo.png"
+                      width={20} />
                   </a>
                   <div className="dropdown-menu dropdown-menu-end">
                     <button

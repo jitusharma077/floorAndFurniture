@@ -283,7 +283,9 @@ function Dashboard() {
                                   <td>{enquirySummaryData[category].completed}</td>
                                   <td style={{ cursor: "pointer", color: "blue", textDecoration: "underline" }} onClick={() => columnHandler('Pending', enquirySummaryData[category].pending, category)}>{enquirySummaryData[category].pending}</td>
                                   <td style={{ cursor: "pointer", color: "blue", textDecoration: "underline" }} onClick={() => columnHandler('Cancelled', enquirySummaryData[category].cancelled, category)}>{enquirySummaryData[category].cancelled}</td>
-                                  <td style={{ cursor: "pointer", color: "blue", textDecoration: "underline" }} onClick={() => columnHandler('Overdue', enquirySummaryData[category].overdue, category)}>{enquirySummaryData[category].overdue}</td>
+                                  <td
+                                    style={{ cursor: "pointer", color: "blue", textDecoration: "underline" }}
+                                    onClick={() => columnHandler('Overdue', enquirySummaryData[category].overdue, category)}>{enquirySummaryData[category].overdue}</td>
                                 </tr>
                               ))}
 
@@ -346,13 +348,13 @@ function Dashboard() {
                                   >
                                     Download
                                   </button>
-                                  <button
+                                  {/* <button
 
                                     onClick={() => setOpenMainEnquirySummaryModal(true)}
                                     className="btn btn-primary mt-2"
                                   >
                                     View
-                                  </button>
+                                  </button> */}
 
                                 </div>
                               </div>
@@ -382,12 +384,12 @@ function Dashboard() {
                                   >
                                     Download
                                   </button>
-                                  <button
+                                  {/* <button
                                     onClick={() => columnHandler("MEASUREMENT", AllDashboardData.measurementPending?.enquiry, "Overdue")}
                                     className="btn btn-primary mt-2"
                                   >
                                     View
-                                  </button>
+                                  </button> */}
                                 </div>
                               </div>
                             </div>
@@ -411,12 +413,12 @@ function Dashboard() {
                                   >
                                     Download
                                   </button>
-                                  <button
+                                  {/* <button
                                     onClick={() => columnHandler("MEASUREMENT", AllDashboardData.estimateShared?.enquiry, "Closed")}
                                     className="btn btn-primary mt-2"
                                   >
                                     View
-                                  </button>
+                                  </button> */}
                                 </div>
                               </div>
                             </div>
@@ -442,12 +444,12 @@ function Dashboard() {
                                   >
                                     Download
                                   </button>
-                                  <button
+                                  {/* <button
                                     onClick={() => columnHandler("ORDER", AllDashboardData.orderConfirmed?.enquiry, "Pending")}
                                     className="btn btn-primary mt-2"
                                   >
                                     View
-                                  </button>
+                                  </button> */}
                                 </div>
                               </div>
                             </div>
@@ -473,12 +475,12 @@ function Dashboard() {
                                   >
                                     Download
                                   </button>
-                                  <button
+                                  {/* <button
                                     onClick={() => columnHandler("ORDER", AllDashboardData.QC1_Complete?.enquiry, "QC1")}
                                     className="btn btn-primary mt-2"
                                   >
                                     View
-                                  </button>
+                                  </button> */}
                                 </div>
                               </div>
                             </div>
@@ -504,12 +506,12 @@ function Dashboard() {
                                   >
                                     Download
                                   </button>
-                                  <button
+                                  {/* <button
                                     onClick={() => columnHandler("ORDER", AllDashboardData.QC2_Complete?.enquiry, "QC2")}
                                     className="btn btn-primary mt-2"
                                   >
                                     View
-                                  </button>
+                                  </button> */}
                                 </div>
                               </div>
                             </div>
@@ -533,12 +535,12 @@ function Dashboard() {
                                   >
                                     Download
                                   </button>
-                                  <button
+                                  {/* <button
                                     onClick={() => columnHandler("ORDER", AllDashboardData.qcComplete?.enquiry, "Closed")}
                                     className="btn btn-primary mt-2"
                                   >
                                     View
-                                  </button>
+                                  </button> */}
                                 </div>
                               </div>
                             </div>
@@ -563,12 +565,12 @@ function Dashboard() {
                                   >
                                     Download
                                   </button>
-                                  <button
+                                  {/* <button
                                     onClick={() => columnHandler("INSTALLATION", AllDashboardData.measurementPending?.enquiry, "Closed")}
                                     className="btn btn-primary mt-2"
                                   >
                                     View
-                                  </button>
+                                  </button> */}
                                 </div>
                               </div>
                             </div>
@@ -609,12 +611,12 @@ function Dashboard() {
                                   >
                                     Download
                                   </button>
-                                  <button
+                                  {/* <button
                                     onClick={() => columnHandler2("pendingComplaint")}
                                     className="btn btn-primary mt-2"
                                   >
                                     View
-                                  </button>
+                                  </button> */}
                                 </div>
 
                               </div>
@@ -639,13 +641,13 @@ function Dashboard() {
                                   >
                                     Download
                                   </button>
-                                  <button
+                                  {/* <button
                                     onClick={() => columnHandler2("feedback")}
                                     // onClick={() => columnHandler("INSTALLATION",AllDashboardData.measurementPending?.enquiry,"Closed")}
                                     className="btn btn-primary mt-2"
                                   >
                                     View
-                                  </button>
+                                  </button> */}
                                 </div>
 
                               </div>
@@ -670,13 +672,44 @@ function Dashboard() {
                                   >
                                     Download
                                   </button>
-                                  <button
+                                  {/* <button
                                     onClick={() => columnHandler2("wcr")}
                                     // onClick={() => columnHandler("INSTALLATION",AllDashboardData.measurementPending?.enquiry,"Closed")}
                                     className="btn btn-primary mt-2"
                                   >
                                     View
-                                  </button>
+                                  </button> */}
+                                </div>
+
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="col-xl-3 col-sm-6">
+                          <div className="card booking">
+                            <div className="card-body">
+                              <div className="booking-status d-flex align-items-center">
+                                <span>
+                                  <img alt="" src="./images/qFollowup.svg" />
+                                </span>
+                                <div className="ms-4">
+                                  <h2 className="mb-0 font-w600">
+                                    {AllDashboardData?.cancelledEnquiry?.enquiry}
+                                  </h2>
+                                  <p className="mb-0">Cancelled Enquiries</p>
+                                  {/* <button
+                                    onClick={() => DownloadReportHandler(AllDashboardData?.wcr?.url)}
+                                    className="btn btn-primary"
+                                  >
+                                    Download
+                                  </button> */}
+                                  {/* <button
+                                    onClick={() => columnHandler2("wcr")}
+                                    // onClick={() => columnHandler("INSTALLATION",AllDashboardData.measurementPending?.enquiry,"Closed")}
+                                    className="btn btn-primary mt-2"
+                                  >
+                                    View
+                                  </button> */}
                                 </div>
 
                               </div>
