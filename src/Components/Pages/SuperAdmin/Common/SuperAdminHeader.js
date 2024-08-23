@@ -62,10 +62,10 @@ function SuperAdminHeader() {
         <Link to={"/SuperAdminDashboard"} className="brand-logo">
           <img
             alt="tesr"
-            src="./images/f&f-logo.png"
+            src="./images/f&f-logo-2.png"
             className="d-xl-block d-none"
             id="img_lg"
-            style={{ width: "140px", padding: "11px", margin: "auto" }}
+            style={{ width: "232px", padding: "11px", margin: "auto" }}
           />
           <img
             alt="test"
@@ -100,8 +100,8 @@ function SuperAdminHeader() {
                 <div className="input-group search-area"></div>
               </div>
               <ul className="navbar-nav header-right">
-                <li className="nav-item">
-                  <Link to={"/Search"} className="btn btn-primary">
+                <li className="nav-item d-none">
+                  <Link to={"/Search"} className="btn">
                     Search
                   </Link>
                 </li>
@@ -128,7 +128,7 @@ function SuperAdminHeader() {
                           data-name="Path 1954"
                           d="M349.741,65.233V62.747a1.2,1.2,0,1,1,2.4,0v2.486a8.4,8.4,0,0,1,7.2,8.314v4.517l.971,1.942a3,3,0,0,1-2.683,4.342h-5.488a1.2,1.2,0,1,1-2.4,0h-5.488a3,3,0,0,1-2.683-4.342l.971-1.942V73.547a8.4,8.4,0,0,1,7.2-8.314Zm1.2,2.314a6,6,0,0,0-6,6v4.8a1.208,1.208,0,0,1-.127.536l-1.1,2.195a.6.6,0,0,0,.538.869h13.375a.6.6,0,0,0,.536-.869l-1.1-2.195a1.206,1.206,0,0,1-.126-.536v-4.8a6,6,0,0,0-6-6Z"
                           transform="translate(0 0)"
-                          fill="#ffffff"
+                          fill="#AD8435"
                           fillRule="evenodd"
                         />
                       </g>
@@ -147,26 +147,26 @@ function SuperAdminHeader() {
                         {AllNotification && AllNotification.length === 0
                           ? "No Notification Found"
                           : AllNotification.slice(0, 4).map((item, index) => {
-                            return (
-                              <li>
-                                <div className="timeline-panel">
-                                  <div className="media me-2">
-                                    <img
-                                      alt="test"
-                                      width={50}
-                                      src="./images/logo.png"
-                                    />
+                              return (
+                                <li>
+                                  <div className="timeline-panel">
+                                    <div className="media me-2">
+                                      <img
+                                        alt="test"
+                                        width={50}
+                                        src="./images/logo.png"
+                                      />
+                                    </div>
+                                    <div className="media-body">
+                                      <h6 className="mb-1"> {item.message}</h6>
+                                      <small className="d-block">
+                                        {moment(item.created_at).format("LLL")}
+                                      </small>
+                                    </div>
                                   </div>
-                                  <div className="media-body">
-                                    <h6 className="mb-1"> {item.message}</h6>
-                                    <small className="d-block">
-                                      {moment(item.created_at).format("LLL")}
-                                    </small>
-                                  </div>
-                                </div>
-                              </li>
-                            );
-                          })}
+                                </li>
+                              );
+                            })}
                       </ul>
                       <div
                         className="ps__rail-x"
@@ -195,14 +195,37 @@ function SuperAdminHeader() {
                   </div>
                 </li>
                 <li className="nav-item dropdown header-profile">
-                  <a
+                  <Link
                     className="nav-link"
-                    href="javascript:void(0);"
+                    to="javascript:void(0);"
                     role="button"
                     data-bs-toggle="dropdown"
                   >
-                    <img src="./images/logo.png" width={20} />
-                  </a>
+                    {/* <img src="./images/logo.png" width={20} /> */}
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      version="1.1"
+                      xmlnsXlink="http://www.w3.org/1999/xlink"
+                      width="20"
+                      height="20"
+                      x="0"
+                      y="0"
+                      viewBox="0 0 6.35 6.35"
+                      style={{enableBackground:"new 0 0 512 512"}}
+                      xmlSpace="preserve"
+                      class=""
+                    >
+                      <g>
+                        <path
+                          d="M3.172.53a.265.266 0 0 0-.262.268v2.127a.265.266 0 0 0 .53 0V.798A.265.266 0 0 0 3.172.53zm1.544.532a.265.266 0 0 0-.026 0 .265.266 0 0 0-.147.47c.459.391.749.973.749 1.626 0 1.18-.944 2.131-2.116 2.131A2.12 2.12 0 0 1 1.06 3.16c0-.65.286-1.228.74-1.62a.265.266 0 1 0-.344-.404A2.667 2.667 0 0 0 .53 3.158a2.66 2.66 0 0 0 2.647 2.663 2.657 2.657 0 0 0 2.645-2.663c0-.812-.363-1.542-.936-2.03a.265.266 0 0 0-.17-.066z"
+                          fill="#AD8435"
+                          opacity="1"
+                          data-original="#AD8435"
+                          class=""
+                        ></path>
+                      </g>
+                    </svg>
+                  </Link>
                   <div className="dropdown-menu dropdown-menu-end">
                     <button
                       onClick={() => {

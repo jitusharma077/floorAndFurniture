@@ -12072,9 +12072,9 @@ h6,
 .content-body .container-lg,
 .content-body .container-xl,
 .content-body .container-xxl {
-  padding-top: 2.5rem;
-  padding-right: 2.5rem;
-  padding-left: 2.5rem;
+  padding-top: 1.5rem;
+  padding-right: 1.5rem;
+  padding-left: 1.5rem;
 }
 
 @media only screen and (max-width: 75rem) {
@@ -12932,7 +12932,7 @@ label {
 }
 
 .nav-header {
-  height: 7.5rem;
+  height: 4.5rem;
   width: 20.5rem;
   display: inline-block;
   text-align: left;
@@ -12941,6 +12941,7 @@ label {
   background-color: var(--nav-headbg);
   transition: all 0.2s ease;
   z-index: 5;
+  border-bottom: 1px solid #eceff3;
 }
 
 .nav-header .logo-abbr {
@@ -13088,7 +13089,7 @@ label {
 }
 
 .hamburger .line {
-  background: #ffffff;
+  background: #AD8435;
   display: block;
   height: 0.1875rem;
   border-radius: 0.1875rem;
@@ -13216,7 +13217,7 @@ label {
 }
 
 .header {
-  height: 7.5rem;
+  height: 4.5rem;
   /* z-index: 2000; */
   position: relative;
   padding: 0rem;
@@ -13233,6 +13234,7 @@ label {
   padding-right: 1.875rem;
   align-items: center;
   display: flex;
+  border-bottom: 1px solid #eceff3;
 }
 
 @media only screen and (max-width: 87.5rem) {
@@ -13451,13 +13453,13 @@ svg.pulse-svg .third-circle {
   position: fixed;
   top: 0;
   width: 100%;
-  background: #8b6c31;
   /* background-image: linear-gradient(to right, #B39355, #8b6c31); */
- /* background: linear-gradient(to left, rgba(179,147,85,1) ,  rgba(139,108,49,0.9528186274509804)); */
+  /* background: linear-gradient(to left, rgba(179,147,85,1) ,  rgba(139,108,49,0.9528186274509804)); */
+  background: #ffffff;
 }
 
 [data-header-position="fixed"] .content-body {
-  padding-top: 7.5rem;
+  padding-top: 4.5rem;
 }
 
 @media only screen and (max-width: 87.5rem) {
@@ -17938,9 +17940,9 @@ html[dir="rtl"]
 .dlabnav {
   width: 20.5rem;
   padding-bottom: 0;
-  height: calc(100% - 106px);
+  height: calc(100% - 64px);
   position: absolute;
-  top: 7.5rem;
+  top: 4.5rem;
   padding-top: 0;
   z-index: 6;
   background-color: var(--sidebar-bg);
@@ -18063,11 +18065,11 @@ html[dir="rtl"]
   font-weight: 500;
   display: inline-block;
   font-size: 1rem;
-  color: #ffffff;
+  color: #666D80;
 }
 
 .dlabnav .metismenu > li > a i {
-  color: #ffffff;
+  color: #666D80;
 }
 
 .dlabnav .metismenu > li > a svg {
@@ -18086,7 +18088,7 @@ html[dir="rtl"]
 .dlabnav .metismenu > li:hover > a,
 .dlabnav .metismenu > li:focus > a {
   /*  background-color: lighten($color: $primary, $amount: 40%); */
-  color: #ffffff;
+  color: #666D80;
 }
 
 .dlabnav .metismenu > li:hover > a g [fill],
@@ -18095,15 +18097,15 @@ html[dir="rtl"]
 }
 
 .dlabnav .metismenu > li.mm-active > a {
-  color: #ffffff !important;
-  /* background:var(--rgba-primary-1); */
+  color: #AD8435 !important;
+  background: rgb(173, 132, 53, 0.08);
   font-weight: 600;
   box-shadow: none;
 }
 
-.dlabnav .metismenu > li.mm-active > a i {
+/* .dlabnav .metismenu > li.mm-active > a i {
   font-weight: 100;
-}
+} */
 
 .dlabnav .metismenu > li.mm-active > a g [fill] {
   fill: var(--primary);
@@ -18139,6 +18141,7 @@ html[dir="rtl"]
   transition: all 0.5s;
   -ms-transition: all 0.5s;
   transition: all 0.5s;
+  color: #666D80;
 }
 
 @media only screen and (max-width: 84.375rem) {
@@ -18194,7 +18197,7 @@ html[dir="rtl"]
 .dlabnav .metismenu ul a:focus,
 .dlabnav .metismenu ul a.mm-active {
   text-decoration: none;
-  color: #ffffff;
+  color: #AD8435;
 }
 
 .dlabnav .metismenu ul a:before {
@@ -19009,10 +19012,11 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
   > li
   > a {
   font-size: 1rem;
-  padding: 1.375rem 2.1875rem;
+  padding: 0.572rem;
   transition: all 0.5s;
   -ms-transition: all 0.5s;
   transition: all 0.5s;
+  margin-bottom: 6px;
 }
 
 [data-sidebar-style="full"][data-layout="vertical"]
@@ -19058,8 +19062,8 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
   > li.mm-active
   > a
   i {
-  color: #ffffff;
-  font-weight: 300;
+  color: #AD8435;
+  /* font-weight: 300; */
 }
 
 [data-sidebar-style="full"][data-layout="vertical"]
@@ -21849,15 +21853,16 @@ Fixing Order => Base + Typography >> General Layout + Grid >> Page Layout + Comp
   position: fixed;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
-  /* background: linear-gradient(344deg, rgba(139,108,49,0.9528186274509804) 35%, rgba(179,147,85,1) 70%); */
-  background-image: linear-gradient(to right, #b39355, #8b6c31);
+  /* background-image: linear-gradient(to right, #b39355, #8b6c31); */
+  background: #ffffff;
 }
 
 [data-sidebar-position="fixed"][data-layout="vertical"] .dlabnav {
   position: fixed;
   border-bottom-left-radius: 0;
   /* background: linear-gradient(to right, rgba(139,108,49,0.9528186274509804) , rgba(179,147,85,1)); */
-  background-image: linear-gradient(to right, #b39355, #8b6c31);
+  /* background-image: linear-gradient(to right, #b39355, #8b6c31); */
+  background: #ffffff;
   border-bottom-right-radius: 0;
 }
 
@@ -48533,12 +48538,19 @@ table.dataTable.display tbody td {
 }
 
 .booking .booking-status span {
-  height: 4.063rem;
-  width: 4.063rem;
+  height: 3.063rem;
+  width: 3.063rem;
   border-radius: 0.5rem;
-  background: #8b6c31;
+  background: rgba(173, 132, 53, 0.08);
   text-align: center;
-  line-height: 4.063rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* line-height: 4.063rem; */
+}
+
+.booking .booking-status span img{
+  mix-blend-mode: exclusion;
 }
 
 .outlet_style .booking .booking-status span {
@@ -48554,12 +48566,20 @@ table.dataTable.display tbody td {
 }
 
 .booking:hover .booking-status span {
-  background: var(--primary);
+  background: rgba(173, 132, 53, 0.08);
   transition: all 0.5s ease-in-out;
 }
 
 .booking:hover .booking-status span svg path {
   fill: #fff;
+}
+
+.booking .card-body{
+  padding: 1rem;
+}
+
+.booking .card-body h2{
+  font-size: 1.4rem;
 }
 
 .event-calender .table-condensed thead tr:first-child {
@@ -54454,3 +54474,25 @@ html {
   overflow: auto;
 }
 
+.dash-head span{
+  font-size: 16px;
+  color: #313C46;
+}
+
+.dash-head h3{
+  font-size: 24px;
+  color: #AD8435;
+}
+
+.dashboard .nav.nav-pills .nav-link{
+  background: transparent;
+  border-radius: 0rem;
+  border-bottom: 1px solid transparent;
+  box-shadow: none;
+}
+
+.dashboard .nav.nav-pills .nav-link.active{
+  border-bottom: 1px solid #AD8435;
+  box-shadow: none;
+  color: #AD8435;
+}

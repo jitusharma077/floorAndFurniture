@@ -31,7 +31,7 @@ function SuperAdminSidebar() {
             </li>
             <li>
               <Link to={"/allOutlet"} className aria-expanded="false">
-                <i className="fa fa-ship fw-bold" aria-hidden="true" />
+                <i className="fas fa-warehouse fw-bold" aria-hidden="true" />
                 <span className="nav-text">Warehouse</span>
               </Link>
             </li>
